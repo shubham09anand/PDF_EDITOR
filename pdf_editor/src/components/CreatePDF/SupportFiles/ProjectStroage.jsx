@@ -89,11 +89,12 @@ const ProjectStorage = ({ setDisplay }) => {
                                         }
                                         {
                                              fileUploaded.length > 0 && (
-                                                  <div className='h-full w-full rounded-lg flex place-content-center items-center relative'>
+                                                  <div className='h-full w-full rounded-lg flex place-content-center items-center relative bg-gray-900'>
                                                        <svg onClick={imgPrev} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="backdrop-blur-3xl rounded-full absolute left-4 w-8 h-8 p-1 cursor-pointer active:opacity-50">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
                                                        </svg>
-                                                       <img src={fileUploaded[currImg]} alt="" className='h-full w-full object-cover' />
+                                                       <img src={fileUploaded[currImg]} alt="" className='h-full w-full object-scale-down' />
+                                                       <div className='absolute top-5 right-5 rounded-2xl p-2 text-white tracking-widest backdrop-blur-2xl'>{currImg + 1}/{fileUploaded.length}</div>
                                                        <svg onClick={imgNext} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="backdrop-blur-3xl rounded-full absolute right-4 w-8 h-8 p-1 cursor-pointer active:opacity-50">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
                                                        </svg>
