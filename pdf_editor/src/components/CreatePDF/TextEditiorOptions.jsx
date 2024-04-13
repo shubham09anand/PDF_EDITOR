@@ -104,7 +104,7 @@ const TextEditiorOptions = ({ controllDisplay, getQuillContent }) => {
                                                                       </div>
                                                                  </div>
                                                             </div>
-                                                            <div className="grow flex place-content-center items-center gap-x-3">
+                                                            <div className="grow flex items-center gap-x-3">
                                                                  <input onChange={(e)=>setDocName(e.target.value)} value={docName} type="text" className="mt-2 w-60 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Name Your Project" />
                                                                  <div onClick={handleNameDoc} className='bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
                                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">

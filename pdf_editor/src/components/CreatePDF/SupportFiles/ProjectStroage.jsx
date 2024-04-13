@@ -1,165 +1,133 @@
-import React, { useEffect, useState } from 'react';
-import { io } from 'socket.io-client';
-import { useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
-const ProjectStroage = ({ setDisplay }) => {
-     
-     const location = useLocation();
-     const currentLocation = location.pathname;
-     console.log(currentLocation);
-     const data = currentLocation.split("/")
-     console.log(data)
+const ProjectStorage = ({ setDisplay }) => {
 
-     const [displayUpload, setDisplayUpload] = useState(true);
-     const [socket, setSocket] = useState(null);
+     const [currImg, setCurrImg] = useState(0);
 
+     const [displayUpload, setDisplayUpload] = useState(true)
 
-     useEffect(() => {
-          const s = io("http://127.0.0.1:3001");
-          setSocket(s);
+     const [fileUploaded, setFileUploaded] = useState([]);
 
-          return () => {
-               s.disconnect();
+     const imgPrev = () => {
+          if (currImg === 0) {
+               setCurrImg(fileUploaded.length - 1);
+          } else {
+               setCurrImg(currImg - 1);
           }
-     }, []);
+     };
 
-     const sendData = (e) =>{
+     const imgNext = () => {
+          if (currImg < fileUploaded.length - 1) {
+               setCurrImg(currImg + 1);
+          } else {
+               setCurrImg(0);
+          }
+     };
 
-          e.preventDefault();
+     let handleImageChange = (e) => {
+          var files = e.target.files;
+          var filesArray = [].slice.call(files);
 
-          if (!socket) return;
-     }
+          filesArray.forEach((file) => {
+               if (!file.type.startsWith('image/')) {
+                    toast.warning("Please select only image files.");
+                    return;
+               }
+               let reader = new FileReader();
+               reader.onloadend = () => {
+                    let base64String = reader.result;
+                    setFileUploaded((prevFiles) =>
+                         [...prevFiles, base64String]);
+               };
+               try {
+                    reader.readAsDataURL(file);
+               } catch (error) {
+                    toast.warning("Process faliled")
+               }
+          });
+     };
+
+     const handleRemoveImages = () => {
+          setFileUploaded([]);
+     };
+
+     const image = [
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp",
+     ];
 
      return (
           <div>
+               <ToastContainer />
                <div className="container mx-auto px-5 py-2 lg:px-32 w-fit backdrop-blur-2xl">
                     <div onClick={() => { setDisplay(0) }} className='bg-gray-200 p-1 rounded-md absolute left-10 cursor-pointer'>close</div>
-                    <div className="w- mx-auto my-10 overflow-hidden rounded-2xl bg-white shadow-lg sm:max-w-lg">
+                    <div className="mx-auto my-10 overflow-hidden rounded-sm bg-white shadow-lg sm:max-w-3xl">
                          <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
                               <div>Upload Files</div>
-                              <svg onClick={() => displayUpload ? setDisplayUpload(false) : setDisplayUpload(true)} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 cursor-pointer active:opacity-75">
-                                   <path fillRule="evenodd" d="M12.53 16.28a.75.75 0 0 1-1.06 0l-7.5-7.5a.75.75 0 0 1 1.06-1.06L12 14.69l6.97-6.97a.75.75 0 1 1 1.06 1.06l-7.5 7.5Z" clipRule="evenodd" />
+                              <svg onClick={() => setDisplayUpload(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
+                                   <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                               </svg>
                          </div>
-                         <div className={`space-y-4 px-8 mt-4 transition-all duration-700 ${displayUpload ? "h-0" : "h-80"}`}>
-                              <div className="flex flex-col items-center justify-center rounded-lg border-2 h-48 border-gray-900 border-dashed px-4 py-10">
-                                   <p className="mt-4 text-center text-xl font-medium text-gray-800">
-                                        <label className="shadow-blue-100 mt-2 block rounded-full border bg-white px-4 py-0.5 font-normal text-blue-500 shadow hover:bg-blue-50">
-                                             <input className="hidden" type="file" name="file" id="" />
-                                             browse
-                                        </label>
-                                   </p>
+                         <div className={`space-y-4 px-4 transition-all duration-700 ${displayUpload ? "h-0" : "h-96"}`}>
+                              <div className='pt-4'>
+                                   <div className={`flex flex-col items-center justify-center rounded-lg h-72 border-gray-900 border-dashed ${fileUploaded.length === 0 ? 'border-2 border-dashed' : 'border border-solid'}`}>
+                                        {
+                                             fileUploaded.length === 0 && (
+                                                  <p className="mt-4 text-center text-xl font-medium text-gray-800">
+                                                       <label className="shadow-blue-100 mt-2 block rounded-full border bg-white px-4 py-0.5 font-normal text-blue-500 shadow hover:bg-blue-50">
+                                                            <input onChange={(e) => handleImageChange(e)} multiple className="hidden" type="file" name="file" id="" />
+                                                            browse
+                                                       </label>
+                                                  </p>
+                                             )
+                                        }
+                                        {
+                                             fileUploaded.length > 0 && (
+                                                  <div className='h-full w-full rounded-lg flex place-content-center items-center relative'>
+                                                       <svg onClick={imgPrev} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="backdrop-blur-3xl rounded-full absolute left-4 w-8 h-8 p-1 cursor-pointer active:opacity-50">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
+                                                       </svg>
+                                                       <img src={fileUploaded[currImg]} alt="" className='h-full w-full object-cover' />
+                                                       <svg onClick={imgNext} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="backdrop-blur-3xl rounded-full absolute right-4 w-8 h-8 p-1 cursor-pointer active:opacity-50">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
+                                                       </svg>
+                                                  </div>
+                                             )
+                                        }
+                                   </div>
                               </div>
-                              <div className="text-gray-600 font-thin text-lg">Tailwind.zip</div>
-
-                              <div className="mt-4 rounded-full bg-blue-600 px-10 py-2 w-fit mx-auto font-semibold text-white">Save In Project Stroage</div>
+                              <div className='flex'>
+                                   <div className="cursor-pointer active:opacity-55 rounded-sm bg-black px-5 py-2 w-fit mx-auto font-semibold text-white select-none">Save In Project Storage</div>
+                                   <div onClick={handleRemoveImages} className="cursor-pointer active:opacity-55 rounded-sm bg-red-600 px-5 py-2 w-fit mx-auto font-semibold text-white select-none">Reupload</div>
+                              </div>
                          </div>
                     </div>
 
                     <div className='font-semibold text-2xl text-gray-800 mb-2'>Previous Material</div>
-                    <div className={`-m-1 w-fit mx-auto flex flex-wrap md:-m-2 overflow-y-scroll ${displayUpload ? "h-[calc(70vh)]" : "h-72"}`}>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp" />
+                    <div className={`-m-1 mb-20 w-fit mx-auto flex flex-wrap place-content-center items-center gap-2 md:-m-2 overflow-y-scroll ${displayUpload ? "h-[calc(70vh)]" : "h-72"}`}>
+                         {image.map((url, index) => (
+                              <div key={index} className="flex w-64 relative flex-wrap">
+                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                   </svg>
+                                   <div className="w-full p-1 md:p-2">
+                                        <img
+                                             alt="gallery"
+                                             className="block h-52 w-80 rounded-lg object-cover object-center"
+                                             src={url} />
+                                   </div>
                               </div>
-                         </div>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp" />
-                              </div>
-                         </div>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp" />
-                              </div>
-                         </div>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp" />
-                              </div>
-                         </div>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp" />
-                              </div>
-                         </div>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp" />
-                              </div>
-                         </div>
-                         <div className="flex w-64 relative flex-wrap mx-auto">
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-2 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                              </svg>
-                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-10 rounded-md backdrop-blur-lg p-1 top-3 z-20">
-                                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                              </svg>
-                              <div className="w-full p-1 md:p-2">
-                                   <img
-                                        alt="gallery"
-                                        className="block h-52 w-80 rounded-lg object-cover object-center"
-                                        src="https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp" />
-                              </div>
-                         </div>
+                         ))}
                     </div>
                </div>
           </div>
-     )
-}
+     );
+};
 
-export default ProjectStroage
+export default ProjectStorage;

@@ -30,3 +30,14 @@ export const nameDoc = async (docId, newName) => {
           throw error;
      }
 };
+
+export const projectStroage = async (projectId, projectStorageContent) => {
+     try {
+          const res = await axios.post("http://127.0.0.1:3200/auth/projectStroage", { projectId: projectId, projectStorageContent: projectStorageContent });
+          console.log(res.data);
+          return res
+     } catch (error) {
+          console.error(error);
+          throw error;
+     }
+};
