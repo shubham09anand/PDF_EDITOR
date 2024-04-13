@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes pulse {
+    50% {
+        opacity: 0;
+    }
+}
+
+.animate-page {
+    animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.glassMorphic {
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 2px 1px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(9.5px);
+    -webkit-backdrop-filter: blur(9.5px);
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+@keyframes translateX {
+    from {
+        transform: translateX(0) rotate(20deg) scaleY(1.5);
+    }
+
+    to {
+        transform: translateX(1000%) rotate(20deg) scaleY(1.5);
+    }
+}
+
+.animatedBlock {
+    animation: translateX 2s linear infinite;
+}
+
+.gradient-background {
+    background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.5) 50%, rgba(255, 255, 255, 0) 80%);
+}
+
+.react-pdf__Page__canvas {
+    height: 200px;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: .8;
+    }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.example::-webkit-scrollbar {
+    display: none;
+}
+
+.example {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.animatePulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* .ql-toolbar {
+    position: relative;;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    overflow-x: scroll;
+} */
+
+.tox-statusbar__branding {
+    display: none;
+}
+
+.mce-content-body {
+    padding: 20px;
+}
+
+@media (min-width: 638px) {
+    .ql-container {
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        padding-top: 1.54cm;
+        padding-left: 1.9cm;
+        padding-right: 1.32cm;
+        padding-bottom: 1.67cm;
+    }
+}
