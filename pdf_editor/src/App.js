@@ -1,15 +1,13 @@
 import './App.css';
-import PreviousDocs from './components/CreatePDF/PreviousDocs';
-import ProjectStroage from './components/CreatePDF/SupportFiles/ProjectStroage';
-import ImageAi from './components/CreatePDF/SupportFiles/ImageAi';
-import TextAi from './components/CreatePDF/SupportFiles/TextAi';
-import VidoeCall from './components/CreatePDF/SupportFiles/VidoeCall';
+
+import TextEditor from './components/CreatePDF/TextEditior';
 import Layout from './components/Layout';
+import TextEditorDummy from './components/Plagrisim/TextEditiorDummy';
 
 
 function App() {
   return (
-    <ProjectStroage/>
+    <Layout/>
   );
 }
 

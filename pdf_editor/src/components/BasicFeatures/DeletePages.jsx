@@ -162,8 +162,8 @@ const DeletePages = () => {
           <div className='p-2 w-full'>
                <ToastContainer />
                <div className='text-center space-y-3 mb-10'>
-                    <h1 class="sm:text-5xl text-4xl font-semibold text-center title-font text-gray-900 mb-2">Remove PDF Pages</h1>
-                    <p class="text-lg leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Select and remove the PDF pages you don’t need. Get a new file without your deleted pages from your original File.</p>
+                    <h1 className="sm:text-5xl text-4xl font-semibold text-center title-font text-gray-900 mb-2">Remove PDF Pages</h1>
+                    <p className="text-lg leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Select and remove the PDF pages you don’t need. Get a new file without your deleted pages from your original File.</p>
                </div>
 
                {selectedFiles.length === 0 && (

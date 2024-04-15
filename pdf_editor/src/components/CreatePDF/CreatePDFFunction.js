@@ -41,3 +41,13 @@ export const projectStroage = async (projectId, projectStorageContent) => {
           throw error;
      }
 };
+
+export const validateLink = async (docId) => {
+     try {
+          const res = await axios.post("http://127.0.0.1:3200/auth/validateLink", { docId: docId });
+          return res
+     } catch (error) {
+          console.error(error);
+          throw error;
+     }
+};

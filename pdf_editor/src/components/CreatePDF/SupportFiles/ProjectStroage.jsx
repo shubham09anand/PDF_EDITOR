@@ -52,6 +52,14 @@ const ProjectStorage = ({ setDisplay }) => {
           setFileUploaded([]);
      };
 
+     const handleDownloadImage = (url) => {
+               const anchor = document.createElement('a');
+               console.log(url)
+               anchor.href = url;
+               anchor.download = `Photo`;
+               anchor.click();
+     }
+
      const image = [
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp",
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp",
@@ -59,13 +67,13 @@ const ProjectStorage = ({ setDisplay }) => {
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(72).webp",
+          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
      ];
 
      return (
           <div>
                <ToastContainer />
-               <div className="container mx-auto px-5 py-2 lg:px-32 w-fit backdrop-blur-2xl">
+               <div className="container mx-auto py-2 lg:px-32 w-fit backdrop-blur-2xl">
                     <div onClick={() => { setDisplay(0) }} className='bg-gray-200 p-1 rounded-md absolute left-10 cursor-pointer'>close</div>
                     <div className="mx-auto my-10 overflow-hidden rounded-sm bg-white shadow-lg sm:max-w-3xl">
                          <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
@@ -103,24 +111,30 @@ const ProjectStorage = ({ setDisplay }) => {
                                         }
                                    </div>
                               </div>
-                              <div className='flex'>
-                                   <div className="cursor-pointer active:opacity-55 rounded-sm bg-black px-5 py-2 w-fit mx-auto font-semibold text-white select-none">Save In Project Storage</div>
-                                   <div onClick={handleRemoveImages} className="cursor-pointer active:opacity-55 rounded-sm bg-red-600 px-5 py-2 w-fit mx-auto font-semibold text-white select-none">Reupload</div>
-                              </div>
+                              {
+                                   fileUploaded.length > 0 ? (
+                                        <div className='flex'>
+                                             <div className="cursor-pointer active:opacity-55 rounded-sm bg-black px-5 py-2 w-fit mx-auto font-semibold text-white select-none">Save In Project Storage</div>
+                                             <div onClick={handleRemoveImages} className="cursor-pointer active:opacity-55 rounded-sm bg-red-600 px-5 py-2 w-fit mx-auto font-semibold text-white select-none">Reupload</div>
+                                        </div>
+                                   ) : (
+                                        <p className="text-sm font-extralight text-center w-fit mx-auto">Upload Photos Here To Let Other Team Members See Them. These Photos Are Avilabel In This Project Only.</p>
+                                   )
+                              }
                          </div>
                     </div>
 
                     <div className='font-semibold text-2xl text-gray-800 mb-2'>Previous Material</div>
-                    <div className={`-m-1 mb-20 w-fit mx-auto flex flex-wrap place-content-center items-center gap-2 md:-m-2 overflow-y-scroll ${displayUpload ? "h-[calc(70vh)]" : "h-72"}`}>
+                    <div className={`-m-1 mb-20 w-fit mx-auto flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example border-2 ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
                          {image.map((url, index) => (
-                              <div key={index} className="flex w-64 relative flex-wrap">
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20">
+                              <div key={index} className="flex w-40 h-40 sm:w-48 sm:h-48 md:w-56 lg:w-60 md:h-56 lg:h-60 relative flex-wrap">
+                                   <svg onClick={()=>handleDownloadImage(url)}  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20 cursor-pointer">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                    </svg>
                                    <div className="w-full p-1 md:p-2">
                                         <img
                                              alt="gallery"
-                                             className="block h-52 w-80 rounded-lg object-cover object-center"
+                                             className="block h-full w-full rounded-lg object-cover object-center"
                                              src={url} />
                                    </div>
                               </div>

@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import addPdf from "../../Assets/images/icons/addPdf.png";
 import moment from 'moment';
 import uploadFile from "../../Assets/images/icons/uploadFile.png";
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { validateLink } from './CreatePDFFunction';
 
 const PreviousDocs = () => {
 
+     const navigate = useNavigate();
      const [doc, setDoc] = useState([]);
+     const [joinLink, setJoinLink] = useState("");
      const [listDisplay, setListDisplay] = useState(0)
      const userId = "6608f032efa3e1a31913d0f3";
 
@@ -21,6 +24,29 @@ const PreviousDocs = () => {
                toast.error("Something Went Wrong While Loading Previous Document")
           })
      }, [userId])
+
+     const joinDoc = () => {
+          const docId = joinLink.split("/");
+          console.log(docId)
+          if (joinLink === "" || joinLink === null) {
+               toast.info("Enter A Room Link")
+               return
+          }
+          else if (docId.length !== 6) {
+               toast.error("Invalid Link")
+               return
+          }
+          else {
+               validateLink(docId[docId.length - 1]).then((res) => {
+                    console.log(res.data)
+                    if (res.data.status === 0 || res.data.success === false) {
+                         toast.error("Invalid Link")
+                         return
+                    }
+               })
+          }
+          // navigate(`/create_doc/document/${docId[docId.length - 1]}`);
+     }
 
      return (
           <div className='sm:pl-2 w-full h-fit'>
@@ -116,11 +142,25 @@ const PreviousDocs = () => {
                     }
 
                     <div className='px-10 w-1/2 mx-auto pt-12 hidden lg:block'>
-                         <Link to="/create_doc" className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-400 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
+                         <div to="/create_doc" className=' px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-300 my-2'>
+                              <img src={addPdf} alt="" className='w-16 h-16 md:w-24 md:h-24' />
+                              <div className='ml-5'>
+                                   <div className='w-fit lg:text-lg'>Join A Meeting</div>
+                                   <div className='flex place-content-center items-center gap-x-2'>
+                                        <input onChange={(e) => setJoinLink(e.target.value)} value={joinLink} type="text" className="mt-2 w-80 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Enter the link of Document" />
+                                        <div onClick={joinDoc} className='bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
+                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
+                                             </svg>
+                                        </div>
+                                   </div>
+                              </div>
+                         </div>
+                         <Link to="/create_doc" className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-300 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
                               <img src={addPdf} alt="" className='w-16 h-16 md:w-24 md:h-24' />
                               <div className='font-semibold w-fit mx-auto text-center lg:text-lg'>Create A New Document</div>
                          </Link>
-                         <div className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-400 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
+                         <div className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-300 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
                               <img src={uploadFile} alt="" className='w-[5rem] h-[5rem] md:w-[7rem] md:h-[7rem]' />
                               <div className='font-semibold w-fit mx-auto text-center lg:text-lg'>Upload A Exisiting PDF and Work</div>
                          </div>

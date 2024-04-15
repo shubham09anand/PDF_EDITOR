@@ -74,9 +74,9 @@ const AddPageNumber = () => {
     <div className='w-full'>
       <ToastContainer />
       <div className='text-center space-y-3'>
-        <div class="text-center mb-10">
-          <h1 class="sm:text-5xl text-4xl font-semibold text-center title-font text-gray-900 mb-2">Merge PDF files</h1>
-          <p class="text-lg leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Combine PDFs in the order you want with the easiest PDF merger available.</p>
+        <div className="text-center mb-10">
+          <h1 className="sm:text-5xl text-4xl font-semibold text-center title-font text-gray-900 mb-2">Merge PDF files</h1>
+          <p className="text-lg leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Combine PDFs in the order you want with the easiest PDF merger available.</p>
         </div>
       </div>
 

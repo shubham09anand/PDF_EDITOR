@@ -21,6 +21,7 @@ const ContentSupport = ({ setDisplay }) => {
      const [summaryState, steSummaryState] = useState(false);
      const [selectedOrigin, setSelectedOrigin] = useState("Select An Organisation");
      const [fullArticle, setFullArticle] = useState(false);
+     const [selectedImage, setSelectedImage] = useState(null);
 
      const getLinks = () => {
           if (queery === "" || queery.trim() === null || selectedOrigin === "Select An Organisation") {
@@ -30,9 +31,9 @@ const ContentSupport = ({ setDisplay }) => {
           setButton(false);
           axios.post("http://127.0.0.1:3200/auth/googleSearch",
                { queery: queery, selectedOrigin: selectedOrigin }).then((res) => {
-                    setLinks(res.data.apiResult.items)
+                    setLinks(res.data.apiResult.items);
                     setItemDisplay(1);
-               }).catch((error) => {
+               }).catch(() => {
                     toast.error(`Process Failed With Stauats Code`)
                }).finally(() => {
                     setButton(true)
@@ -178,6 +179,7 @@ const ContentSupport = ({ setDisplay }) => {
                                                   <path fillRule="evenodd" d="M3 9.375C3 8.339 3.84 7.5 4.875 7.5h9.75c1.036 0 1.875.84 1.875 1.875v11.25c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V9.375ZM6 12a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V12Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 15a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V15Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75ZM6 18a.75.75 0 0 1 .75-.75h.008a.75.75 0 0 1 .75.75v.008a.75.75 0 0 1-.75.75H6.75a.75.75 0 0 1-.75-.75V18Zm2.25 0a.75.75 0 0 1 .75-.75h3.75a.75.75 0 0 1 0 1.5H9a.75.75 0 0 1-.75-.75Z" clipRule="evenodd" />
                                              </svg>
                                         </button>
+                                        {link?.pagemap.cse_image[0].src && (<>true</>)}
                                    </div>
                               ))}
                          </div>
@@ -251,7 +253,38 @@ const ContentSupport = ({ setDisplay }) => {
                               <div className="heading text-center font-bold text-3xl my-3 text-gray-800">Genrate Images</div>
                          </div>
                          <GenrateImage />
+                         <div className="-m-1 mb-20 w-fit mx-auto flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example">
+                              {
+                                   links.map((link, index) => (
+                                        <div onClick={() => setSelectedImage(link?.pagemap.cse_image[0]?.src)} key={index} className='relative w-fit mx-auto'>
+                                             <div className='flex space-x-4 absolute top-3 right-3'>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
+                                                  </svg>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                  </svg>
+                                             </div>
+                                             <img className="object-cover object-center w-60 h-48 max-w-full rounded-lg"
+                                                  src={link?.pagemap.cse_image[0]?.src}
+                                                  alt="gallery-photo" />
+                                        </div>
+                                   ))
+                              }
+                         </div>
                     </div>
+
+                    {
+                         selectedImage !== null && (
+                              <div className='w-[98%] h-[92%] absolute top-0 left-5'>
+                                   <img src={selectedImage} alt="" className='w-full h-full absolute top-0 left-0' />
+                                   <svg onClick={()=> setSelectedImage(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 backdrop-blur-3xl cursor-pointer rounded-full absolute top-5 right-10">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                   </svg>
+
+                              </div>
+                         )
+                    }
 
                </div>
           </div>

@@ -5,18 +5,18 @@ import ImageResize from 'quill-image-resize-module-react';
 import { io } from 'socket.io-client';
 import { useParams } from 'react-router-dom';
 import TextEditiorOptions from '../CreatePDF/TextEditiorOptions';
-import { getContent } from './CreatePDFFunction';
+import { getContent } from '../CreatePDF/CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
-const TextEditor = ({ isFocused, controllDisplay }) => {
+const TextEditorDummy = ({ isFocused, controllDisplay }) => {
 
      // const [supportDisplay, setSupportDisplay] = useState(3);
      const [words, setWords] = useState();
      const [socket, setSocket] = useState(null);
      const [quill, setQuill] = useState(null);
-     const [docContent, setDocContent] = useState(null)
+     const [docContent, setDocContent] = useState("null")
      const { id: documentId } = useParams();
 
      // setSupportDisplay(value);
@@ -99,7 +99,6 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
 
           if (!wrapper) return;
 
-          wrapper.innerHTML = "";
           const editor = document.createElement("div");
           wrapper.append(editor);
 
@@ -112,60 +111,34 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                          toolbar: toolbarOptions,
                          imageResize: {
                               parchment: Quill.import('parchment')
-                              // See optional "config" below
                          }
                     }
                });
           q.enable(true);
+          q.setContents([
+               { insert: 'Hello ' },
+               { insert: 'World!', attributes: { bold: true } },
+               { insert: '\n' },
+             ]);
+           
           setQuill(q);
-          // q.setText(docContent);
      }, []);
 
-     const getQuillContent = () => {
-          if (!socket || !quill) return null;
-
-          const delta = quill.getContents();
-
-          return delta;
-     }
-
-     useEffect(() => {
-          if (quill === null || docID === null) return
-          if (docContent === null) {
-               getContent(docID)
-                    .then((res) => {
-                         console.log(res.data.doc[0].docContent)
-                         setDocContent(res.data.doc[0].docContent)
-                         quill.setContents(docContent)
-                         toast.success("Document Fetched Succesfully");
-                    })
-                    .catch((error) => {
-                         console.log(error)
-                         toast.error(`Failed To Fetch Data`);
-                    });
+     const getContent = () =>{
+          if (quill === null) {
+               return
           }
-     },[quill])
 
+          console.log(quill.getContents())
+     }
      return (
           <>
                <ToastContainer />
-               {/* <div onClick={() => { getQuillContent() }}>get Content</div> */}
+               <div className='text-xl font-semibold' onClick={getContent}>Get</div>
                <div className='p-5 pt-0 w-full h-full'>
                     <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
                </div>
-
-               {
-                    isFocused &&
-                    (
-                         <div className='absolute top-24 z-[200] w-full'>
-                              <TextEditiorOptions controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
-                         </div>
-                    )
-               }
-
-               {/* {supportDisplay === 1 ? <VidoeCall setDisplay_1={setDisplay} /> : supportDisplay === 2 ? <ProjectStroage setDisplay={setDisplay} /> : supportDisplay === 3 ? <ImageAi setDisplay={setDisplay} /> : supportDisplay === 4 ? <TextAi setDisplay={setDisplay} /> : supportDisplay === 5 ? <ContentSupport setDisplay={setDisplay} /> : null} */}
-
           </>
      );
 }
-export default TextEditor;
+export default TextEditorDummy;

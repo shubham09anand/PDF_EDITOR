@@ -15,8 +15,8 @@ import pageNumber from "../Assets/images/pdfIcons/addPageNumber.png";
 const Home = () => {
      return (
           <section className="text-gray-600 body-font w-full xl:p-2 xl:absolute right-0 h-8 -z-10 mt-0">
-               <div className="container px-5 py-24 pt-5 mx-auto w-fit">
-                    <div className="flex flex-wrap  place-content-center -m-4 gap-4 items-center mx-auto w-fit">
+               <div className="container py-24 pt-5 mx-auto w-fit">
+                    <div className="flex flex-wrap  place-content-center -m-4 gap-0 items-center mx-auto w-fit">
                          <div className="place-content-center items-center flex flex-col lg:w-1/6 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={editFiles} />
@@ -152,6 +152,8 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Put Watermark</h2>
                               </div>
                          </div>
+
+
                     </div>
                </div>
           </section>
