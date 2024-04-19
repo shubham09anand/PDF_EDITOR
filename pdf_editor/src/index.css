@@ -66,15 +66,6 @@
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* .ql-toolbar {
-    position: relative;;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    overflow-x: scroll;
-} */
-
 .tox-statusbar__branding {
     display: none;
 }
@@ -92,3 +83,9 @@
         padding-bottom: 1.67cm;
     }
 }
+
+.ql-font-roboto {
+    font-family: 'Roboto', sans-serif;
+  }
+
+  

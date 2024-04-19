@@ -1,8 +1,9 @@
 import './App.css';
 
-import TextEditor from './components/CreatePDF/TextEditior';
+import ImageAi from './components/CreatePDF/SupportFiles/ImageAi';
+// import TextEditor from './components/CreatePDF/TextEditior';
 import Layout from './components/Layout';
-import TextEditorDummy from './components/Plagrisim/TextEditiorDummy';
+// import TextEditorDummy from './components/Plagrisim/TextEditiorDummy';
 
 
 function App() {

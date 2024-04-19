@@ -1,6 +1,5 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
-const fs = require('fs');
 const { summaryGenration } = require('./summaryGenration');
 
 const scrapeWebpage = async (req, res) => {

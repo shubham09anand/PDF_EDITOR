@@ -11,7 +11,7 @@ const TextEditiorOptions = ({ controllDisplay, getQuillContent }) => {
      const location = useLocation();
      const [docName, setDocName] = useState("Dummy 20");
 
-     const docId = "b49e04af-714c-4ca8-9ccb-77368c4cc3c6";
+     const docId = location.pathname.split("/");
      const docAdmin = "6608f032efa3e1a31913d0f3";
 
      const [link, setLink] = useState();
@@ -28,7 +28,7 @@ const TextEditiorOptions = ({ controllDisplay, getQuillContent }) => {
           const quillContent = getQuillContent();
           console.log(quillContent);
 
-          saveDoc(docId, docName, docAdmin, quillContent)
+          saveDoc(docId[docId.length - 1], docName, docAdmin, quillContent)
               .then(() => {
                   toast.success("Document saved successfully");
               })

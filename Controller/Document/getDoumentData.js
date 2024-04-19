@@ -1,14 +1,13 @@
 const DocumentSchema = require("../../Models/DocumentModel.js");
 
-const getDocument = async (req, res) => {
-     console.log("get doc");
+const getDocumentData = async (req, res) => {
+     // console.log("get doc");
      try {
           console.log(req.body);
           const docData = req.body;
 
-          const exisitingDoc = await DocumentSchema.find(
-               // { docAdmin: docData.userId },
-               { docID: "b49e04af-714c-4ca8-9ccb-77368c4cc3c6" },
+          const exisitingDoc = await DocumentSchema.findOne(
+               { docAdmin: docData.userId, docID: docData.docID },
           );
 
           if (exisitingDoc) {
@@ -16,13 +15,13 @@ const getDocument = async (req, res) => {
                     success: true,
                     status: 1,
                     doc: exisitingDoc,
-                    message: "Doc Found",
+                    message: "Data Fetched",
                })
           } else {
-               res.status(400).json({
+               res.status(200).json({
                     success: false,
                     status: 0,
-                    message: "Doc does not Exists",
+                    message: "Data Not Found $)$",
                })
           }
 
@@ -36,4 +35,4 @@ const getDocument = async (req, res) => {
      }
 }
 
-module.exports = { getDocument };
+module.exports = { getDocumentData };

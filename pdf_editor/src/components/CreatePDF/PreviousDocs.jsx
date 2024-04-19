@@ -17,7 +17,7 @@ const PreviousDocs = () => {
      const userId = "6608f032efa3e1a31913d0f3";
 
      useEffect(() => {
-          axios.post("http://127.0.0.1:3200/auth/getDocument", { userId: userId }).then((req) => {
+          axios.post("http://127.0.0.1:3200/auth/getDocumentList", { userId: userId }).then((req) => {
                setDoc(req.data.doc);
           }).catch((error) => {
                console.log(error)
@@ -38,7 +38,6 @@ const PreviousDocs = () => {
           }
           else {
                validateLink(docId[docId.length - 1]).then((res) => {
-                    console.log(res.data)
                     if (res.data.status === 0 || res.data.success === false) {
                          toast.error("Invalid Link")
                          return
@@ -87,7 +86,7 @@ const PreviousDocs = () => {
                                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="hidden md:block w-6 h-6">
                                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
                                                                            </svg>
-                                                                           <div className='max-w-32 w-fit sm:max-w-80 text-wrap md:text-base max-h-10 md:max-h-6 truncate px-1'>{file?.docName} Lorem ipsum dolor sit amet. </div>
+                                                                           <div className='max-w-32 w-fit sm:max-w-80 text-wrap md:text-base max-h-10 md:max-h-6 truncate px-1'>{file?.docName}</div>
                                                                       </div>
                                                                       <div className='pl-4 md:hidden bg-gray-200 rounded-3xl w-fit h-fit px-2 py-1 ml-2'>{moment(file.createdAt)?.format('YYYY-MM-DD')}</div>
                                                                  </th>
@@ -102,7 +101,7 @@ const PreviousDocs = () => {
                                                                       </div>
                                                                  </td>
                                                                  <td className="px-6 py-4">
-                                                                      <Link to="/create_doc" className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
+                                                                      <Link to={`/create_doc/document/${file?.docID}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
                                                                            <div className='w-fit h-fit mx-auto cursor-pointer'>
                                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                                                                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
@@ -119,7 +118,7 @@ const PreviousDocs = () => {
 
                                    {
                                         doc.length === 0 && (
-                                             <div className="text-md font-semibold dark:text-white mb-3">No Previous Files</div>
+                                             <div className="text-md w-full text-center pt-10 font-semibold mb-3">No Previous Files</div>
                                         )
                                    }
                               </div>
@@ -147,7 +146,7 @@ const PreviousDocs = () => {
                               <div className='ml-5'>
                                    <div className='w-fit lg:text-lg'>Join A Meeting</div>
                                    <div className='flex place-content-center items-center gap-x-2'>
-                                        <input onChange={(e) => setJoinLink(e.target.value)} value={joinLink} type="text" className="mt-2 w-80 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Enter the link of Document" />
+                                        <input onChange={(e) => setJoinLink(e.target.value)} value={joinLink} type="text" className="mt-2 w-60 lg:w-80 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Enter the link of Document" />
                                         <div onClick={joinDoc} className='bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">
                                                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />

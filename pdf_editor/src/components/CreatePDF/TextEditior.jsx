@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import Quill from 'quill';
 import "quill/dist/quill.snow.css";
+import "../../Style/abc.css";
 import ImageResize from 'quill-image-resize-module-react';
 import { io } from 'socket.io-client';
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import TextEditiorOptions from '../CreatePDF/TextEditiorOptions';
-import { getContent } from './CreatePDFFunction';
+import { getDocumentContent } from './CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const TextEditor = ({ isFocused, controllDisplay }) => {
+
+     const location = useLocation();
 
      // const [supportDisplay, setSupportDisplay] = useState(3);
      const [words, setWords] = useState();
@@ -18,10 +20,29 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
      const [quill, setQuill] = useState(null);
      const [docContent, setDocContent] = useState(null)
      const { id: documentId } = useParams();
+     const [divSize, setDivSize] = useState({ width: 0, height: 0 });
+
+     const handleResize = () => {
+          const element = document.getElementsByClassName('ql-editor')[0]; // Assuming there's only one element with this class
+          if (element) {
+               const { clientWidth, clientHeight } = element;
+               setDivSize({ width: clientWidth, height: clientHeight });
+          }
+     };
+
+
+     useEffect(() => {
+          handleResize();
+          window.addEventListener('resize', handleResize);
+          return () => window.removeEventListener('resize', handleResize);
+     }, []);
+
+     console.log(divSize)
 
      // setSupportDisplay(value);
-
-     const docID = "b49e04af-714c-4ca8-9ccb-77368c4cc3c6";
+     const cuurPath = location.pathname.split("/");
+     const docID = cuurPath[cuurPath.length - 1];
+     const userId = "6608f032efa3e1a31913d0f3"
 
      useEffect(() => {
           const s = io("http://localhost:3001");
@@ -79,7 +100,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
           const toolbarOptions = [
                ['bold', 'italic', 'underline', 'strike'],
                ['blockquote', 'code-block'],
-               ['link', 'image', 'video', 'formula'],
+               ['link', 'image'],
 
                [{ 'header': 1 }, { 'header': 2 }],
                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
@@ -118,7 +139,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                });
           q.enable(true);
           setQuill(q);
-          // q.setText(docContent);
+          q.setText("docContent");
      }, []);
 
      const getQuillContent = () => {
@@ -132,19 +153,16 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
      useEffect(() => {
           if (quill === null || docID === null) return
           if (docContent === null) {
-               getContent(docID)
+               getDocumentContent(docID, userId)
                     .then((res) => {
-                         console.log(res.data.doc[0].docContent)
-                         setDocContent(res.data.doc[0].docContent)
-                         quill.setContents(docContent)
-                         toast.success("Document Fetched Succesfully");
+                         setDocContent(res.data?.doc?.docContent?.ops)
                     })
                     .catch((error) => {
                          console.log(error)
                          toast.error(`Failed To Fetch Data`);
                     });
           }
-     },[quill])
+     }, [quill])
 
      return (
           <>
@@ -168,4 +186,4 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
           </>
      );
 }
-export default TextEditor;
+export default TextEditor; 
