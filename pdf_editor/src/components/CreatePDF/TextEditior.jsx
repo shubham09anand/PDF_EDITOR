@@ -20,24 +20,6 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
      const [quill, setQuill] = useState(null);
      const [docContent, setDocContent] = useState(null)
      const { id: documentId } = useParams();
-     const [divSize, setDivSize] = useState({ width: 0, height: 0 });
-
-     const handleResize = () => {
-          const element = document.getElementsByClassName('ql-editor')[0]; // Assuming there's only one element with this class
-          if (element) {
-               const { clientWidth, clientHeight } = element;
-               setDivSize({ width: clientWidth, height: clientHeight });
-          }
-     };
-
-
-     useEffect(() => {
-          handleResize();
-          window.addEventListener('resize', handleResize);
-          return () => window.removeEventListener('resize', handleResize);
-     }, []);
-
-     console.log(divSize)
 
      // setSupportDisplay(value);
      const cuurPath = location.pathname.split("/");
@@ -125,6 +107,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
           wrapper.append(editor);
 
           Quill.register('modules/imageResize', ImageResize);
+          
           const q = new Quill(
                editor,
                {

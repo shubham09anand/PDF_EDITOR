@@ -27,24 +27,25 @@ const PreviousDocs = () => {
 
      const joinDoc = () => {
           const docId = joinLink.split("/");
-          console.log(docId)
+          // console.log(docId)
           if (joinLink === "" || joinLink === null) {
                toast.info("Enter A Room Link")
                return
           }
           else if (docId.length !== 6) {
-               toast.error("Invalid Link")
+               toast.error("Invalid Link 2")
                return
           }
           else {
+               navigate(`/create_doc/document/${docId[docId.length - 1]}`);
                validateLink(docId[docId.length - 1]).then((res) => {
+                    console.log(res)
                     if (res.data.status === 0 || res.data.success === false) {
                          toast.error("Invalid Link")
                          return
                     }
                })
           }
-          // navigate(`/create_doc/document/${docId[docId.length - 1]}`);
      }
 
      return (
