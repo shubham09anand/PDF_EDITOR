@@ -1,7 +1,7 @@
 const DocumentSchema = require("../../Models/DocumentModel.js");
 
 const updateDocName = async (req, res) => {
-    console.log("update Name");
+    // console.log("update Name");
     try {
         // console.log(req.body.docID);
         const docData = req.body;

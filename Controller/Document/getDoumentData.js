@@ -3,7 +3,7 @@ const DocumentSchema = require("../../Models/DocumentModel.js");
 const getDocumentData = async (req, res) => {
      // console.log("get doc");
      try {
-          console.log(req.body);
+          // console.log(req.body);
           const docData = req.body;
 
           const exisitingDoc = await DocumentSchema.findOne(

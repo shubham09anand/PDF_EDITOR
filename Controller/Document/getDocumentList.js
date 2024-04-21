@@ -1,9 +1,9 @@
 const DocumentSchema = require("../../Models/DocumentModel.js");
 
 const getDocument = async (req, res) => {
-     console.log("get doc");
+     // console.log("get doc");
      try {
-          console.log(req.body);
+          // console.log(req.body);
           const docData = req.body;
 
           const exisitingDoc = await DocumentSchema.find(

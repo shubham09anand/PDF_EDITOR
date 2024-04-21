@@ -7,7 +7,7 @@ const validateLink = async (req, res) => {
           
 
           // Check document exists or not
-          const existingDoc = await DocumentSchema.findOne({ docID: docData.docID });
+          const existingDoc = await DocumentSchema.findOne({ docID: req.body.docId });
 
           if (existingDoc) {
                // Document exists with give id

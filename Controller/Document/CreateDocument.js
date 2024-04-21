@@ -3,6 +3,7 @@ const DocumentSchema = require("../../Models/DocumentModel.js");
 const createDoc = async (req, res) => {
     try {
         const docData = req.body;
+        console.log(docData)
 
         // Check document exists or not
         const existingDoc = await DocumentSchema.findOne({ docID: req.body.docID });

@@ -37,12 +37,14 @@ const PreviousDocs = () => {
                return
           }
           else {
-               navigate(`/create_doc/document/${docId[docId.length - 1]}`);
                validateLink(docId[docId.length - 1]).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     if (res.data.status === 0 || res.data.success === false) {
                          toast.error("Invalid Link")
                          return
+                    }
+                    else{
+                         navigate(`/create_doc/document/${docId[docId.length - 1]}`);
                     }
                })
           }

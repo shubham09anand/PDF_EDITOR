@@ -107,7 +107,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
           wrapper.append(editor);
 
           Quill.register('modules/imageResize', ImageResize);
-          
+
           const q = new Quill(
                editor,
                {
@@ -122,9 +122,9 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                });
           q.enable(true);
           setQuill(q);
-          q.setText("docContent");
+          q.setContents(docContent);   
      }, []);
-
+ 
      const getQuillContent = () => {
           if (!socket || !quill) return null;
 
@@ -134,7 +134,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
      }
 
      useEffect(() => {
-          if (quill === null || docID === null) return
+          if (docID === null) return
           if (docContent === null) {
                getDocumentContent(docID, userId)
                     .then((res) => {
@@ -144,14 +144,16 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                          console.log(error)
                          toast.error(`Failed To Fetch Data`);
                     });
-          }
-     }, [quill])
+               }
+          },[docID])
+          
+          console.log(docContent    );
 
      return (
           <>
                <ToastContainer />
                {/* <div onClick={() => { getQuillContent() }}>get Content</div> */}
-               <div className='p-5 pt-0 w-full h-full'>
+               <div className='px-5 pt-0 w-full h-full'>
                     <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
                </div>
 

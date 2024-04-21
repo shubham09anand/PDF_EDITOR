@@ -1,4 +1,6 @@
 import './App.css';
+import Intro from './components/Account/Intro';
+import Login from './components/Account/Login';
 
 import ContentSupport from './components/CreatePDF/SupportFiles/ContentSupport';
 import ImageAi from './components/CreatePDF/SupportFiles/ImageAi';
