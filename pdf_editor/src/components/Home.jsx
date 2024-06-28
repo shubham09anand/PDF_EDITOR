@@ -7,8 +7,6 @@ import mergFiles from "../Assets/images/pdfIcons/mergFiles.png";
 import splitFiles from "../Assets/images/pdfIcons/splitFiles.avif";
 import uplaodFiles from "../Assets/images/pdfIcons/uplaodFiles.png";
 import oraganisePages from "../Assets/images/pdfIcons/oraganisePages.png";
-import deletePages from "../Assets/images/pdfIcons/deletePages.png";
-import plagrisim from "../Assets/images/pdfIcons/plagrisim.jpeg";
 import image from "../Assets/images/pdfIcons/image.png";
 import pdfOCR from "../Assets/images/pdfIcons/pdfOCR.png";
 import pageNumber from "../Assets/images/pdfIcons/addPageNumber.avif";
@@ -20,7 +18,7 @@ const Home = () => {
      return (
           <section className="text-gray-600 body-font w-full xl:p-2 xl:absolute right-0 h-8 -z-10 mt-0">
                <div className="container py-2 pt- mx-auto w-fit">
-                    <div className="select-none pb-10 flex flex-wrap place-content-center -m-4 gap-y-3 sm:gap-10 lg:gap-5 xl:gap-0 items-center mx-auto w-fit">
+                    <div className="select-none pb-10 flex flex-wrap place-content-center -m-4 gap-y-3 sm:gap-10 lg:gap-5 xl:gap-10 items-center mx-auto w-fit">
                          <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={editFiles} />
@@ -134,8 +132,8 @@ const Home = () => {
                                    </div>
                               </div>
                               <div className="mt-4">
-                                   <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">PDF To Powerpoint</h3>
-                                   <h2 className="text-gray-900 title-font text-lg font-medium">PDF To Powerpoint</h2>
+                                   <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">Evade Plagrisim</h3>
+                                   <h2 className="text-gray-900 title-font text-lg font-medium">Evade Plagrisim</h2>
                               </div>
                          </div>
                          <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">

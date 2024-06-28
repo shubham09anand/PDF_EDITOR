@@ -35,10 +35,10 @@ const AddPageNumber = () => {
                     //getting pdf in pdfDoc
                     const pdfDoc = await PDFDocument.load(fileBuffer);
 
-                    // // Embed the Helvetica font
+                    // Embed the Helvetica font
                     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
 
-                    // // Get the first page of the document
+                    // Get the first page of the document
                     const pages = pdfDoc.getPages()
                     console.log(pages.length)
 

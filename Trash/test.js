@@ -2,7 +2,7 @@ const { createCanvas } = require('canvas');
 const fs = require('fs');
 
 // Set font properties
-const fontSize = 12;
+const fontSize = 60;
 
 const fontFamily = 'Arial';
 const text = 'Hello, world!';

@@ -1,16 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="https://cdn.tailwindcss.com"></script>
      <title>Document</title>
 </head>
+<script>
+
+     // Sample JSON structure
+     const jsonData = 
+     [
+  {
+    "attributes": {
+      "size": "large",
+      "bold": true
+    },
+    "insert": "Alien Planets Might Teem With Purple — Yes, Purple — Life"
+  },
+  {
+    "attributes": {
+      "header": 1
+    },
+    "insert": "\n"
+  }
+]
+;
+
+     // Function to split "insert" into individual words and handle spaces
+     function processInserts(data) {
+          let newData = [];
+          for (let obj of data) {
+               if (obj.hasOwnProperty("insert")) {
+                    if (typeof obj.insert === "string") {
+                         let insertText = obj.insert.toString().trim();
+                         let words = insertText.split(' ');
+                         for (let i = 0; i < words.length; i++) {
+                              let word = words[i];
+                              let newItem = {
+                                   "insert": word
+                              };
+
+                              // Copy attributes if they exist
+                              if (obj.hasOwnProperty("attributes")) {
+                                   newItem.attributes = obj.attributes;
+                              }
+
+                              newData.push(newItem);
+
+                              // Add comma as a separate item with specified attributes if not the last word
+                              if (i < words.length - 1) {
+                                   newData.push({
+                                        "attributes": { "color": "#ffffff" },
+                                        "insert": ","
+                                   });
+                              }
+                         }
+                    } else {
+                         // For image, just push the original object
+                         newData.push(obj);
+                    }
+               }
+               newData.push({
+                    "attributes": { "color": "#ffffff" },
+                    "insert": ","
+               });
+          }
+          return newData;
+     }
+
+     // Call the function with your JSON data
+     const processedData = processInserts(jsonData);
+
+     // Print the modified JSON data
+     console.log(JSON.stringify(processedData, null, 2));
+
+
+</script>
+
 <body>
      <div class="flex">
           <div>hi</div>
-      <img src="./20240214T095146842Z.png" class="border-2 border-black"  alt="">
-      <div>hi</div>
+          <img src="./20240214T095146842Z.png" class="border-2 border-black" alt="">
+          <div>hi</div>
      </div>
 </body>
+
 </html>
