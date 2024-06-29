@@ -7,7 +7,7 @@ import avatar3 from '../../../Assets/images/avatars/avatar-3.jpg';
 import avatar4 from '../../../Assets/images/avatars/avatar-4.jpg';
 import avatar5 from '../../../Assets/images/avatars/avatar-5.jpg';
 
-const VidoeCall = ({setDisplay_1}) => {
+const VidoeCall = () => {
 
      const [displayMessage, setDisplayMessage] = useState(false);
      const [joinedPeople, setJoinedPeople] = useState(true);
@@ -22,8 +22,7 @@ const VidoeCall = ({setDisplay_1}) => {
      }
 
      return (
-          <div className='flex w-screen backdrop-blur-md h-full bg-white'>
-               <div onClick={()=>{setDisplay_1(0)}} className='bg-gray-200 p-1 rounded-md absolute left-10 cursor-pointer z-50'>close</div>
+          <div className='flex w-screen backdrop-blur-md h-full'>
                <div className={`space-y-1 rounded-lg p-2 pt-0 relative transition-all duration-700 ${displayMessage ? 'w-3/4' : 'w-full'}`}>
                     <div className='w-2/3 absolute bg-green-700'></div>
                     <div className='flex place-content-center items-center h-fit bg-gray-200 rounded-lg p-2'>

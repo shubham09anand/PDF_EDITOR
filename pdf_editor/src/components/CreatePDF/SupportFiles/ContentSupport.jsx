@@ -11,7 +11,7 @@ import sunNews from "../../../Assets/images/icons/sunNews.png";
 import GenrateImage from './genrateImage';
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 
-const ContentSupport = ({ setDisplay }) => {
+const ContentSupport = () => {
 
      const [links, setLinks] = useState([]);
      const [itemDisplay, setItemDisplay] = useState(0)
@@ -61,16 +61,11 @@ const ContentSupport = ({ setDisplay }) => {
                })
      }
      return (
-          <div className="p-2 lg:p-5 w-screen flex bg-teal-lightest font-sans mx-auto h-fu backdrop-blur-2xl relative">
+          <div className="p-2 lg:p-5 w-full flex bg-teal-lightest font-sans mx-auto h-fu backdrop-blur-2xl relative">
                <ToastContainer />
                <div className="h-screen m-4 w-full lg:max-w-4xl mx-auto">
                     <div className="mb-4">
                          <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
-                              <div onClick={() => { setDisplay(0) }} className='bg-gray-300 rounded-full w-fit h-fit cursor-pointer'>
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7 p-1">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                   </svg>
-                              </div>
                               <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
                          </div>
                          <div className='heading text-center sm:w-3/5 md:w-3/5 lg:w-1/2 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>

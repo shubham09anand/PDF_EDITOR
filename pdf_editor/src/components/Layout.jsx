@@ -26,7 +26,7 @@ const Layout = () => {
      return (
           <div>
                <Header controllDisplay={controllDisplay}/>
-               <div className='flex w-screen'>
+               <div className=' w-screen'>
                     <Routes>
                          <Route path="/" element={<Home />} />
                          <Route path="/split_pdf" element={<SplitPDF />} />

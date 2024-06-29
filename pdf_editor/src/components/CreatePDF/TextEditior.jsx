@@ -14,14 +14,12 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
 
      const location = useLocation();
 
-     // const [supportDisplay, setSupportDisplay] = useState(3);
      const [words, setWords] = useState();
      const [socket, setSocket] = useState(null);
      const [quill, setQuill] = useState(null);
      const [docContent, setDocContent] = useState(null)
      const { id: documentId } = useParams();
 
-     // setSupportDisplay(value);
      const cuurPath = location.pathname.split("/");
      const docID = cuurPath[cuurPath.length - 1];
      const userId = "6608f032efa3e1a31913d0f3"
@@ -122,9 +120,9 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                });
           q.enable(true);
           setQuill(q);
-          q.setContents(docContent);   
+          q.setContents(docContent);
      }, []);
- 
+
      const getQuillContent = () => {
           if (!socket || !quill) return null;
 
@@ -144,30 +142,22 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                          console.log(error)
                          toast.error(`Failed To Fetch Data`);
                     });
-               }
-          },[docID])
-          
-          console.log(docContent    );
+          }
+     }, [docID])
+
+     console.log(docContent);
 
      return (
           <>
                <ToastContainer />
                {/* <div onClick={() => { getQuillContent() }}>get Content</div> */}
-               <div className='px-5 pt-0 w-full h-full'>
-                    <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
+
+               <div className='flex'>
+                    <TextEditiorOptions controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
+                    <div className='pt-0 w-full h-full'>
+                         <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
+                    </div>
                </div>
-
-               {
-                    isFocused &&
-                    (
-                         <div className='absolute top-24 z-[200] w-full'>
-                              <TextEditiorOptions controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
-                         </div>
-                    )
-               }
-
-               {/* {supportDisplay === 1 ? <VidoeCall setDisplay_1={setDisplay} /> : supportDisplay === 2 ? <ProjectStroage setDisplay={setDisplay} /> : supportDisplay === 3 ? <ImageAi setDisplay={setDisplay} /> : supportDisplay === 4 ? <TextAi setDisplay={setDisplay} /> : supportDisplay === 5 ? <ContentSupport setDisplay={setDisplay} /> : null} */}
-
           </>
      );
 }

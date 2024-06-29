@@ -29,11 +29,6 @@ const ImageAi = ({ setDisplay }) => {
           <div className='p-2 w-full h-screen backdrop-blur-2xl'>
                <ToastContainer />
                <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
-                    <div onClick={() => { setDisplay(0) }} className='bg-gray-300 rounded-full w-fit h-fit cursor-pointer'>
-                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-7 h-7 p-1">
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                         </svg>
-                    </div>
                     <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">AI Text-to-Image Support</div>
                </div>
                <div className='heading text-center w-1/3 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Describe, and we'll visualize! Use text to generate images effortlessly. From your words to vibrant visuals, let our AI bring your ideas to life</div>
