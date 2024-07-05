@@ -1,6 +1,5 @@
 import React from 'react';
 
-import feed from '../Assets/images/icons/home.png';
 import message from '../Assets/images/icons/message.png';
 import event from '../Assets/images/icons/event.png';
 import page from '../Assets/images/icons/page.png';

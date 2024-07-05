@@ -144,8 +144,6 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
      return (
           <>
                <ToastContainer />
-               {/* <div onClick={() => { getQuillContent() }}>get Content</div> */}
-
                <div className='flex'>
                     <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
                     <div className='pt-0 w-[94%] absolute right-0'>

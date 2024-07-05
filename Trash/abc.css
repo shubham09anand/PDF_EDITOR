@@ -1,0 +1,11 @@
+.trapizium {
+     rotate: 90deg;
+     display: inline-block;
+     color: #fcec0c;
+     transform-style: preserve-3d;
+     padding: 20px 70px;
+     border: 1px solid #fcec0c;
+     transform: perspective(200px) rotateX(35deg) translateZ(25px) translateY(5px);
+     transition: all .3s ease-out;
+
+}

@@ -82,6 +82,14 @@
     padding: 20px;
 }
 
+.trapizium {
+    /* display: inline-block; */
+    transform-style: preserve-3d;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transform: perspective(80px) rotateX(35deg) translateZ(55px) translateY(5px);
+}
+
 @media (min-width: 638px) {
     .ql-container {
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
