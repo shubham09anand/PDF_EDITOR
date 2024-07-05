@@ -1,6 +1,12 @@
 const express = require('express');
 const cors = require("cors");
+const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
+
+dotenv.config();
+
+const app = express();
+
 const connectDB = require("./DatabseConnection/connection.js");
 
 const io = require('socket.io')(3001, {
@@ -19,12 +25,9 @@ io.on("connection", socket => {
       socket.broadcast.to(documentId).emit("receive-changes", delta)
     })
   })
-  
-  
 })
 
-const app = express();
-const port = 3200;
+const port =  process.env.PORTS || 8080;
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(cors());

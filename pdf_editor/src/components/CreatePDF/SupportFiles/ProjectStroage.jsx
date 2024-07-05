@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import uploadImage from '../../../Assets/images/icons/uploadImage.webp'
 
 const ProjectStorage = () => {
 
@@ -63,18 +64,13 @@ const ProjectStorage = () => {
      const image = [
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp",
           "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(75).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(70).webp",
      ];
 
      return (
           <div className='mx-auto'>
                <ToastContainer />
                <div className="container py-2 lg:px-32 w-fit backdrop-blur-2xl">
-                    <div className=" my-10 overflow-hidden rounded-sm bg-white shadow-lg sm:max-w-3xl">
+                    <div className=" my-10 overflow-hidden rounded-sm bg-white shadow-lg w-full">
                          <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
                               <div>Upload Files</div>
                               <svg onClick={() => setDisplayUpload(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -83,11 +79,11 @@ const ProjectStorage = () => {
                          </div>
                          <div className={`space-y-4 px-4 transition-all duration-700 ${displayUpload ? "h-0" : "h-96"}`}>
                               <div className='pt-4'>
-                                   <div className={`flex flex-col items-center justify-center rounded-lg h-72 border-gray-900 border-dashed ${fileUploaded.length === 0 ? 'border-dashed' : 'border border-solid'}`}>
+                                   <div style={{backgroundImage: `url(${uploadImage})`}} className={`flex flex-col items-center justify-center rounded-lg h-72 border-gray-900 border-dashed ${fileUploaded.length === 0 ? 'border-dashed' : 'border border-solid'}`}>
                                         {
                                              fileUploaded.length === 0 && (
                                                   <p className="mt-4 text-center text-xl font-medium text-gray-800">
-                                                       <label className="shadow-blue-100 mt-2 block rounded-full border bg-white px-4 py-0.5 font-normal text-blue-500 shadow hover:bg-blue-50">
+                                                       <label className="cursor-pointer shadow-blue-100 mt-2 block rounded-full border bg-white px-4 py-0.5 font-normal text-blue-500 shadow hover:bg-blue-50">
                                                             <input onChange={(e) => handleImageChange(e)} multiple className="hidden" type="file" name="file" id="" />
                                                             browse
                                                        </label>
@@ -100,7 +96,7 @@ const ProjectStorage = () => {
                                                        <svg onClick={imgPrev} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="backdrop-blur-3xl rounded-full absolute left-4 w-8 h-8 p-1 cursor-pointer active:opacity-50">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061A1.125 1.125 0 0 1 21 8.689v8.122ZM11.25 16.811c0 .864-.933 1.406-1.683.977l-7.108-4.061a1.125 1.125 0 0 1 0-1.954l7.108-4.061a1.125 1.125 0 0 1 1.683.977v8.122Z" />
                                                        </svg>
-                                                       <img src={fileUploaded[currImg]} alt="" className='h-full w-full object-scale-down' />
+                                                       <img src={fileUploaded[currImg]} alt="" className='h-full w-96 object-scale-down' />
                                                        <div className='absolute top-5 right-5 rounded-2xl p-2 text-white tracking-widest backdrop-blur-2xl'>{currImg + 1}/{fileUploaded.length}</div>
                                                        <svg onClick={imgNext} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="backdrop-blur-3xl rounded-full absolute right-4 w-8 h-8 p-1 cursor-pointer active:opacity-50">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
@@ -125,8 +121,8 @@ const ProjectStorage = () => {
 
                     {displayUpload && (
                          <>
-                              <div className='font-semibold text-2xl text-gray-800 mb-2'>Previous</div>
-                              <div className={`-m-1 mb-20 w-fit  flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
+                              <div className='font-semibold text-2xl text-gray-800 mb-2 mx-auto'>Previous</div>
+                              <div className={`-m-1 mb-20 w-fit  flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example place-content-center ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
                                    {image.map((url, index) => (
                                         <div key={index} className="flex w-40 h-40 sm:w-48 sm:h-48 md:w-56 lg:w-72 md:h-56 lg:h-60 relative flex-wrap">
                                              <svg onClick={() => handleDownloadImage(url)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20 cursor-pointer">

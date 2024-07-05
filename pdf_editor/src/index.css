@@ -8,6 +8,14 @@
     }
 }
 
+.ql-editor{
+    height: 90%;
+}
+
+.ql-container{
+    height: 20%;
+}
+
 .animate-page {
     animation: pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }

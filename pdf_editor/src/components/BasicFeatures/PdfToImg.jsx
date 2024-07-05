@@ -131,11 +131,11 @@ const PdfToImg = () => {
                          )}
                          {images.length > 0 && (
                               <>
-                                   <div className='py-10 flex flex-wrap gap-5 max-h-[80vh] m-auto mx-auto w-[95%] overflow-y-scroll example mt-10'>
+                                   <div className='flex mx-auto flex-wrap p-2 w-fit place-content-center'>
                                         {images.map((imageUrl, index) => (
-                                             <div key={index} onClick={(e) => handlePageSelection(index, imageUrl, e)} className={`border-2 w-fit h-fit mx-auto rounded-md border-red-500 hover:shadow-xl ${pageDelete.includes(index) ? 'opacity-40' : ''}`}>
-                                                  <div className='mx-auto p-10 pb-2'>
-                                                       <img draggable={true} className={`shadow-[1px_1px_10px_black] rounded-lg h-48 mx-auto cursor-move ${selectedPage.length > 0 ? "w-32" : "w-36 md:w-40"}`} src={imageUrl} alt={`Page ${index + 1}`} />
+                                             <div key={index} onClick={(e) => handlePageSelection(index, imageUrl, e)} className={`m-5 w-fit h-fit ${pageDelete.includes(index) ? 'opacity-40' : ''}`}>
+                                                  <div className='mx-auto pb-2'>
+                                                       <img draggable={true} className={`shadow-[1px_1px_10px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-pointer}`} src={imageUrl} alt={`Page ${index + 1}`} />
                                                        <div className='text-gray-500 text-center text-sm mt-2 font-semibold'>{index + 1}</div>
                                                   </div>
                                              </div>

@@ -31,7 +31,7 @@ const ImageAi = ({ setDisplay }) => {
                <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                     <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">AI Text-to-Image Support</div>
                </div>
-               <div className='heading text-center w-1/3 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Describe, and we'll visualize! Use text to generate images effortlessly. From your words to vibrant visuals, let our AI bring your ideas to life</div>
+               <div className='heading text-center w-4/5 md:w-1/3 mx-auto text-base font-thin text-gray-800 mt-4 mb-4 font-mono'>Describe, and we'll visualize! Use text to generate images effortlessly. From your words to vibrant visuals, let our AI bring your ideas to life</div>
                <div className="mx-auto h-fit rounded-md mt-2 w-full sm:w-10/12 flex flex-col text-gray-800 border border-gray-300 p-4 shadow-lg max-w-2xl">
                     <div className="flex w-full h-fit">
                          <input onChange={(e) => setUserQueery(e.target.value)} value={userQueery} className="title w-full bg-gray-100 border border-gray-300 p-2 mb-4 rounded-md rounded-r-none border-right-0 outline-none" spellCheck="false" placeholder="Describe everything about your image" type="text" />

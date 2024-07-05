@@ -8,6 +8,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { validateLink } from './CreatePDFFunction';
 
+
 const PreviousDocs = () => {
 
      const navigate = useNavigate();
@@ -17,7 +18,7 @@ const PreviousDocs = () => {
      const userId = "6608f032efa3e1a31913d0f3";
 
      useEffect(() => {
-          axios.post("http://127.0.0.1:3200/auth/getDocumentList", { userId: userId }).then((req) => {
+          axios.post("http://127.0.0.1:8080/auth/getDocumentList", { userId: userId }).then((req) => {
                setDoc(req.data.doc);
           }).catch((error) => {
                console.log(error)
@@ -27,7 +28,7 @@ const PreviousDocs = () => {
 
      const joinDoc = () => {
           const docId = joinLink.split("/");
-          // console.log(docId)
+          console.log(docId)
           if (joinLink === "" || joinLink === null) {
                toast.info("Enter A Room Link")
                return
@@ -51,7 +52,9 @@ const PreviousDocs = () => {
      }
 
      return (
+          
           <div className='sm:pl-2 w-full h-fit'>
+               {process.env.server}
                <ToastContainer />
                <div className='w-full space-x-2 px-2 md:space-x-10 flex lg:hidden py-2'>
                     <div onClick={() => setListDisplay(0)} className='shadow-inner rounded-lg w-full border-2 font-semibold text-sm text-center py-2 pl-2 cursor-pointer'>Your Previous Work</div>
@@ -133,7 +136,7 @@ const PreviousDocs = () => {
                               <div className='pl-5 pr-5 sm:w-3/4 md:w-1/2 mx-auto pt-12 lg:hidden'>
                                    <Link to="/create_doc" className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-400 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
                                         <img src={addPdf} alt="" className='w-16 h-16 lg:w-24 lg:h-24' />
-                                        <div className='font-semibold w-fit mx-auto text-center text-lg'>Create A New Document</div>
+                                        <div className='no-underline font-semibold w-fit mx-auto text-center text-lg'>Create A New Document</div>
                                    </Link>
                                    <div className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-400 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
                                         <img src={uploadFile} alt="" className='w-[5rem] h-[5rem] lg:w-[7rem] lg:h-[7rem]' />
@@ -144,13 +147,13 @@ const PreviousDocs = () => {
                     }
 
                     <div className='px-10 w-1/2 mx-auto pt-12 hidden lg:block'>
-                         <div to="/create_doc" className=' px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-300 my-2'>
-                              <img src={addPdf} alt="" className='w-16 h-16 md:w-24 md:h-24' />
-                              <div className='ml-5'>
-                                   <div className='w-fit lg:text-lg'>Join A Meeting</div>
+                         <div to="/create_doc" className='p-2 w-full flex items-center border-b bg-gray-200 my-2'>
+                              <img src={addPdf} alt="" className='w-[70px] h-[70px]'/>
+                              <div className='ml-2'>
+                                   <div className='w-fit'>Join A Meeting</div>
                                    <div className='flex place-content-center items-center gap-x-2'>
-                                        <input onChange={(e) => setJoinLink(e.target.value)} value={joinLink} type="text" className="mt-2 w-60 lg:w-80 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Enter the link of Document" />
-                                        <div onClick={joinDoc} className='bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
+                                        <input onChange={(e) => setJoinLink(e.target.value)} value={joinLink} type="text" className="mt-1 w-60 lg:w-80 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Enter the link of Document" />
+                                        <div onClick={joinDoc} className='cursor-pointer bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
                                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">
                                                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                              </svg>
@@ -158,14 +161,10 @@ const PreviousDocs = () => {
                                    </div>
                               </div>
                          </div>
-                         <Link to="/create_doc" className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-300 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
-                              <img src={addPdf} alt="" className='w-16 h-16 md:w-24 md:h-24' />
-                              <div className='font-semibold w-fit mx-auto text-center lg:text-lg'>Create A New Document</div>
+                         <Link style={{textDecoration:"none"}} to="/create_doc" className='cursor-pointer p-2 w-full flex items-center border-b bg-gray-200 my-2 active:opacity-20 duration-700'>
+                              <img src={addPdf} alt="" className='w-[70px] h-[70px]' />
+                              <div className='w-fit text-2xl pl-3'>Create A New Document</div>
                          </Link>
-                         <div className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-300 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
-                              <img src={uploadFile} alt="" className='w-[5rem] h-[5rem] md:w-[7rem] md:h-[7rem]' />
-                              <div className='font-semibold w-fit mx-auto text-center lg:text-lg'>Upload A Exisiting PDF and Work</div>
-                         </div>
                     </div>
                </div>
           </div>

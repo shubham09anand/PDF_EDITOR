@@ -11,7 +11,7 @@ const ShufflePdf = () => {
   const [status, setStatus] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [images, setImages] = useState([]);
-  const [pageDelete, setPageDelete] = useState([]);
+  const [pageShuffle, setPageShuffle] = useState([]);
   const [blob, setBlog] = useState(null);
 
 
@@ -80,9 +80,9 @@ const ShufflePdf = () => {
   return (
     <div className='w-full'>
       <ToastContainer/>
-      <div className='text-center space-y-3'>
-        <div className='text-5xl font-bold'>Organize PDF</div>
-        <div className='text-2xl font-medium px-4'>Sort, add and delete PDF pages. Drag and drop the page thumbnails and sort them in our PDF organizer.</div>
+      <div className='text-center space-y-3 pt-4'>
+        <div className='text-4xl lg:text-5xl font-bold'>Organize PDF</div>
+        <div className='text-xl lg:text-2xl font-medium px-4'>Sort, add and delete PDF pages. Drag and drop the page thumbnails and sort them in our PDF organizer.</div>
       </div>
 
       {selectedFiles.length === 0 && (
@@ -99,33 +99,32 @@ const ShufflePdf = () => {
           </label>
         </div>
       )}
-
       {status && selectedFiles.length > 0 && images.length === 0 && <LoadingPages />}
 
       {images.length > 0 && (
-        <div className='flex flex-wrap gap-5 h-[90vh] p-2 mx-auto w-[95%] overflow-y-scroll mt-10 mr-5'>
+        <div className='flex mx-auto flex-wrap p-2 w-fit lg:ga place-content-center'>
           {images.map((imageUrl, index) => (
             <div
               key={index}
               draggable={true}
 
-              className={`p-4 border mx-auto w-fit h-fit rounded-md border-red-500 hover:shadow-xl ${pageDelete.includes(index) ? 'opacity-40' : ''}`}
+              className={`p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl ${pageShuffle.includes(index) ? 'opacity-40' : ''}`}
             >
               <div className='w-fit mx-auto'>
-                <img draggable={true} className='shadow-[1px_1px_10px_black] rounded-lg w-28 h-40 sm:w-36 sm:h-48 cursor-move' src={imageUrl} alt={`Page ${index + 1}`} />
-                <div className='text-gray-900 text-center font-thin'>Page {index + 1}</div>
+                <img draggable={true} className='shadow-[1px_1px_4px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-move' src={imageUrl} alt={`Page ${index + 1}`} />
+                <div className='text-center text-sm text-gray-500'>Page {index + 1}</div>
               </div>
             </div>
           ))}
         </div>
       )}
 
-      {pageDelete.length > 0 && (<div className='px-4 py-2 bg-red-600 text-white w-fit h-fit rounded-lg'>Remove pages</div>
-      )}
+      {pageShuffle.length > 0 && (<div className='px-4 py-2 bg-red-600 text-white w-fit h-fit rounded-lg'>Remove pages</div>)}
+
       <div>
         {blob && (
-          <div className='mt-20 mx-auto w-fit items-center text-center place-content-center '>
-            <a href={blob} download={`deleted.pdf`} className='flex place-content-center items-center bg-[#e5322d] w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 rounded-md active:opacity-70 mx-auto'>
+          <div className='mt-20 mx-auto w-fit items-center text-center place-content-center'>
+            <a href={blob} download={`deleted.pdf`} className='flex items-center bg-[#e5322d] w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 rounded-md active:opacity-70 mx-auto'>
               <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
               </svg>

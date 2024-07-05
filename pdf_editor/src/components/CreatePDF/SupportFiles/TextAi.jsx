@@ -29,7 +29,7 @@ const TextAi = () => {
      console.log(aiResponse)
 
      return (
-          <div className='md:p-2 h-screen  backdrop-blur-xl'>
+          <div className='md:p-2 h-screen  backdrop-blur-xl w-full'>
                <ToastContainer />
                <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                     <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">AI Text-to-Text Support</div>

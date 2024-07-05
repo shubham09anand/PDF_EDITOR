@@ -9,7 +9,7 @@ const Header = ({controllDisplay}) => {
 
     return (
         <div>
-            <nav className=" bg-gray-400 h-16 flex place-content-center items-center border-gray-200">
+            <nav className="bg-gray-400 h-16 z-20 flex fixed place-content-center items-center border-gray-200">
                 <div className="flex flex-wrap place-content-center items-center justify-between mx-auto w-screen p-2">
                     <div className="flex items-center space-x-3 rtl:space-x-reverse">
                         <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>

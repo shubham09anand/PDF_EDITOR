@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^13.5.0",
     "@tinymce/tinymce-react": "^4.3.2",
     "axios": "^1.6.8",
+    "dotenv": "^16.4.5",
     "html2canvas": "^1.4.1",
     "image-size": "^1.1.1",
     "moment": "^2.30.1",

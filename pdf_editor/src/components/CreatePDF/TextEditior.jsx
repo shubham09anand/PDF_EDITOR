@@ -5,7 +5,7 @@ import "../../Style/abc.css";
 import ImageResize from 'quill-image-resize-module-react';
 import { io } from 'socket.io-client';
 import { useLocation, useParams } from 'react-router-dom';
-import TextEditiorOptions from '../CreatePDF/TextEditiorOptions';
+import TextEditorDashboard from './TextEditorDashboard';
 import { getDocumentContent } from './CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -81,20 +81,16 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                ['bold', 'italic', 'underline', 'strike'],
                ['blockquote', 'code-block'],
                ['link', 'image'],
-
                [{ 'header': 1 }, { 'header': 2 }],
                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
                [{ 'script': 'sub' }, { 'script': 'super' }],
                [{ 'indent': '-1' }, { 'indent': '+1' }],
                [{ 'direction': 'rtl' }],
-
                [{ 'size': ['small', false, 'large', 'huge'] }],
                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
                [{ 'color': [] }, { 'background': [] }],
                [{ 'font': [] }],
                [{ 'align': [] }],
-
                ['clean']
           ];
 
@@ -125,9 +121,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
 
      const getQuillContent = () => {
           if (!socket || !quill) return null;
-
           const delta = quill.getContents();
-
           return delta;
      }
 
@@ -143,7 +137,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                          toast.error(`Failed To Fetch Data`);
                     });
           }
-     }, [docID])
+     }, [quill])
 
      console.log(docContent);
 
@@ -153,8 +147,8 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
                {/* <div onClick={() => { getQuillContent() }}>get Content</div> */}
 
                <div className='flex'>
-                    <TextEditiorOptions controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
-                    <div className='pt-0 w-full h-full'>
+                    <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
+                    <div className='pt-0 w-[94%] absolute right-0'>
                          <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
                     </div>
                </div>

@@ -3,88 +3,80 @@
 
 <head>
      <meta charset="UTF-8">
-     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <script src="https://cdn.tailwindcss.com"></script>
-     <title>Document</title>
+     <title>PDF.js Parsing Example</title>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
 </head>
-<script>
 
-     // Sample JSON structure
-     const jsonData = 
-     [
-  {
-    "attributes": {
-      "size": "large",
-      "bold": true
-    },
-    "insert": "Alien Planets Might Teem With Purple — Yes, Purple — Life"
-  },
-  {
-    "attributes": {
-      "header": 1
-    },
-    "insert": "\n"
-  }
-]
-;
-
-     // Function to split "insert" into individual words and handle spaces
-     function processInserts(data) {
-          let newData = [];
-          for (let obj of data) {
-               if (obj.hasOwnProperty("insert")) {
-                    if (typeof obj.insert === "string") {
-                         let insertText = obj.insert.toString().trim();
-                         let words = insertText.split(' ');
-                         for (let i = 0; i < words.length; i++) {
-                              let word = words[i];
-                              let newItem = {
-                                   "insert": word
-                              };
-
-                              // Copy attributes if they exist
-                              if (obj.hasOwnProperty("attributes")) {
-                                   newItem.attributes = obj.attributes;
-                              }
-
-                              newData.push(newItem);
-
-                              // Add comma as a separate item with specified attributes if not the last word
-                              if (i < words.length - 1) {
-                                   newData.push({
-                                        "attributes": { "color": "#ffffff" },
-                                        "insert": ","
-                                   });
-                              }
-                         }
-                    } else {
-                         // For image, just push the original object
-                         newData.push(obj);
-                    }
-               }
-               newData.push({
-                    "attributes": { "color": "#ffffff" },
-                    "insert": ","
-               });
-          }
-          return newData;
+<style>
+     .pdf-text {
+          /* white-space: pre-wrap; */
      }
-
-     // Call the function with your JSON data
-     const processedData = processInserts(jsonData);
-
-     // Print the modified JSON data
-     console.log(JSON.stringify(processedData, null, 2));
-
-
-</script>
+</style>
 
 <body>
-     <div class="flex">
-          <div>hi</div>
-          <img src="./20240214T095146842Z.png" class="border-2 border-black" alt="">
-          <div>hi</div>
-     </div>
+
+     <div id="output"></div>
+
 </body>
+<script>
+     document.addEventListener('DOMContentLoaded', () => {
+    const url = 'notes.pdf'; // Replace with the path to your PDF file
+    const outputDiv = document.getElementById('output');
+
+    // Function to extract text and styling from a single page
+    const extractTextWithStylingFromPage = (page) => {
+        return page.getTextContent().then((textContent) => {
+            let previousY, previousX;
+            let text = '';
+            textContent.items.forEach((item) => {
+                const currentY = item.transform[5]; // Y position of the text
+                const currentX = item.transform[4]; // X position of the text
+
+                // Insert a line break if the current Y position is significantly different from the previous Y position
+                if (previousY && Math.abs(previousY - currentY) > 10) {
+                    text += '<br>';
+                }
+                // Insert a space if the current X position is significantly different from the previous X position (indicating a new word)
+                if (previousX && Math.abs(previousX - currentX) > 5) {
+                    text += ' ';
+                }
+
+                const style = `font-size: ${item.transform[0]}px;`; // Approximate font size
+                text += `<span style="${style}">${item.str}</span> `;
+                previousY = currentY;
+                previousX = currentX;
+            });
+            return text;
+        });
+    };
+
+    // Load the PDF document
+    pdfjsLib.getDocument(url).promise.then((pdf) => {
+        const numPages = pdf.numPages;
+        let textPromises = [];
+
+        // Iterate through each page and extract text with styling
+        for (let i = 1; i <= numPages; i++) {
+            textPromises.push(
+                pdf.getPage(i).then(extractTextWithStylingFromPage)
+            );
+        }
+
+        // Process all text extraction promises
+        Promise.all(textPromises).then((texts) => {
+            texts.forEach((text, pageIndex) => {
+                const pageDiv = document.createElement('div');
+                pageDiv.classList.add('pdf-text');
+                pageDiv.innerHTML = `Page ${pageIndex + 1}: <br>${text}`;
+                outputDiv.appendChild(pageDiv);
+            });
+        });
+    }).catch((error) => {
+        console.error('Error loading PDF:', error);
+    });
+});
+
+</script>
 
 </html>

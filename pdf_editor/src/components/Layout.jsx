@@ -24,9 +24,10 @@ const Layout = () => {
      }
 
      return (
-          <div>
+         <>
+           <div>
                <Header controllDisplay={controllDisplay}/>
-               <div className=' w-screen'>
+               <div className='pt-16 w-screen'>
                     <Routes>
                          <Route path="/" element={<Home />} />
                          <Route path="/split_pdf" element={<SplitPDF />} />
@@ -44,6 +45,7 @@ const Layout = () => {
                     </Routes>
                </div>
           </div>
+         </>
      )
 }
 
