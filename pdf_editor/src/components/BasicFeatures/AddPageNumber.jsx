@@ -4,6 +4,9 @@ import { pdfjs } from 'react-pdf';
 import { PDFDocument, StandardFonts, rgb } from 'pdf-lib';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
+import UploadFile from './Components/UploadFile';
+import AboutFeature from './Components/AboutFeature';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -23,6 +26,8 @@ const AddPageNumber = () => {
           console.log(files)
           setSelectedFiles(files);
      };
+
+     console.log(blob)
 
      useEffect(() => {
           if (selectedFiles.length > 0) {
@@ -61,47 +66,28 @@ const AddPageNumber = () => {
                }
                addPageNumber();
           }
-
-
      }, [selectedFiles])
 
-     if (newPdf !== null) {
-          const blobUrl = URL.createObjectURL(new Blob([newPdf]));
-     }
-
-     if (newPdf !== null) {
-          // setBlob("blobUrl");
-     }
+     useEffect(() => {
+          if (newPdf !== null) {
+               const blobUrl = URL.createObjectURL(new Blob([newPdf]));
+               setBlob(blobUrl);
+          }
+     }, [])
 
      return (
-          <div className='w-full'>
+          <div className='w-full pt-4'>
                <ToastContainer />
-               <div className='text-center space-y-3'>
-                    <div className='text-5xl font-bold text-[#33333b]'>Add PDF page numbers</div>
-                    <div className='text-2xl font-semibold'>Add page numbers into PDFs with ease. Choose your positions, dimensions, typography.</div>
-               </div>
-
-
+               
+               <AboutFeature featureHeading={'Add PDF Page Numbers'} featureDescription={'Add page numbers into PDFs with ease. Choose your positions, dimensions, typography.'}/>
+              
                {selectedFiles.length === 0 &&
-                    <div className="mt-10 mx-auto flex items-center justify-center w-1/3 bg-[#e5322d] rounded-lg cursor-pointer">
-                         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-40 rounded-lg cursor-pointer">
-                              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                   </svg>
-                                   <p className="mb-2 text-4xl text-white"><span className="font-semibold">Click to upload Pdf</span></p>
-                                   <p className="text-base text-white">Uplaod Your Pdfs</p>
-                              </div>
-                              <input accept=".pdf" id="dropzone-file" type="file" className="hidden" onChange={handleFileChange} />
-                         </label>
-                    </div>
+                    <UploadFile handleFileChange={handleFileChange} multiple={false} />
                }
-
-
 
                {selectedFiles.length > 0 &&
                     <div>
-                         <div className='gapy-y-10 space-y-3 w-1/2 mx-auto flex-wrap p-5 mt-10 bg-[#f5f5fa] rounded-xl border'>
+                         <div className='gapy-y-10 space-y-3 w-full lg:w-1/2 mx-auto flex-wrap p-3 mt-10 bg-[#f5f5fa] rounded-xl border'>
                               <div className='w-fit mx-auto text-center font-semibold text-lg'>Selected Pdf</div>
                               <div className="cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg overflow-hidden w-80 h-12 flex place-content-center items-center">
                                    <div className="flex space-x-4 h-full w-full">
@@ -119,19 +105,9 @@ const AddPageNumber = () => {
                     </div>
                }
 
-
                {blob !== null &&
-                    <div>
-                         <div className='mt-20 mx-auto w-fit items-center text-center place-content-center '>
-                              <a style={{ textDecoration: "none" }} href={blob} download={`hello.pdf`} className='flex place-content-center items-center bg-[#e5322d] w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 rounded-md active:opacity-70 mx-auto'>
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                   </svg>
-                                   <div className='no-underline'>Download File</div>
-                              </a>
-                         </div>
-                    </div>}
-
+                    <DownLoadEditedPDF blob={blob} />
+               }
           </div>
      )
 }
