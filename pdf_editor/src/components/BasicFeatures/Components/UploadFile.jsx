@@ -2,7 +2,7 @@ import React from 'react'
 
 const UploadFile = ({ handleFileChange, multiple }) => {
      return (
-          <div className='mx-auto mt-5 bg-gradient-to-tr relative from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-xl h-fit w-fit'>
+          <div className='mx-auto mt-5 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-xl h-fit w-fit'>
                <label htmlFor="dropzone-file" className="flex place-content-center items-center text-white w-fit h-fit min-h-[80px] min-w-[330px] space-x-5 justify-center rounded-lg cursor-pointer">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-8" viewBox="0 0 16 16">
                          <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />

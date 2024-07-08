@@ -26,7 +26,9 @@ const DeletePages = () => {
           setSelectedFiles(files);
      };
 
-     console.log(pageDelete)
+     useEffect(()=>{
+          document.title = "Delete Pages";
+     })
 
      useEffect(() => {
           handleConversion();
@@ -85,12 +87,10 @@ const DeletePages = () => {
           const index = pageDelete.indexOf(pageIndex);
           if (index === -1) {
                setPageDelete([...pageDelete, pageIndex]);
-               console.log(pageDelete)
           } else {
                const updatedPageDelete = [...pageDelete];
                updatedPageDelete.splice(index, 1);
                setPageDelete(updatedPageDelete);
-               console.log(pageDelete)
           }
      };
 
@@ -126,7 +126,6 @@ const DeletePages = () => {
 
                          // get total page count in pdf 
                          const pageNum = scanPdf.getPageCount();
-                         console.log(pageNum)
 
                          for (let index = 0; index < pageNum - 1; index++) {
                               const condition = pageDelete.indexOf(index);
@@ -157,6 +156,10 @@ const DeletePages = () => {
           }
      }, [])
 
+     pageDelete.forEach((e)=>{
+          console.log(e);     
+     })
+
      return (
           <div className='p-2 w-full'>
                <ToastContainer />
@@ -182,8 +185,7 @@ const DeletePages = () => {
                     </div>
                }
 
-               {!blob && pageDelete.length > 0 && (<div onClick={removePages} className='px-4 py-2 select-none text-xl md:text-4xl bg-red-600 text-white w-fit h-fit rounded-lg mx-auto mt-5'>Remove pages</div>
-               )}
+               {!blob && pageDelete.length > 0 && (<div onClick={removePages} className='px-4 py-2 select-none text-xl md:text-4xl bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white w-fit h-fit rounded-lg mx-auto mt-5'>Remove pages</div>)}
                <div>
                     {blob && (
                          <DownLoadEditedPDF blob={blob} />

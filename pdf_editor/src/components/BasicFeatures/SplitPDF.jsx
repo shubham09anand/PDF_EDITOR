@@ -1,272 +1,249 @@
-import React, { useState, useEffect } from 'react';
-import { PDFDocument } from 'pdf-lib';
-import { ToastContainer, toast } from 'react-toastify';
+import React, { useEffect, useState } from 'react';
+import { PDFDocument } from 'pdf-lib'
 import 'react-toastify/dist/ReactToastify.css';
+import UploadFile from './Components/UploadFile';
+import AboutFeature from './Components/AboutFeature';
+import { ToastContainer, toast } from 'react-toastify';
 
 const SplitPDF = () => {
 
-     const [files, setFiles] = useState(null);
-     const [loading, setLoading] = useState(false);
-     const [blobs, setBlobs] = useState([]);
-     const [totalSplit, setTotalSplit] = useState(1);
-     const [maxPage, setMaxPage] = useState("");
-     const [splitRanges, setSplitRanges] = useState([]);
-     const [warning, setWarning] = useState(false);
+     const [uploadedPdf, setUploadedPdf] = useState(null)
+     const [pdfTotalPage, setpdfTotalPage] = useState();
+     const [pdfSplitCount, setPdfSplitCount] = useState(1);
+     const [blob, setBlob] = useState([]);
+     const [pageRanges, setPageRanges] = useState([['', '']]);
 
+     // uploading file function
      const handleFileChange = (e) => {
-          const fileList = Array.from(e.target.files);
-          for (const file of fileList) {
-               if (file.type !== 'application/pdf') {
-                    toast.error("Only PDF are allowed")
-                    return;
-               }
+          const file = e.target.files[0];
+          if (file.type !== 'application/pdf') {
+               toast.error("Only PDF Files are allowed");
+               return
           }
-          setFiles(fileList);
-          setWarning(false);
-     };
-
-     useEffect(() => {
-          if (files !== null) {
-               getTotalPage();
+          else {
+               setUploadedPdf(file);
           }
-     }, [files]);
-
-     const getTotalPage = async () => {
-          const fileBuffer = await files[0].arrayBuffer();
-          const scanPdf = await PDFDocument.load(fileBuffer);
-          setMaxPage(scanPdf.getPageCount());
      }
 
+     // setting max and min split of pdf
      useEffect(() => {
-          if (files !== null) {
-               setMaxPage();
+          if (pdfSplitCount > 10) {
+               setPdfSplitCount(10);
           }
-     }, [files]);
-
-     useEffect(() => {
-          if (totalSplit > 10) {
-               setTotalSplit(10);
-          } else if (totalSplit <= 0) {
-               setTotalSplit(1);
+          if (pdfSplitCount < 1) {
+               setPdfSplitCount(1);
           }
-     }, [totalSplit]);
+     }, [pdfSplitCount]);
 
-     const mergePDF = async () => {
-          if (files === null) {
-               alert("Please select at least one PDF file.");
-               return;
-          }
 
-          for (const range of splitRanges) {
-               const splitStart = range.start;
-               const splitEnd = range.end;
-
-               if (splitStart < 1 || splitStart > maxPage || splitEnd < splitStart || splitEnd > maxPage || splitEnd === null || splitStart === null || isNaN(splitStart) || isNaN(splitEnd)) {
-                    setWarning(true)
-                    setLoading(false);
-                    return;
+     //get pdf Total Page count
+     const handlePageCount = async () => {
+          if (uploadedPdf !== null) {
+               try {
+                    const pdfBuffer = await uploadedPdf.arrayBuffer();
+                    const orgFile = await PDFDocument.load(pdfBuffer);
+                    const numPages = orgFile.getPageCount();
+                    setpdfTotalPage(numPages);
+               } catch (error) {
+                    console.log(error)
                }
           }
+     }
+     useEffect(() => {
+          handlePageCount()
+     }, [uploadedPdf, pdfTotalPage])
 
-          setLoading(true);
+     // spliting pdf
+     const handleSplitPDF = async () => {
+          const pdfBuffer = await uploadedPdf.arrayBuffer();
+          const orgFile = await PDFDocument.load(pdfBuffer);
+          const numPages = orgFile.getPageCount();
+          setpdfTotalPage(numPages);
           const blobsArray = [];
-
-          try {
-               const fileBuffer = await files[0].arrayBuffer();
-               const scanPdf = await PDFDocument.load(fileBuffer);
-
-               for (const item of splitRanges) {
-                    const pdfDoc = await PDFDocument.create();
-
-                    for (let index = item.start; index < item.end + 1; index++) {
-                         const copiedPages = await pdfDoc.copyPages(scanPdf, [index]);
-                         copiedPages.forEach((page) => {
-                              pdfDoc.addPage(page);
-                         });
+          var isValueValid = true;
+     
+          // Check the validity of page ranges
+          for (const e of pageRanges) {
+               if (e[0] > e[1]) {
+                    isValueValid = false;
+                    toast.error("Start page must be less than end page.");
+                    return;
+               } else {
+                    for (const i of e) {
+                         if (i.trim() === "") {
+                              toast.error("Fill All of the values");
+                              isValueValid = false;
+                              return; 
+                         }
+                         else if (i <= 0 || isNaN(i)) {
+                              toast.error("Start page value should Be 1 or greater than 1");
+                              isValueValid = false;
+                              return;
+                         }
+                         else if (i > numPages) {
+                              toast.error("End Page value can not exceed the PDF Total Page Value");
+                              isValueValid = false;
+                              return;                    
+                         }
                     }
-
-                    const splitedPdf = await pdfDoc.save();
-                    const blobUrl = URL.createObjectURL(new Blob([splitedPdf]));
-                    blobsArray.push(blobUrl);
                }
-
-               setBlobs(blobsArray);
-          } catch (error) {
-               console.error('Error splitting PDFs:', error);
-               alert('Error splitting PDFs. Please try again.');
-          } finally {
-               setLoading(false);
           }
+     
+          // Proceed with splitting PDF if values are valid
+          if (isValueValid) {
+               try {
+                    for (const e of pageRanges) {
+                         const pdfDoc = await PDFDocument.create();
+                         for (let i = e[0] - 1; i < e[1]; i++) {
+                              const [firstDonorPage] = await pdfDoc.copyPages(orgFile, [i]);
+                              // Insert the individual pages in the new PDF
+                              pdfDoc.addPage(firstDonorPage);
+                         }
+                         const pdf = await pdfDoc.save();
+                         const blobUrl = URL.createObjectURL(new Blob([pdf]));
+                         blobsArray.push(blobUrl);
+                    }
+                    setBlob(blobsArray);
+               } catch (error) {
+                    alert("Error");
+               }
+          }
+     };     
+
+     const handleSplitRangeChange = (index, startOrEnd, value) => {
+          const newPageRanges = [...pageRanges];
+          newPageRanges[index][startOrEnd] = value;
+          setPageRanges(newPageRanges);
      };
 
-     const handleSplitRangeChange = (index, start, end) => {
-          const updatedRanges = [...splitRanges];
-          updatedRanges[index] = { start, end };
-          setSplitRanges(updatedRanges);
+     const handlepdfSplitCountChange = (e) => {
+          let count = parseInt(e.target.value, 10);
+          if (count < 1) {
+               count = 1;
+          }
+          setPdfSplitCount(count);
+          setPageRanges(Array.from({ length: count }, (_, i) => pageRanges[i] || ['', '']));
      };
 
-     useEffect(() => {
-          if (totalSplit < splitRanges.length) {
-               setSplitRanges(splitRanges.slice(0, totalSplit));
-          } else if (totalSplit > splitRanges.length) {
-               const newRanges = [...splitRanges];
-               for (let i = splitRanges.length; i < totalSplit; i++) {
-                    newRanges.push({ start: '', end: '' });
-               }
-               setSplitRanges(newRanges);
-          }
-     }, [totalSplit]);
-
-
+     const handleRestartProcess = () => {
+          setUploadedPdf(null);
+          setPdfSplitCount(1);
+          setpdfTotalPage();
+          setBlob([]);
+          setPageRanges([['', '']]);
+     }
 
      return (
           <div className='w-full'>
-               <ToastContainer/>
-               <div className='text-center space-y-3'>
-                    <div className='text-5xl font-bold'>Split PDF files</div>
-                    <div className='text-2xl font-semibold'>Split PDFs Into Multiple Fragments</div>
-               </div>
+               <ToastContainer />
 
-               {files === null && (
-                    <div className="mt-10 mx-auto flex items-center justify-center w-1/3 bg-[#e5322d] rounded-lg cursor-pointer">
-                         <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-40 rounded-lg cursor-pointer">
-                              <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                   </svg>
-                                   <p className="mb-2 text-4xl text-white"><span className="font-semibold">Click to upload Pdf</span></p>
-                                   <p className="text-base text-white">Uplaod Your Pdf</p>
-                              </div>
-                              <input id="dropzone-file" accept=".pdf" type="file" className="hidden" onChange={handleFileChange} />
-                         </label>
-                    </div>
-               )}
+               <AboutFeature featureHeading={'Split PDF Files'} featureDescription={'Split PDFs Into Multiple Fragments. Get a new file without your deleted pages from your original File.'} />
 
+               {uploadedPdf === null && (<UploadFile handleFileChange={handleFileChange} multiple={false} />)}
 
-               {files !== null && blobs.length === 0 && (
-                    <div>
-                         <div className='select-none gap-y-10 space-y-3 w-3/4 mx-auto flex-wrap p-5 mt-10 bg-[#f5f5fa] rounded-xl border'>
-
-
-                              <div className="cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg overflow-hidden w-80 h-12 flex place-content-center items-center">
-                                   <div className="flex space-x-4 h-full w-full">
-                                        <div className='bg-white border-r-2 border-black px-3 h-full my-auto flex place-content-center items-center'>
-                                             <svg xmlns="http://www.w3.org/2000/svg" fill="#eaeaea" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-8 h-8">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                             </svg>
-                                        </div>
-                                        <div className='flex place-content-center items-center pr-4'>
-                                             <div className="text-sm font-semibold text-center">{files[0].name}</div>
-                                        </div>
-                                   </div>
-                              </div>
-                              <div className='text-sm text-center text-black font-semibold'>Toatal Number of page in PDF {maxPage}</div>
-
-                              <div>
-                                   <div className="max-w-sm mx-auto">
-                                        <label htmlFor="number-input" className="block mb-2 text-sm text-gray-900 dark:text-white font-semibold">Split PDF into</label>
-                                        <input onChange={(e) => setTotalSplit(e.target.value)} value={totalSplit} type="number" id="number-input" aria-describedby="helper-text-explanation" className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="2" required />
-
-                                        {totalSplit === 10 && (
-                                             <div className='flex space-x-5 mt-1'>
-                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth=".9" stroke="#e5322d" className="w-4 h-4">
-                                                       <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+               {
+                    uploadedPdf !== null && blob.length === 0 && (
+                         <div>
+                              <div className='select-none gap-y-10 space-y-3 w-full xl:w-3/5 mx-auto flex-wrap px-0 py-5 sm:py-5 mt-10 bg-[#f5f5fa] rounded-xl border'>
+                                   <div className="cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg overflow-hidden w-80 h-12 flex place-content-center items-center">
+                                        <div className="flex space-x-4 h-full w-full">
+                                             <div className='bg-white border-r-2 border-black px-3 h-full my-auto flex place-content-center items-center'>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-8" viewBox="0 0 16 16">
+                                                       <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                                       <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
                                                   </svg>
-                                                  <div className='text-red-600 font-extralight text-xs skew-x-12 italic'>maxiamum 10 splits are allowed</div>
                                              </div>
-
-                                        )}
+                                             <div className='flex place-content-center items-center pr-4'>
+                                                  <div className="text-sm font-semibold text-center">{uploadedPdf?.name}</div>
+                                             </div>
+                                        </div>
                                    </div>
-
-                                   {Array.from({ length: totalSplit }, (_, index) => (
-                                        <div key={index} className="flex justify-between place-content-center items-center mt-5">
-                                             <div className='relative'>
-                                                  <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-2">Splitted Pdf</label>
-                                                  <div className="my-auto h-fit mt-5 py-2 relative cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg w-80 flex flex-col place-content-center items-center">
-                                                       <div className='rounded-full text-center flex place-content-center items-center w-5 h-5 bg-red-700 text-white absolute z-10 -top-2 -left-2 text-sm animate-bounce animateulse'>{index + 1}</div>
-                                                       <div className="flex space-x-4 h-full w-full">
-                                                            <div className="bg-white border-r-2 border-black px-3 h-full my-auto flex place-content-center items-center">
-                                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="#eaeaea" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="w-8 h-8">
-                                                                      <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                                                 </svg>
+                                   <div className='text-sm text-center text-black font-semibold'>Total Number of page in PDF {pdfTotalPage}</div>
+                                   <div>
+                                        <div className="max-w-80 mb-4 mx-auto">
+                                             <label htmlFor="number-input" className="block mb-2 text-sm text-gray-900 dark:text-white font-semibold">Split PDF into</label>
+                                             <input
+                                                  onChange={handlepdfSplitCountChange}
+                                                  value={pdfSplitCount}
+                                                  type="number"
+                                                  id="number-input"
+                                                  aria-describedby="helper-text-explanation"
+                                                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg outline-none font-semibold block w-full p-2.5"
+                                                  placeholder="2"
+                                                  required
+                                             />
+                                        </div>
+                                        {Array.from({ length: pdfSplitCount }, (_, index) => (
+                                             <div key={index} className='overflow-x-scroll example'>
+                                                  <div key={index} className="mx-auto w-fit mt-3 px-3 space-x-9 lg:space-x-16 flex items-center">
+                                                       <div className='relative'>
+                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Splitted Pdf</label>
+                                                            <div className="my-auto h-fit mt-5 py-2 relative cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg w-80 flex flex-col place-content-center items-center">
+                                                                 <div className='text-xs rounded-full text-center flex place-content-center items-center w-4 h-4 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white absolute z-10 -top-2 -left-2 animate-bounce'>{index + 1}</div>
+                                                                 <div className="flex space-x-4 h-full w-full">
+                                                                      <div className="bg-white border-r-2 border-black px-3 h-full my-auto flex place-content-center items-center">
+                                                                           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-6" viewBox="0 0 16 16">
+                                                                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                                                                <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
+                                                                           </svg>
+                                                                      </div>
+                                                                      <div className='flex place-content-center items-center pr-4'>
+                                                                           <div className="text-sm truncate font-semibold text- max-w-48 overflow-x-scroll">{uploadedPdf?.name && uploadedPdf.name.replace(/\.pdf$/, '') + `_${index + 1}.pdf`}</div>
+                                                                      </div>
+                                                                 </div>
                                                             </div>
-                                                            <div className="flex place-content-center items-center pr-4">
-                                                                 <div className="text-sm font-semibold text-center">{files[0].name.split('.').slice(0, -1).join('.')}{"-split-"}{index + 1}{".pdf"}</div>
-                                                            </div>
+                                                       </div>
+                                                       <div>
+                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Start Page</label>
+                                                            <input max={pdfSplitCount} min={0} onChange={(e) => handleSplitRangeChange(index, 0, e.target.value)} value={pageRanges[index][0]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="1" required />
+                                                       </div>
+                                                       <div>
+                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">End Page</label>
+                                                            <input max={pdfSplitCount} min={0} onChange={(e) => handleSplitRangeChange(index, 1, e.target.value)} value={pageRanges[index][1]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="2" required />
                                                        </div>
                                                   </div>
                                              </div>
-                                             <div className="max-w-sm mx-auto">
-                                                  <label className="block text-sm text-gray-900 dark:text-white font-semibold mb-2">Split From <span className='text-xs italic text-gray-800'>(enter page number)</span></label>
-                                                  <input
-                                                       type="number"
-                                                       value={splitRanges[index]?.start || ''}
-                                                       onChange={(e) => handleSplitRangeChange(index, e.target.value, splitRanges[index]?.end || '')}
-                                                       aria-describedby="helper-text-explanation"
-                                                       className="h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg outline-none font-semibold block w-full p-2.5"
-                                                       placeholder="2"
-                                                       required
-                                                  />
-                                             </div>
-                                             <div className="max-w-sm mx-auto">
-                                                  <label className="block text-sm text-gray-900 dark:text-white font-semibold mb-2">Split Upto <span className='text-xs italic text-gray-800'>(enter page number)</span></label>
-                                                  <input
-                                                       type="number"
-                                                       value={splitRanges[index]?.end || ''}
-                                                       onChange={(e) => handleSplitRangeChange(index, splitRanges[index]?.start || '', e.target.value)}
-                                                       aria-describedby="helper-text-explanation"
-                                                       className="h-12 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg outline-none font-semibold block w-full p-2.5"
-                                                       placeholder="2"
-                                                       required
-                                                  />
-                                             </div>
-                                        </div>
-                                   ))}
+                                        ))}
+                                   </div>
+                                   <div onClick={handleSplitPDF} className='select-none bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] mx-auto w-fit h-fit px-4 py-2 rounded-xl text-lg uppercase font-semibold text-white tracking-wide cursor-pointer active:opacity-80 mt-5'>split</div>
                               </div>
-                              {warning && (
-                                   <div className='mx-auto space-y-1 w-full h-fit my-2'>
-                                        <div className='flex flex-col mx-auto place-content-center items-center'>
-                                             {splitRanges.splice(0, 1).map((range, index) => (
-                                                  <React.Fragment key={index}>
-                                                       {(isNaN(range.start) || isNaN(range.end) || range.start === null || range.end === null || range.start === "" || range.end === "" || range.start < 1 || range.start > maxPage || range.end < range.start || range.end > maxPage) && (
-                                                            <>
-                                                                 <div className='text-sm text-red-700 font-light mx-auto w-fit mb-5'>Splitting of your PDF failed. Possible reasons:</div>
-                                                                 <div className='text-sm text-red-700 font-light'><span className='text-sm text-red-700 italic font-bold'>Split upto</span> or <span className='text-sm text-red-700 italic font-bold'>Split From</span> values could be more than the total number of pages</div>
-                                                                 <div className='text-sm text-red-700 font-light'><span className='text-sm text-red-700 italic font-bold'>Split upto</span> or <span className='text-sm text-red-700 italic font-bold'>Split From</span> values could be less than or equal to 0 or not a number</div>
-                                                                 <div className='text-sm text-red-700 font-light'><span className='text-sm text-red-700 italic font-bold'>Split From</span> value could be more than <span className='text-sm text-red-700 italic font-bold'>Split upto</span> value</div>
-                                                                 <div className='text-sm text-red-700 font-light uppercase text-center pt-5'>Make sure that any of the above conditions are not true and try again</div>
-                                                            </>
-                                                       )}
-                                                  </React.Fragment>
-                                             ))}
-                                        </div>
-                                   </div>
-                              )}
-
                          </div>
-                         <div className='bg-[#e5322d] cursor-pointer w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 rounded-md active:opacity-70 mx-auto' onClick={mergePDF} disabled={loading}>{loading ? 'Spliting...' : 'Split PDFs'}</div>
-                    </div>
-               )};
-
-               <div>
-                    {blobs.length > 0 && (
-                         <div className='flex space-x-5 mx-auto flex-wrap w-fit'>
-                              {blobs.map((url, index) => (
-                                   <div key={index} className='mt-10 w-fit items-center text-center place-content-center '>
-                                        <a key={index} href={url} download={`Splitted-${index + 1}.pdf`} className='active:opacity-50 flex place-content-center items-center bg-[#e5322d] w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 rounded-md mx-auto'>
-                                             <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                             </svg>
-                                             <div>{`Splitted-${index + 1}.pdf`}</div>
-                                        </a>
+                    )
+               }
+               {
+                    blob.length > 0 &&
+                    (
+                         <div>
+                              <div className='w-fit mx-auto flex flex-col place-content-center items-center'>
+                                   <div className='text-2xl mt-10 uppercase font-semibold tracking-widest mb-4'>Download Splitted Pdf</div>
+                                   <div className='flex flex-wrap w-full place-content-center'>
+                                        {Array.from({ length: blob.length }, (_, index) => (
+                                             <div key={index} className='bg-gray-100 border-2 mx-4 my-3 sm:my-4 border-gray-300 px-2 space-x-5 flex place-content-center items-center rounded-md w-fit h-fit'>
+                                                  <div className='flex space-x-3 place-content-center items-center'>
+                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-8" viewBox="0 0 16 16">
+                                                            <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                                            <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
+                                                       </svg>
+                                                       <div className='pl-2 mx-auto w-60 truncate h-fit py-2 rounded-md text-xl uppercase font-semibold tracking-wide cursor-pointer active:opacity-80 '> {uploadedPdf?.name && `${index + 1}_${uploadedPdf.name.replace(/\.pdf$/, '')}` + `.pdf`}</div>
+                                                  </div>
+                                                  <a href={blob[index]} download={uploadedPdf?.name.replace(/\.pdf$/, '') + `_${index + 1}.pdf`} className='bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] h-full rounded-full'>
+                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="size-6 p-1">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                       </svg>
+                                                  </a>
+                                             </div>
+                                        ))}
                                    </div>
-                              ))}
+                              </div>
+                              <div onClick={handleRestartProcess} className='select-none mt-10 mx-auto cursor-pointer active:opacity-55 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] px-4 py-1 rounded-md uppercase text-white w-fit h-fit'>Restart</div>
                          </div>
-                    )}
-               </div>
+
+                    )
+               }
+
 
           </div>
-     )
-}
+     );
+};
 
-export default SplitPDF
+export default SplitPDF;

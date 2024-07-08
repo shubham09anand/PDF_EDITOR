@@ -3,7 +3,7 @@ import { pdfjs } from 'react-pdf';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-const UploadPdf = () => {
+const PdfPreview = () => {
 
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [images, setImages] = useState([]);
@@ -79,4 +79,4 @@ const UploadPdf = () => {
   );
 };
 
-export default UploadPdf;
+export default PdfPreview;

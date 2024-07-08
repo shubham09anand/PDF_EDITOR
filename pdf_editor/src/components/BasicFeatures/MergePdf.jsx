@@ -4,6 +4,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import UploadFile from './Components/UploadFile';
 import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
+import AboutFeature from './Components/AboutFeature';
 
 const AddPageNumber = () => {
   const [files, setFiles] = useState([]);
@@ -42,10 +43,6 @@ const AddPageNumber = () => {
           //scanning each pdf
           const scanPdf = await PDFDocument.load(fileBuffer);
 
-          // get total page count in pdf 
-          // const pageNum = scanPdf.getPageCount();
-          // console.log(pageNum)
-
           const copiedPages = await pdfDoc.copyPages(scanPdf, scanPdf.getPageIndices());
           copiedPages.forEach((page) => {
             //adding pages of pdf in null pdf
@@ -74,12 +71,8 @@ const AddPageNumber = () => {
   return (
     <div className='w-full select-none'>
       <ToastContainer />
-      <div className='text-center space-y-3'>
-        <div className="text-center mb-10">
-          <h1 className="sm:text-5xl text-4xl font-semibold text-center title-font text-gray-900 mb-2">Merge PDF files</h1>
-          <p className="text-lg leading-relaxed xl:w-2/4 lg:w-3/4 mx-auto">Combine PDFs in the order you want with the easiest PDF merger available.</p>
-        </div>
-      </div>
+
+      <AboutFeature featureHeading={'Merge PDF Files'} featureDescription={"Combine PDF's in the order you want with the easiest PDF merger available."}/>
 
       {files.length === 0 && (
         <UploadFile handleFileChange={handleFileChange} multiple={true} />
