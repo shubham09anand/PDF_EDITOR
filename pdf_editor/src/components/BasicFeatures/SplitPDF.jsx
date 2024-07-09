@@ -12,6 +12,7 @@ const SplitPDF = () => {
      const [pdfSplitCount, setPdfSplitCount] = useState(1);
      const [blob, setBlob] = useState([]);
      const [pageRanges, setPageRanges] = useState([['', '']]);
+     const [warning, setWraning] = useState([]);
 
      // uploading file function
      const handleFileChange = (e) => {
@@ -55,41 +56,43 @@ const SplitPDF = () => {
 
      // spliting pdf
      const handleSplitPDF = async () => {
+
           const pdfBuffer = await uploadedPdf.arrayBuffer();
           const orgFile = await PDFDocument.load(pdfBuffer);
           const numPages = orgFile.getPageCount();
           setpdfTotalPage(numPages);
           const blobsArray = [];
           var isValueValid = true;
-     
-          // Check the validity of page ranges
-          for (const e of pageRanges) {
+          var waringArray = [];
+
+          // Check the page number values
+          pageRanges.forEach((e, index) => {
                if (e[0] > e[1]) {
+                    // console.log(index)
                     isValueValid = false;
-                    toast.error("Start page must be less than end page.");
+                    waringArray.push(index)
                     return;
                } else {
-                    for (const i of e) {
+                    e.forEach((i) => {
+                         console.log(index)
                          if (i.trim() === "") {
-                              toast.error("Fill All of the values");
                               isValueValid = false;
-                              return; 
-                         }
-                         else if (i <= 0 || isNaN(i)) {
-                              toast.error("Start page value should Be 1 or greater than 1");
-                              isValueValid = false;
+                              waringArray.push(index)
                               return;
                          }
-                         else if (i > numPages) {
-                              toast.error("End Page value can not exceed the PDF Total Page Value");
+                         else if (i <= 0 || isNaN(i) || i > numPages) {
                               isValueValid = false;
-                              return;                    
+                              waringArray.push(index)
+                              return;
                          }
-                    }
+                    })
+
                }
-          }
-     
-          // Proceed with splitting PDF if values are valid
+               setWraning(waringArray)
+          })
+
+
+          // if page number values are correct then split pdf
           if (isValueValid) {
                try {
                     for (const e of pageRanges) {
@@ -108,7 +111,7 @@ const SplitPDF = () => {
                     alert("Error");
                }
           }
-     };     
+     };
 
      const handleSplitRangeChange = (index, startOrEnd, value) => {
           const newPageRanges = [...pageRanges];
@@ -125,6 +128,7 @@ const SplitPDF = () => {
           setPageRanges(Array.from({ length: count }, (_, i) => pageRanges[i] || ['', '']));
      };
 
+     // restrat whole splitting process
      const handleRestartProcess = () => {
           setUploadedPdf(null);
           setPdfSplitCount(1);
@@ -135,6 +139,7 @@ const SplitPDF = () => {
 
      return (
           <div className='w-full'>
+
                <ToastContainer />
 
                <AboutFeature featureHeading={'Split PDF Files'} featureDescription={'Split PDFs Into Multiple Fragments. Get a new file without your deleted pages from your original File.'} />
@@ -175,7 +180,7 @@ const SplitPDF = () => {
                                         </div>
                                         {Array.from({ length: pdfSplitCount }, (_, index) => (
                                              <div key={index} className='overflow-x-scroll example'>
-                                                  <div key={index} className="mx-auto w-fit mt-3 px-3 space-x-9 lg:space-x-16 flex items-center">
+                                                  <div key={index} className="overflow-x-scroll example relative mx-auto w-fit mt-3 px-3 pb-3 space-x-9 lg:space-x-16 flex items-center">
                                                        <div className='relative'>
                                                             <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Splitted Pdf</label>
                                                             <div className="my-auto h-fit mt-5 py-2 relative cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg w-80 flex flex-col place-content-center items-center">
@@ -188,24 +193,33 @@ const SplitPDF = () => {
                                                                            </svg>
                                                                       </div>
                                                                       <div className='flex place-content-center items-center pr-4'>
-                                                                           <div className="text-sm truncate font-semibold text- max-w-48 overflow-x-scroll">{uploadedPdf?.name && uploadedPdf.name.replace(/\.pdf$/, '') + `_${index + 1}.pdf`}</div>
+                                                                           <div className="text-sm truncate font-semibold text- max-w-48 overflow-x-scroll example">{uploadedPdf?.name && uploadedPdf.name.replace(/\.pdf$/, '') + `_${index + 1}.pdf`}</div>
                                                                       </div>
                                                                  </div>
                                                             </div>
                                                        </div>
-                                                       <div>
-                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Start Page</label>
-                                                            <input max={pdfSplitCount} min={0} onChange={(e) => handleSplitRangeChange(index, 0, e.target.value)} value={pageRanges[index][0]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="1" required />
-                                                       </div>
-                                                       <div>
-                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">End Page</label>
-                                                            <input max={pdfSplitCount} min={0} onChange={(e) => handleSplitRangeChange(index, 1, e.target.value)} value={pageRanges[index][1]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="2" required />
+                                                       <div className='relative h-fit'>
+                                                            <div className='space-x-9 lg:space-x-16 flex items-center'>
+                                                                 <div>
+                                                                      <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Start Page</label>
+                                                                      <input onChange={(e) => handleSplitRangeChange(index, 0, e.target.value)} value={pageRanges[index][0]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="1" required />
+                                                                 </div>
+                                                                 <div>
+                                                                      <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">End Page</label>
+                                                                      <input onChange={(e) => handleSplitRangeChange(index, 1, e.target.value)} value={pageRanges[index][1]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="2" required />
+                                                                 </div>
+                                                            </div>
                                                        </div>
                                                   </div>
+                                                  {
+                                                       warning.map((e) =>
+                                                            (e === index && (<div key={e} className=' min-w-fit font-semibold w-fit mx-auto px-2 text-red-800 italic text-xs z-10 animate-pulse'>Only integers allowed. START PAGE should be LESS than END PAGE. END PAGE at most could be {pdfTotalPage}.</div>))
+                                                       )
+                                                  }
                                              </div>
                                         ))}
                                    </div>
-                                   <div onClick={handleSplitPDF} className='select-none bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] mx-auto w-fit h-fit px-4 py-2 rounded-xl text-lg uppercase font-semibold text-white tracking-wide cursor-pointer active:opacity-80 mt-5'>split</div>
+                                   <div onClick={handleSplitPDF} className='select-none top-0 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] mx-auto w-fit h-fit px-4 py-2 rounded-xl text-lg uppercase font-semibold text-white tracking-wide cursor-pointer active:opacity-80 mt-5'>split</div>
                               </div>
                          </div>
                     )
@@ -215,10 +229,10 @@ const SplitPDF = () => {
                     (
                          <div>
                               <div className='w-fit mx-auto flex flex-col place-content-center items-center'>
-                                   <div className='text-2xl mt-10 uppercase font-semibold tracking-widest mb-4'>Download Splitted Pdf</div>
+                                   <div className='text-xl ms:text-2xl mt-10 uppercase font-semibold tracking-widest mb-4'>Download Splitted Pdf</div>
                                    <div className='flex flex-wrap w-full place-content-center'>
                                         {Array.from({ length: blob.length }, (_, index) => (
-                                             <div key={index} className='bg-gray-100 border-2 mx-4 my-3 sm:my-4 border-gray-300 px-2 space-x-5 flex place-content-center items-center rounded-md w-fit h-fit'>
+                                             <div key={index} className='bg-gray-100 border-2 sm:mx-4 my-3 sm:my-4 border-gray-300 px-2 space-x-5 flex place-content-center items-center rounded-md w-fit h-fit'>
                                                   <div className='flex space-x-3 place-content-center items-center'>
                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-8" viewBox="0 0 16 16">
                                                             <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
