@@ -30,31 +30,20 @@ const AddPageNumber = () => {
       setLoading(true);
 
       try {
-
-        // crating a null pdf
         const pdfDoc = await PDFDocument.create();
 
-        //iterating over each pdf
         for (const file of files) {
-
-          // convert whole pdf into array64bit format
           const fileBuffer = await file.arrayBuffer();
-
-          //scanning each pdf
           const scanPdf = await PDFDocument.load(fileBuffer);
-
           const copiedPages = await pdfDoc.copyPages(scanPdf, scanPdf.getPageIndices());
           copiedPages.forEach((page) => {
-            //adding pages of pdf in null pdf
             pdfDoc.addPage(page);
           });
 
         }
 
         const mergedPdfBytes = await pdfDoc.save();
-
         const blobUrl = URL.createObjectURL(new Blob([mergedPdfBytes]));
-
         setBlog(blobUrl);
 
       } catch (error) {
@@ -72,8 +61,8 @@ const AddPageNumber = () => {
     <div className='w-full select-none'>
       <ToastContainer />
 
-      <AboutFeature featureHeading={'Merge PDF Files'} featureDescription={"Combine PDF's in the order you want with the easiest PDF merger available."}/>
-
+      <AboutFeature featureHeading={'Merge PDF Files'} featureDescription={"Combine PDF's in the order you want with the easiest PDF merger available."} />
+      
       {files.length === 0 && (
         <UploadFile handleFileChange={handleFileChange} multiple={true} />
       )}

@@ -69,7 +69,7 @@ const ProjectStorage = () => {
      return (
           <div className='mx-auto'>
                <ToastContainer />
-               <div className="container py-2 lg:px-32 w-fit backdrop-blur-2xl">
+               <div className="container py-2 w-full backdrop-blur-2xl">
                     <div className=" my-10 overflow-hidden rounded-sm bg-white shadow-lg w-full">
                          <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
                               <div>Upload Files</div>

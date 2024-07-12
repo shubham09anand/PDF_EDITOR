@@ -74,10 +74,10 @@ const TextEditorDashboard = ({ getQuillContent }) => {
      return (
           <>
                <ToastContainer />
-               <nav className="w-fit z-10 relative border-4 backdrop-blur-lg flex justify-between bg-transparent">
-                    <div className="border-none bg-clip-padding dark:bg-neutral-700 flex w-full">
-                         <div className="h-fit border-r-2 bg-white relative w-full">
-                              <div class=" z-30 right-0 trapizium bg-black border-[1px] border-white">
+               <nav className="w-full z-10 relative border-4 backdrop-blur-lg flex justify-between bg-transparent">
+                    <div className="border-none bg-clip-padding dark:bg-neutral-700 flex">
+                         <div className="h-fit border-r-2 bg-white relative w-fit">
+                              <div className=" z-30 right-0 trapizium bg-black border-[1px] border-white">
                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                                         stroke="white" className="size-4 rotate-[270deg]">
                                         <path strokeLinecap="round" strokeLinejoin="round"
@@ -138,9 +138,7 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                                   </div>
                                              </div>
                                         </li>
-
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
-
                                    </ul>
                                    <ul>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.link} option={"Link"} description={"Copy This Link Send To Thise Whom You Want To Work With."} />

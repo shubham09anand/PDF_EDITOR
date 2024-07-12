@@ -127,7 +127,7 @@ const DeletePages = () => {
                          // get total page count in pdf 
                          const pageNum = scanPdf.getPageCount();
 
-                         for (let index = 0; index < pageNum - 1; index++) {
+                         for (let index = 0; index < pageNum; index++) {
                               const condition = pageDelete.indexOf(index);
                               if (condition === -1) {
                                    const copiedPages = await pdfDoc.copyPages(scanPdf, [index]);
@@ -185,7 +185,7 @@ const DeletePages = () => {
                     </div>
                }
 
-               {!blob && pageDelete.length > 0 && (<div onClick={removePages} className='px-4 py-2 select-none text-xl md:text-4xl bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white w-fit h-fit rounded-lg mx-auto mt-5'>Remove pages</div>)}
+               {!blob && pageDelete.length > 0 && (<div onClick={removePages} className='px-4 py-2 select-none text-sm bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white w-fit h-fit rounded-lg mx-auto mt-5'>Remove pages</div>)}
                <div>
                     {blob && (
                          <DownLoadEditedPDF blob={blob} />

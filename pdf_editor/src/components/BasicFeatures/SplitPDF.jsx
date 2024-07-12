@@ -75,12 +75,7 @@ const SplitPDF = () => {
                } else {
                     e.forEach((i) => {
                          console.log(index)
-                         if (i.trim() === "") {
-                              isValueValid = false;
-                              waringArray.push(index)
-                              return;
-                         }
-                         else if (i <= 0 || isNaN(i) || i > numPages) {
+                         if (i <= 0 || isNaN(i) || i > numPages || i.trim() === "") {
                               isValueValid = false;
                               waringArray.push(index)
                               return;
@@ -90,7 +85,6 @@ const SplitPDF = () => {
                }
                setWraning(waringArray)
           })
-
 
           // if page number values are correct then split pdf
           if (isValueValid) {

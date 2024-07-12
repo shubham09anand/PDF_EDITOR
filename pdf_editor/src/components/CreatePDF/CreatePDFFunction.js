@@ -1,12 +1,12 @@
 import axios from 'axios';
+import API from '../../Api/Api';
 
 export const getDocumentContent = async (docID , userId) => {
      try {
-          const res = await axios.post("http://127.0.0.1:8080/auth/getDocumentData", { docID: docID , userId: userId});
+          const res = await API.post("/getDocumentData", { docID: docID , userId: userId});
           return res
      } catch (error) {
           console.error(error);
-          throw error;
      }
 }
 
@@ -16,7 +16,6 @@ export const saveDoc = async (docId, docName, docAdmin, docContent) => {
           console.log(res.status);
      } catch (error) {
           console.error(error);
-          throw error;
      }
 };
 
@@ -27,7 +26,6 @@ export const nameDoc = async (docId, newName) => {
           return res.data.status
      } catch (error) {
           console.error(error);
-          throw error;
      }
 };
 
@@ -38,17 +36,15 @@ export const projectStroage = async (projectId, projectStorageContent) => {
           return res
      } catch (error) {
           console.error(error);
-          throw error;
      }
 };
 
 export const validateLink = async (docId) => {
      try {
-          const res = await axios.post("http://127.0.0.1:8080/auth/validateLink", { docId: docId });
+          const res = await API.post("/validateLink", { docId: docId });
           return res
      } catch (error) {
           console.error(error);
-          throw error;
      }
 };
 
@@ -58,7 +54,6 @@ export const generateAiImage = async (userInput) => {
           return res
      } catch (error) {
           console.error(error);
-          throw error;
      }
 };
 
