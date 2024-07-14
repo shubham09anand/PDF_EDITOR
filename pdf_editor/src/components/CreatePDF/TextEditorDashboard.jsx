@@ -75,15 +75,15 @@ const TextEditorDashboard = ({ getQuillContent }) => {
           <>
                <ToastContainer />
                <nav className="w-full z-10 relative border-4 backdrop-blur-lg flex justify-between bg-transparent">
-                    <div className="border-none bg-clip-padding dark:bg-neutral-700 flex">
+                    <div className="border-none bg-clip-padding dark:bg-neutral-700 flex w-full">
                          <div className="h-fit border-r-2 bg-white relative w-fit">
-                              <div className=" z-30 right-0 trapizium bg-black border-[1px] border-white">
+                              {/* <div className=" z-30 right-0 trapizium bg-black border-[1px] border-white">
                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
                                         stroke="white" className="size-4 rotate-[270deg]">
                                         <path strokeLinecap="round" strokeLinejoin="round"
                                              d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
                                    </svg>
-                              </div>
+                              </div> */}
                               <div className="">
                                    <div onClick={() => setEditorDisplay(editorDisplay ? false : true)} className='w-fit h-fit absolute top-4 right-4 text-white rounded-sm p-1 z-[2000] cursor-pointer'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className={`size-8 ${editorDisplay ? "rotate-180" : "rotate-0"}`}>

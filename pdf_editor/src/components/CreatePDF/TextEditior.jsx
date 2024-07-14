@@ -145,7 +145,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
           <>
                <ToastContainer />
                <div className='flex'>
-                    {/* <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} /> */}
+                    <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
                     <div className='pt-0 w-[94%] absolute right-0 '>
                          <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
                     </div>

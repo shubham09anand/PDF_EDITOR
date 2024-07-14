@@ -5,25 +5,25 @@ const LoadingPlaneAnimation = () => {
      return (
           <div>
                <div className='scale-50'>
-                    <div class="paperplane">
-                         <div class="plane">
-                              <div class="wingRight"></div>
-                              <div class="wingLeft"></div>
-                              <div class="bottom"></div>
-                              <div class="top"></div>
-                              <div class="middle"></div>
+                    <div className="paperplane">
+                         <div className="plane">
+                              <div className="wingRight"></div>
+                              <div className="wingLeft"></div>
+                              <div className="bottom"></div>
+                              <div className="top"></div>
+                              <div className="middle"></div>
                          </div>
-                         <div class="clouds">
-                              <div class="cloudOne"></div>
-                              <div class="cloudTwo"></div>
-                              <div class="cloudThree"></div>
+                         <div className="clouds">
+                              <div className="cloudOne"></div>
+                              <div className="cloudTwo"></div>
+                              <div className="cloudThree"></div>
                          </div>
                     </div>
                </div>
                <div className='mx-auto h-fit w-fit -translate-y-36'>
-                    <span class="loading-dots h-fit">.</span>
-                    <span class="loading-dots h-fit">.</span>
-                    <span class="loading-dots h-fit">.</span>
+                    <span className="loading-dots h-fit">.</span>
+                    <span className="loading-dots h-fit">.</span>
+                    <span className="loading-dots h-fit">.</span>
                </div>
           </div>
      )

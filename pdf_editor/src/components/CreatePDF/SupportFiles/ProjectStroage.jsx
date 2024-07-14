@@ -121,8 +121,8 @@ const ProjectStorage = () => {
 
                     {displayUpload && (
                          <>
-                              <div className='font-semibold text-2xl text-gray-800 mb-2 mx-auto'>Previous</div>
-                              <div className={`-m-1 mb-20 w-fit  flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example place-content-center ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
+                              <div className='font-semibold text-2xl text-gray-800 mb-2 mx-auto px-2'>Previous</div>
+                              <div className={`-m-1 mb-20 w-fit  flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example place-content-center px-2 ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
                                    {image.map((url, index) => (
                                         <div key={index} className="flex w-40 h-40 sm:w-48 sm:h-48 md:w-56 lg:w-72 md:h-56 lg:h-60 relative flex-wrap">
                                              <svg onClick={() => handleDownloadImage(url)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20 cursor-pointer">

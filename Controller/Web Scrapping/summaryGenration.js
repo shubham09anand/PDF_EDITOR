@@ -1,6 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const genAI = new GoogleGenerativeAI("AIzaSyBo_FnrQnrLmndtVgRU-mbkNg2Ec6WioZw");
+const genAI = new GoogleGenerativeAI("AIzaSyCV0_I26dExFLwWMbju9ZokQyZGOAKa_Ak");
 
 const summaryGenration = async (summaryMetaData) => {
      try {

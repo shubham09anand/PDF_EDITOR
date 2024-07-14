@@ -16,7 +16,7 @@ const TextAi = () => {
      const aiHelp = () => {
           setButton(true);
           setState(true)
-          axios.post("http://127.0.0.1:3200/auth/aiTextSupport", { queery: userInput }).then((res) => {
+          axios.post("http://127.0.0.1:8080/auth/aiTextSupport", { queery: userInput }).then((res) => {
                console.log(res.data)
                setAiResponse(res.data.generatedText);
           }).catch((error) => {
@@ -26,10 +26,10 @@ const TextAi = () => {
                setButton(false)
           })
      }
-     console.log(aiResponse)
+     // console.log(aiResponse)
 
      return (
-          <div className='md:p-2 h-screen  backdrop-blur-xl w-full'>
+          <div className='md:p-2 h-screen backdrop-blur-xl w-full'>
                <ToastContainer />
                <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                     <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">AI Text-to-Text Support</div>

@@ -1,48 +1,55 @@
-const { PDFDocument, StandardFonts, rgb, degrees, opacity } = require('pdf-lib');
-const fs = require('fs').promises;
+const { PDFDocument, StandardFonts, rgb, degrees } = require('pdf-lib');
+const fs = require('fs');
 
-async function createPDF() {
-  try {
+const createPDF = async () => {
+    try {
+        // Create a new PDFDocument
+        const pdfDoc = await PDFDocument.create();
 
-    // Read the existing PDF file
-    const existingPdfBytes = await fs.readFile('test copy.pdf');
+        // Embed the Times Roman font
+        const timesRomanFont = await pdfDoc.embedFont(StandardFonts.TimesRoman);
 
-    // Load a PDFDocument from the existing PDF bytes
-    const pdfDoc = await PDFDocument.load(existingPdfBytes);
-    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+        // Add a blank page to the document
+        const page = pdfDoc.addPage();
 
-    // Get the first page of the PDF
-    const firstPage = pdfDoc.getPage(0);
+        // Get the width and height of the page
+        const { width, height } = page.getSize();
 
-    // Add text to the first page
-    firstPage.drawText("Water Msark", {
-      x: firstPage.getWidth() / 3,
-      y: firstPage.getHeight() / 2,
-      size: 40,
-      rotate: degrees(-45),
-      font: helveticaFont,
-      color: rgb(0, 0, 0, .2),
-      opacity: .1,
-    });
+        // Define the text to be placed in the PDF
+        const text = 'Centered Texwqsdwdwqdqwt';
 
-    // Create a new PDFDocument
-    const newPdfDoc = await PDFDocument.create();
+        // Calculate the width and height of the text
+        const fontSize = 60;
+        const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
+        const textHeight = timesRomanFont.heightAtSize(fontSize);
 
-    // Add the modified page to the new document
-    const [newPage] = await newPdfDoc.copyPages(pdfDoc, [0]);
-    newPdfDoc.addPage(newPage);
+        // Calculate the x-coordinate to center the text horizontally
+        const textX = (width - textWidth) / 2;
 
-    // Serialize the new PDFDocument to bytes
-    const pdfBytes = await newPdfDoc.save();
+        // Calculate the y-coordinate to center the text vertically
+        const textY = (height) / 1;
 
-    // Write the bytes to a new PDF file
-    await fs.writeFile("outputPath.pdf", pdfBytes);
+        // Draw centered text on the page
+        page.drawText(text, {
+            x: textX,
+            y: textY,
+            size: fontSize,
+            font: timesRomanFont,
+            color: rgb(0, 0.53, 0.7),
+            rotate: degrees(-45), // No rotation
+            opacity: 0.2, // Set opacity to 50%
+        });
 
-    console.log('PDF created successfully!');
-  } catch (error) {
-    console.error('Error creating PDF:', error);
-  }
-}
+        // Save the PDF document to a buffer
+        const pdfBytes = await pdfDoc.save();
 
-// Call the function to load, modify, and save the PDF
+        // Write the buffer to a file
+        fs.writeFileSync('text.pdf', pdfBytes);
+
+        console.log('PDF created successfully!');
+    } catch (error) {
+        console.error('Error creating PDF:', error);
+    }
+};
+
 createPDF();

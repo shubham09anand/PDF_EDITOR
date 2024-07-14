@@ -19,7 +19,7 @@ const ContentSupport = () => {
      const [button, setButton] = useState(true);
      const [summary, setSummary] = useState(null);
      const [summaryState, steSummaryState] = useState(false);
-     const [selectedOrigin, setSelectedOrigin] = useState("Select An Organisation");
+     const [selectedOrigin, setSelectedOrigin] = useState("https://www.bbc.com/");
      const [fullArticle, setFullArticle] = useState(false);
      const [selectedImage, setSelectedImage] = useState(null);
 
@@ -29,7 +29,7 @@ const ContentSupport = () => {
                return;
           }
           setButton(false);
-          axios.post("http://127.0.0.1:3200/auth/googleSearch",
+          axios.post("http://127.0.0.1:8080/auth/googleSearch",
                { queery: queery, selectedOrigin: selectedOrigin }).then((res) => {
                     setLinks(res.data.apiResult.items);
                     setItemDisplay(1);
@@ -47,13 +47,14 @@ const ContentSupport = () => {
           }
           steSummaryState(true);
           setButton(false);
-          axios.post("http://127.0.0.1:3200/auth/scrapeWebpage",
+          axios.post("http://127.0.0.1:8080/auth/scrapeWebpage",
                { slectedLink: link, conetntSnippet: snippet, contentTitle: tilte }).then((res) => {
                     setSummary(res.data)
                     setItemDisplay(2);
                     steSummaryState(false);
                     console.log(res.data)
                }).catch((error) => {
+                    console.log(error)
                     toast.error(`Process Failed With Stauats Code`)
                }).finally(() => {
                     steSummaryState(false);
@@ -63,12 +64,12 @@ const ContentSupport = () => {
      return (
           <div className="p-2 lg:p-5 w-full flex bg-teal-lightest font-sans mx-auto h-fu backdrop-blur-2xl relative">
                <ToastContainer />
-               <div className="h-screen m-4 w-full lg:max-w-4xl mx-auto">
+               <div className="h-screen m-4 w-11/12 md:w-4/5 lg:w-3/4 mx-auto">
                     <div className="mb-4">
                          <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                               <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
                          </div>
-                         <div className='heading text-center sm:w-3/5 md:w-3/5 lg:w-1/2 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>
+                         <div className='heading text-center w-11/12 md:w-4/5 lg:w-3/4 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>
                          <div className="flex flex-col place-content-center items-center w-full h-fit mt-3">
                               <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
                                    <div className='flex place-content-center items-center space-x-5'>
@@ -134,7 +135,7 @@ const ContentSupport = () => {
                     </div>
 
                     {/* link display */}
-                    <div className='relative'>
+                    <div key={Math.random()} className='relative'>
                          <div className={`mb-10 w-full space-y-3 relative ${itemDisplay === 1 ? "block" : "hidden"}`}>
                               {summaryState &&
                                    <div className='absolute z-20 backdrop-blur-[2px] w-full h-full top-0'>
@@ -157,7 +158,7 @@ const ContentSupport = () => {
                                    }
                               </div>
                               {links.map((link, index) => (
-                                   <div index={index} className="flex items-center">
+                                   <div key={index} className="flex items-center">
                                         <div className="relative w-full">
                                              <input id="website-url" type="text" className="bg-gray-50 border-r-0 border rounded-l-xl font-extrabold border-gray-300 text-gray-500 outline-none text-sm block w-full p-3" value={link.link} readOnly />
                                         </div>
