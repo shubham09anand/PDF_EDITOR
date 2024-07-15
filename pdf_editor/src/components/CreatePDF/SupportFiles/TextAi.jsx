@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
-import LoadingText from '../../Animation/LoadingText';
-
+import API from '../../../Api/Api';
 
 const TextAi = () => {
 
@@ -16,17 +14,27 @@ const TextAi = () => {
      const aiHelp = () => {
           setButton(true);
           setState(true)
-          axios.post("http://127.0.0.1:8080/auth/aiTextSupport", { queery: userInput }).then((res) => {
-               console.log(res.data)
+          API.post("/aiTextSupport", { queery: userInput }).then((res) => {
                setAiResponse(res.data.generatedText);
-          }).catch((error) => {
+          }).catch(() => {
                toast.error("Something Went Wrong.")
           }).finally(() => {
                setState(false)
                setButton(false)
           })
      }
-     // console.log(aiResponse)
+     
+     const handleCopyText = async () =>{
+          if (aiResponse === null) {
+               return
+          }
+          try {
+               await window.navigator.clipboard.writeText(aiResponse);
+               toast.success("Copies Succesfully")
+          } catch (err) {
+               toast.error("Copies Succesfully")
+           }
+     }
 
      return (
           <div className='md:p-2 h-screen backdrop-blur-xl w-full'>
@@ -35,16 +43,18 @@ const TextAi = () => {
                     <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">AI Text-to-Text Support</div>
                </div>
                <div className='heading text-center sm:w-3/5 md:w-3/5 lg:w-1/2 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need help? Our AI Support feature is here for you! Simply type in your question or topic, and AI will generate helpful responses.</div>
-               <div className="editor mx-auto rounded-md mt-4 w-full md:w-4/5 lg:w-3/5 flex flex-col text-gray-800 border border-gray-300 p-4 lg:shadow-lg">
+               <div className="editor mx-auto rounded-md mt-4 w-full md:w-4/5 lg:w-3/5 flex flex-col text-gray-800 border border-gray-300 md:p-4 lg:shadow-lg">
                     <div className="flex w-full h-fit">
                          <input onChange={(e) => setUserInput(e.target.value)} value={userInput} className="title w-full bg-gray-100 border border-gray-300 p-2 mb-4 outline-none border-r-0" spellCheck="false" placeholder="Describe everything about requirement here" type="text" />
                          <button onClick={aiHelp} disabled={button} className={`border border-indigo-500 px-4 font-semibold h-full p-2 rounded-l-none border-l-0 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-wait" : "cursor-pointer"}`} >Ask</button>
                     </div>
                     <div className='relative'>
                          {
+                              aiResponse !== null && <div onClick={handleCopyText} className='backdrop-blur z-20 border px-2 pb-1 rounded-md absolute right-2 top-2 text-gray-600 w-fit h-fit cursor-pointer select-none'>copy</div>                         }
+                         {
                               aiResponse !== null &&
                               (
-                                   <div className="description h-fit text-gray-500 min-h-60 border-s-8 border-green-500 pl-8 p-2">
+                                   <div className="description h-fit text-gray-500 min-h-60 border-s-4 border-green-500 md:pl-8 pl-2 pr-3 max-h-96 overflow-y-scroll example">
                                         {aiResponse.split('\n').map((line, index) => (
                                              <React.Fragment key={index}>
                                                   {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
@@ -74,7 +84,6 @@ const TextAi = () => {
                                    </div>
                               )
                          }
-
                          {
                               aiResponse === null &&
                               (

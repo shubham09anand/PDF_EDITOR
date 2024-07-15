@@ -4,7 +4,6 @@ const genAI = new GoogleGenerativeAI("AIzaSyCV0_I26dExFLwWMbju9ZokQyZGOAKa_Ak");
 
 const aiTextSupport = async (req, res) => {
      try {
-
           const model = genAI.getGenerativeModel({ model: "gemini-pro" });
           const queery = (req.body.queery)
 
