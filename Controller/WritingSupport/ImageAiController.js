@@ -50,7 +50,7 @@ const ImageAiController = async (req, res) => {
                return `data:image/png;base64,${image.base64}`;
           });
 
-          console.log(imageUrls)
+          // console.log(imageUrls)
 
           res.status(200).json({
                message: 'Image URLs generated successfully',

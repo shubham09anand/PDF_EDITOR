@@ -3,7 +3,7 @@ const ProjectStorageSchema = require("../../Models/ProjectStroageModel");
 const projectStroage = async (req, res) => {
      try {
           const storeData = req.body;
-          console.log(storeData);
+          // console.log(storeData);
 
           const newStorage = await ProjectStorageSchema.create(storeData);
 
@@ -22,7 +22,7 @@ const projectStroage = async (req, res) => {
                })
           }
      } catch (error) {
-          console.log(error)
+          // console.log(error)
           res.status(500).json({
                success: false,
                message: "Internal Server Error"

@@ -28,11 +28,9 @@ const GenrateImage = () => {
 
      }
 
-
      return (
-
-          <div className=''>
-               <div className="editor mx-auto rounded-md w-full  flex flex-col text-gray-800 p-4 max-w-4xl">
+          <>
+               <div className="editor mx-auto rounded-md w-full flex flex-col text-gray-800 p-4 max-w-4xl">
                     <ToastContainer />
                     <div className="flex w-full h-fit">
                          <input onChange={(e) => setImageQueery(e.target.value)} value={imageQueery} className="title w-full bg-gray-200 rounded-md rounded-r-none border border-gray-300 p-2 mb-4 outline-none" spellCheck="false" placeholder="Describe everything about requirement here" type="text" />
@@ -56,14 +54,12 @@ const GenrateImage = () => {
                                              <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                         </svg>
                                    </div>
-                                   <img className="object-cover object-center w-80 h-48 max-w-full rounded-lg"
-                                        src={url.link}
-                                        alt="gallery-photo" />
+                                   <img className="object-cover object-center w-80 h-48 max-w-full rounded-lg" src={url.link} alt={`gallery_photo_${index}`} />
                               </div>
                          ))}
                     </div>
                </div>
-          </div>
+          </>
      )
 }
 

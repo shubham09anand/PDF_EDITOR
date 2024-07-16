@@ -8,9 +8,9 @@ const scrapeWebpage = async (req, res) => {
           const slectedLink = req.body.slectedLink;
           const conetntSnippet = req.body.conetntSnippet;
           const contentTitle = req.body.contentTitle;
-          console.log(slectedLink)
-          console.log(conetntSnippet)
-          console.log(contentTitle)
+          // console.log(slectedLink)
+          // console.log(conetntSnippet)
+          // console.log(contentTitle)
 
           const response = await axios.get(slectedLink);
           if (response.status == 200) {
@@ -64,7 +64,7 @@ const scrapeWebpage = async (req, res) => {
                };
 
                const summary_1 = summarizeArticle(para, 1200)
-               console.log(summary_1)
+               // console.log(summary_1)
 
                const articleData = {
                     artilceOriginalContent:para,
@@ -95,7 +95,7 @@ const scrapeWebpage = async (req, res) => {
                })
           }
      } catch (error) {
-          console.error('An error occurred:', error);
+          // console.error('An error occurred:', error);
           res.status(500).json({
                success: false,
                status: -1,

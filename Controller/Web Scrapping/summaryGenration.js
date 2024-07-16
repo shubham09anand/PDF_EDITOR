@@ -25,8 +25,8 @@ const summaryGenration = async (summaryMetaData) => {
                articleLink is containig a link of a article, articleHeading has a heading about the content on web page , articleSnippet has very short summary about that content of that content on that web page.
                `
 
-               console.log(summaryMetaData.articleSnippet)
-               console.log(summaryMetaData.articleLink)
+               // console.log(summaryMetaData.articleSnippet)
+               // console.log(summaryMetaData.articleLink)
 
           const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 

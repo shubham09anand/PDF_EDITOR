@@ -12,6 +12,33 @@ import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 
 const ContentSupport = () => {
 
+     const newsOutletLinks = [
+          {
+               name: "BBC",
+               link: "https://www.bbc.com/",
+               photo: bbcNews,
+          },
+          {
+               name: "Deutsche Welle",
+               link: "https://www.dw.com/",
+               photo: DW,
+          },
+          {
+               name: "The Sun",
+               link: "https://www.thesun.co.uk/",
+               photo: sunNews,
+          },
+          {
+               name: "Washington Post",
+               link: "https://www.washingtonpost.com/",
+               photo: washingtonPost,
+          },
+          {
+               name: "CNN",
+               link: "https://edition.cnn.com/",
+               photo: CNN,
+          },
+     ]
      const [links, setLinks] = useState([]);
      const [itemDisplay, setItemDisplay] = useState(0)
      const [queery, setQueery] = useState("");
@@ -51,24 +78,27 @@ const ContentSupport = () => {
                     setSummary(res.data)
                     setItemDisplay(2);
                     steSummaryState(false);
-                    console.log(res.data)
-               }).catch((error) => {
-                    console.log(error)
+                    // console.log(res.data)
+               }).catch(() => {
+                    // console.log(error)
                     toast.error(`Process Failed With Stauats Code`)
                }).finally(() => {
                     steSummaryState(false);
                     setButton(true)
                })
      }
+
+
+
      return (
           <div className="p-2 lg:p-5 w-full flex bg-teal-lightest font-sans mx-auto h-fu backdrop-blur-2xl relative">
                <ToastContainer />
-               <div className="h-screen m-4 w-11/12 md:w-4/5 lg:w-3/4 mx-auto">
+               <div className="h-screen m-4 w-[99%] md:w-4/5 lg:w-3/4 mx-auto">
                     <div className="mb-4">
                          <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                               <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
                          </div>
-                         <div className='heading text-center w-11/12 md:w-4/5 lg:w-3/4 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>
+                         <div className='heading text-center w-full md:w-4/5 lg:w-3/4 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>
                          <div className="flex flex-col place-content-center items-center w-full h-fit mt-3">
                               <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
                                    <div className='flex place-content-center items-center space-x-5'>
@@ -86,46 +116,18 @@ const ContentSupport = () => {
                                              {selectedOrigin}
                                         </button>
                                         <ul className="dropdown-menu w-60">
-                                             <li onClick={() => setSelectedOrigin("https://www.bbc.com/")}>
-                                                  <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                       <img src={bbcNews} alt="" className='w-8 h-8' />
-                                                       <span className="mx-1 px-2 font-extrabold">
-                                                            BBC
-                                                       </span>
-                                                  </div>
-                                             </li>
-                                             <li onClick={() => setSelectedOrigin("https://www.thesun.co.uk/")}>
-                                                  <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                       <img src={sunNews} alt="" className='w-8 h-8' />
-                                                       <span className="mx-1 px-2 font-extrabold">
-                                                            The Sun
-                                                       </span>
-                                                  </div>
-                                             </li>
-                                             <li onClick={() => setSelectedOrigin("https://www.washingtonpost.com/")}>
-                                                  <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                       <img src={washingtonPost} alt="" className='w-8 h-8' />
-                                                       <span className="mx-1 px-2 font-extrabold">
-                                                            Washington Post
-                                                       </span>
-                                                  </div>
-                                             </li>
-                                             <li onClick={() => setSelectedOrigin("https://www.dw.com/")}>
-                                                  <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                       <img src={DW} alt="" className='w-8 h-7' />
-                                                       <span className="mx-1 px-2 font-extrabold">
-                                                            Deutsche Welle
-                                                       </span>
-                                                  </div>
-                                             </li>
-                                             <li onClick={() => setSelectedOrigin("https://edition.cnn.com/")} >
-                                                  <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                       <img src={CNN} alt="" className='w-8 h-7' />
-                                                       <span className="mx-1 px-2 font-extrabold">
-                                                            CNN
-                                                       </span>
-                                                  </div>
-                                             </li>
+                                             {
+                                                  newsOutletLinks.map((items, index) => (
+                                                       <li key={index} onClick={() => setSelectedOrigin(items.link)}>
+                                                            <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
+                                                                 <img src={items.photo} alt="" className='w-8 h-8' />
+                                                                 <span className="mx-1 px-2 font-extrabold">
+                                                                      {items.name}
+                                                                 </span>
+                                                            </div>
+                                                       </li>
+                                                  ))
+                                             }
                                         </ul>
                                    </div>
                                    <button onClick={getLinks} className={`mx-auto btn border border-indigo-500 px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</button>
@@ -178,7 +180,6 @@ const ContentSupport = () => {
                               ))}
                          </div>
                     </div>
-
 
                     <div className={`h-6 ${itemDisplay === 2 ? "block" : "hidden"}`}>
                          <div className='flex place-content-center items-center my-2 space-x-5'>
@@ -237,8 +238,6 @@ const ContentSupport = () => {
                          </div>
                     </div>
 
-
-
                     <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>
                          <div className='flex place-content-center items-center space-x-5'>
                               <svg onClick={() => setItemDisplay(2)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 cursor-pointer rounded-full">
@@ -250,18 +249,21 @@ const ContentSupport = () => {
                          <div className="-m-1 mb-20 w-fit mx-auto flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example">
                               {
                                    links.map((link, index) => (
-                                        <div onClick={() => setSelectedImage(link?.pagemap.cse_image[0]?.src)} key={index} className='relative w-fit mx-auto'>
-                                             <div className='flex space-x-4 absolute top-3 right-3'>
-                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                        <div key={index} className='relative w-fit m-1 mx-auto'>
+                                             <div className='flex space-x-4 absolute top-3 right-3 bg-white rounded-md'>
+                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                                                   </svg>
-                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
-                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                  <a href={link} download={`${queery}_${index}.png`}>
+                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                       </svg>
+                                                  </a>
+                                                  <svg onClick={() => setSelectedImage(link?.pagemap.cse_image[0]?.src)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                                                   </svg>
                                              </div>
-                                             <img className="object-cover object-center w-60 h-48 max-w-full rounded-lg"
-                                                  src={link?.pagemap.cse_image[0]?.src}
-                                                  alt="gallery-photo" />
+                                             <img className="object-cover object-center shadow w-80 h-56 max-w-full rounded-lg" src={link?.pagemap.cse_image[0]?.src} alt={`${queery}_${index}`} />
                                         </div>
                                    ))
                               }
@@ -272,7 +274,7 @@ const ContentSupport = () => {
                          selectedImage !== null && (
                               <div className='w-[98%] h-[92%] absolute top-0 left-5'>
                                    <img src={selectedImage} alt="" className='w-full h-full absolute top-0 left-0' />
-                                   <svg onClick={()=> setSelectedImage(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 backdrop-blur-3xl cursor-pointer rounded-full absolute top-5 right-10">
+                                   <svg onClick={() => setSelectedImage(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 backdrop-blur-3xl cursor-pointer rounded-full absolute top-5 right-10">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                    </svg>
 

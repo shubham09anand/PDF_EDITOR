@@ -7,7 +7,7 @@ const getImages = async (req, res) => {
           const API_KEY = "AIzaSyDhXIKNv8WUsk9EJwJKA9MZ6TLFQmIb2WY";
           const SEARCH_ENGINE_ID = "402cb9ae467ab4a4e";
           const search_query = req.body.queery;
-          console.log(search_query)
+          // console.log(search_query)
 
           const url = "https://www.googleapis.com/customsearch/v1";
 
