@@ -1,9 +1,9 @@
 import axios from 'axios';
 import API from '../../Api/Api';
 
-export const getDocumentContent = async (docID , userId) => {
+export const getDocumentContent = async (docID, userId) => {
      try {
-          const res = await API.post("/getDocumentData", { docID: docID , userId: userId});
+          const res = await API.post("/getDocumentData", { docID: docID, userId: userId });
           return res
      } catch (error) {
           console.error(error);

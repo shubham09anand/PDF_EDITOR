@@ -7,7 +7,6 @@ import washingtonPost from "../../../Assets/images/icons/washingtonPost.png";
 import DW from "../../../Assets/images/icons/DW.png";
 import CNN from "../../../Assets/images/icons/CNN.jpeg";
 import sunNews from "../../../Assets/images/icons/sunNews.png";
-import GenrateImage from './genrateImage';
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 
 const ContentSupport = () => {
@@ -227,7 +226,6 @@ const ContentSupport = () => {
                               </svg>
                               <div className="heading text-center font-bold text-3xl my-3 text-gray-800">Genrate Images</div>
                          </div>
-                         <GenrateImage />
                          <div className="-m-1 mb-20 w-fit mx-auto flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example">
                               {
                                    links.map((link, index) => (
