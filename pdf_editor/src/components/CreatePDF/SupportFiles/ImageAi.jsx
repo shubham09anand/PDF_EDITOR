@@ -3,7 +3,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import { generateAiImage } from '../CreatePDFFunction';
 import 'react-toastify/dist/ReactToastify.css';
 
-const ImageAi = ({ setDisplay }) => {
+const ImageAi = () => {
 
      const [userQueery, setUserQueery] = useState("");
      const [status, setStatus] = useState(true);
@@ -27,7 +27,7 @@ const ImageAi = ({ setDisplay }) => {
 
      return (
           <div className='p-2 w-full h-screen backdrop-blur-2xl'>
-               {/* <ToastContainer /> */}
+               <ToastContainer />
                <div className='w-fit mx-auto'>
                     <div className='w-fit mx-auto flex place-content-center items-center space-x-3 mt-3'>
                          <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">AI Text-to-Image Support</div>

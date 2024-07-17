@@ -46,7 +46,6 @@ const ContentSupport = () => {
      const [summary, setSummary] = useState(null);
      const [summaryState, steSummaryState] = useState(false);
      const [selectedOrigin, setSelectedOrigin] = useState("https://www.bbc.com/");
-     const [fullArticle, setFullArticle] = useState(false);
      const [selectedArticle, setSelectedArticle] = useState([]);
      const [selectedImage, setSelectedImage] = useState(null);
 
@@ -216,7 +215,7 @@ const ContentSupport = () => {
                                              <br />
                                         </React.Fragment>
                                    ))}
-                              <a className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
+                              <a target='_blank' className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
                               </p>
                          </div>
                     </div>

@@ -26,10 +26,6 @@ const DeletePages = () => {
           setSelectedFiles(files);
      };
 
-     useEffect(()=>{
-          document.title = "Delete Pages";
-     })
-
      useEffect(() => {
           handleConversion();
      }, [selectedFiles]);
