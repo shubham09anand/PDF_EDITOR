@@ -10,7 +10,7 @@ import { getDocumentContent } from './CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const TextEditor = ({ isFocused, controllDisplay }) => {
+const TextEditor = ({ controllDisplay }) => {
 
      const location = useLocation();
 
@@ -18,6 +18,7 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
      const [socket, setSocket] = useState(null);
      const [quill, setQuill] = useState(null);
      const [docContent, setDocContent] = useState(null)
+     const [display, setDisplay] = useState(0)
      const { id: documentId } = useParams();
 
      const cuurPath = location.pathname.split("/");
@@ -145,7 +146,9 @@ const TextEditor = ({ isFocused, controllDisplay }) => {
           <>
                <ToastContainer />
                <div className='flex'>
-                    <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
+                    <div className='relative z-10 w-full'>
+                         <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
+                    </div>
                     <div className='pt-0 w-[94%] absolute right-0 '>
                          <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
                     </div>

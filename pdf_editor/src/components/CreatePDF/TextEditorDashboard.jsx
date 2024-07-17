@@ -18,7 +18,7 @@ const TextEditorDashboard = ({ getQuillContent }) => {
      const location = useLocation();
      const [docName, setDocName] = useState("Dummy 20");
      const [editorDisplay, setEditorDisplay] = useState(true);
-     const [supportDisplay, setSupportDisplay] = useState(null);
+     const [supportDisplay, setSupportDisplay] = useState(0);
 
      const docId = location.pathname.split("/");
      const docAdmin = "6608f032efa3e1a31913d0f3";
@@ -74,7 +74,7 @@ const TextEditorDashboard = ({ getQuillContent }) => {
      return (
           <>
                <ToastContainer />
-               <nav className="w-full z-10 relative border-4 backdrop-blur-lg flex justify-between bg-transparent">
+               <nav className="w-full relative border-4 backdrop-blur-lg flex justify-between bg-transparent">
                     <div className="border-none bg-clip-padding dark:bg-neutral-700 flex w-full">
                          <div className="h-fit border-r-2 bg-white relative w-fit">
                               {/* <div className=" z-30 right-0 trapizium bg-black border-[1px] border-white">
@@ -156,7 +156,11 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                    </ul>
                               </div>
                          </div>
-                         {supportDisplay === 1 ? <VidoeCall /> : supportDisplay === 2 ? <ProjectStroage /> : supportDisplay === 3 ? <ImageAi /> : supportDisplay === 4 ? <TextAi /> : supportDisplay === 5 ? <ContentSupport /> : null}
+                         <div className={supportDisplay === 1 ? 'block w-full' : 'hidden w-full'}><VidoeCall /></div>
+                         <div className={supportDisplay === 2 ? 'block w-full' : 'hidden w-full'}><ProjectStroage /></div>
+                         <div className={supportDisplay === 3 ? 'block w-full' : 'hidden w-full'}><ImageAi /></div>
+                         <div className={supportDisplay === 4 ? 'block w-full' : 'hidden w-full'}><TextAi /></div>
+                         <div className={supportDisplay === 5 ? 'block w-full' : 'hidden w-full'}><ContentSupport /></div>
                     </div>
                </nav>
           </>
