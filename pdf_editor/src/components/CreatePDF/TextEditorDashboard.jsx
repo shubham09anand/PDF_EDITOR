@@ -74,24 +74,12 @@ const TextEditorDashboard = ({ getQuillContent }) => {
      return (
           <>
                <ToastContainer />
-               <nav className="w-full relative border-4 backdrop-blur-lg flex justify-between bg-transparent">
-                    <div className="border-none bg-clip-padding dark:bg-neutral-700 flex w-full">
-                         <div className="h-fit border-r-2 bg-white relative w-fit">
-                              {/* <div className=" z-30 right-0 trapizium bg-black border-[1px] border-white">
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5"
-                                        stroke="white" className="size-4 rotate-[270deg]">
-                                        <path strokeLinecap="round" strokeLinejoin="round"
-                                             d="M3 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061A1.125 1.125 0 0 1 3 16.811V8.69ZM12.75 8.689c0-.864.933-1.406 1.683-.977l7.108 4.061a1.125 1.125 0 0 1 0 1.954l-7.108 4.061a1.125 1.125 0 0 1-1.683-.977V8.69Z" />
-                                   </svg>
-                              </div> */}
-                              <div className="">
-                                   <div onClick={() => setEditorDisplay(editorDisplay ? false : true)} className='w-fit h-fit absolute top-4 right-4 text-white rounded-sm p-1 z-[2000] cursor-pointer'>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className={`size-8 ${editorDisplay ? "rotate-180" : "rotate-0"}`}>
-                                             <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                        </svg>
-                                   </div>
-                                   <ul className='flex flex-col place-content-center'>
-                                        <li className={`p-3 transition duration-300 ease-in-out cursor-pointer rounded-xl relative mx-auto ${editorDisplay ? "w-fit" : "w-full"}`}>
+               <nav className="w-full absolute bottom- z-20 border-4 backdrop-blur-lg flex justify-between bg-transparent">
+                    <div className="relative border-none bg-clip-padding dark:bg-neutral-700 flex w-full">
+                         <div className="h-fit border-r-0 bg-white relative w-fit">
+                              <div className="mr-2 bg-slate-100 px-2 flex">
+                                   <ul className='flex flex-co place-content-center'>
+                                        <li className={`hidden p-3 transition duration-300 ease-in-out cursor-pointer rounded-xl relative mx-auto ${editorDisplay ? "w-fit" : "w-full"}`}>
                                              <div>
                                                   <div className="flex items-start space-x-4">
                                                        <div className="shrink-0">
@@ -140,14 +128,14 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                         </li>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
                                    </ul>
-                                   <ul>
+                                   <ul className='flex'>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.link} option={"Link"} description={"Copy This Link Send To Thise Whom You Want To Work With."} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={1} editorDisplay={editorDisplay} svg={optionSVG.video} option={"Video"} description={"Vidoe Call, Share Screen, Messaging"} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={2} editorDisplay={editorDisplay} svg={optionSVG.project} option={"Project"} description={"Upload Photos And Share With Other People Who Are In Team."} />
                                    </ul>
-                                   <ul>
+                                   <ul className='flex'>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={3} editorDisplay={editorDisplay} svg={optionSVG.aiImage} option={"Text-To-Image Support"} description={"Text To Image Support."} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={4} editorDisplay={editorDisplay} svg={optionSVG.aiText} option={"Text-To-Text Support"} description={"AI Assistance For Text Support."} />
@@ -155,12 +143,17 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={5} editorDisplay={editorDisplay} svg={optionSVG.contentSupport} option={"Content Support"} description={"Get Related Artilces About Your Topic."} />
                                    </ul>
                               </div>
+                              <div onClick={() => setEditorDisplay(editorDisplay ? false : true)} className=' w-4 bg-gray-200 h-full right-0 top-0 absolute'>
+                                   <svg xmlns="http://www.w3.org/2000/svg" className={`size-6 absolute -left-1 top-[45%] bi bi-caret-right-fill ${editorDisplay ? "rotate-180" : "rotate-0"}`} fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="m12.14 8.753-5.482 4.796c-.646.566-1.658.106-1.658-.753V3.204a1 1 0 0 1 1.659-.753l5.48 4.796a1 1 0 0 1 0 1.506z" />
+                                   </svg>
+                              </div>
                          </div>
-                         <div className={supportDisplay === 1 ? 'block w-full' : 'hidden w-full'}><VidoeCall /></div>
-                         <div className={supportDisplay === 2 ? 'block w-full' : 'hidden w-full'}><ProjectStroage /></div>
-                         <div className={supportDisplay === 3 ? 'block w-full' : 'hidden w-full'}><ImageAi /></div>
-                         <div className={supportDisplay === 4 ? 'block w-full' : 'hidden w-full'}><TextAi /></div>
-                         <div className={supportDisplay === 5 ? 'block w-full' : 'hidden w-full'}><ContentSupport /></div>
+                         <div className={supportDisplay === 1 ? 'block w-full h' : 'hidden w-full'}><VidoeCall /></div>
+                         <div className={supportDisplay === 2 ? 'block w-full h' : 'hidden w-full'}><ProjectStroage /></div>
+                         <div className={supportDisplay === 3 ? 'block w-full h' : 'hidden w-full'}><ImageAi /></div>
+                         <div className={supportDisplay === 4 ? 'block w-full h' : 'hidden w-full'}><TextAi /></div>
+                         <div className={supportDisplay === 5 ? 'block w-full h' : 'hidden w-full'}><ContentSupport /></div>
                     </div>
                </nav>
           </>

@@ -214,7 +214,7 @@ const ContentSupport = () => {
                                              <br />
                                         </React.Fragment>
                                    ))}
-                              <a target='_blank' className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
+                              <a target='_blank' rel='noreferrer' className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
                               </p>
                          </div>
                     </div>

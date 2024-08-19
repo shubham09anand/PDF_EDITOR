@@ -146,12 +146,12 @@ const TextEditor = ({ controllDisplay }) => {
           <>
                <ToastContainer />
                <div className='flex'>
-                    <div className='relative z-10 w-full'>
+                    <div className='absolute bottom-0 w-full'>
                          <TextEditorDashboard controllDisplay={controllDisplay} getQuillContent={getQuillContent} />
                     </div>
-                    <div className='pt-0 w-[94%] absolute right-0 '>
+                    {/* <div className='pt-0 w-[94%] absolute right-0 '>
                          <div id='container' ref={wrapperRef} className='h-screen rounded-2xl'></div>
-                    </div>
+                    </div> */}
                </div>
           </>
      );

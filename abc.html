@@ -5,17 +5,73 @@
      <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
      <script src="https://cdn.tailwindcss.com"></script>
-
-     <title>Document</title>
+     <title>Draggable Div Example</title>
+     <style>
+          .draggable {
+               width: 100px;
+               height: 100px;
+               background-color: coral;
+               position: absolute;
+               cursor: grab;
+          }
+     </style>
 </head>
 
 <body>
-
-     <div class="flex">
-          <div class="w-3/5 h-screen bg-gray-700"></div>
-          <div class="w-full h-screen bg-gray-400"></div>
+     <div class="w-[600px] h-[550px] border-2 border-black" id="parentDiv">
+          <div class="border-2 "></div>
+          <div class="draggable" id="draggableDiv"></div>
      </div>
 
+
+     <svg class="bg-white border-blue-400" style="width: 107.283px; height: 36.4px; top: -11px; left: -11px;">
+          <rect class="surface-rect enabled visible" x="5" y="5" width="97.28334045410156" height="26.400009155273438" style="stroke-width: 1px;"></rect>
+          <rect class="anchor anchor_top visible enabled" width="9" height="9" stroke-width="1" rx="2" ry="2" x="48.64167022705078" y="0"></rect>
+          <rect class="anchor anchor_top_left visible enabled" width="9" height="9" stroke-width="1" rx="2" ry="2" x="0" y="0"></rect>
+          <rect class="anchor anchor_top_right visible enabled cursor-nesw-resize" width="9" height="9" stroke-width="1" rx="2" ry="2" x="97.28334045410156" y="0"></rect>
+          <rect class="anchor anchor_right visible enabled cursor-ew-resize" width="9" height="9" stroke-width="1" rx="2" ry="2" x="97.28334045410156" y="13.200004577636719"></rect>
+          <rect class="anchor anchor_left visible enabled cursor-ew-resize" width="9" height="9" stroke-width="1" rx="2" ry="2" x="0" y="13.200004577636719"></rect>
+          <rect class="anchor anchor_bottom cursor-ns-resize visible enabled" width="9" height="9" stroke-width="1" rx="2" ry="2" x="48.64167022705078" y="26.400009155273438"></rect>
+          <rect class="anchor anchor_bottom_left visible enabled" width="9" height="9" stroke-width="1" rx="2" ry="2" x="0" y="26.400009155273438"></rect>
+          <rect class="anchor anchor_bottom_right visible enabled cursor-nwse-resize" width="9" height="9" stroke-width="1" rx="2" ry="2" x="97.28334045410156" y="26.400009155273438"></rect>
+
+     </svg>
+
+   
+
+     <script>
+          const draggableDiv = document.getElementById('draggableDiv');
+          const parentDiv = document.getElementById('parentDiv');
+
+          let offsetX = 0;
+          let offsetY = 0;
+          let isDragging = false;
+
+          draggableDiv.addEventListener('mousedown', (e) => {
+               isDragging = true;
+               offsetX = e.clientX - draggableDiv.offsetLeft;
+               offsetY = e.clientY - draggableDiv.offsetTop;
+               draggableDiv.style.cursor = 'grabbing';
+          });
+
+          document.addEventListener('mouseup', () => {
+               isDragging = false;
+               draggableDiv.style.cursor = 'grab';
+          });
+
+          document.addEventListener('mousemove', (e) => {
+               console.log(parentDiv.offsetHeight)
+               if (isDragging) {
+                    const x = e.clientX - offsetX;
+                    const y = e.clientY - offsetY;
+                    if (x < (parentDiv.offsetWidth - draggableDiv.offsetWidth) && y < (parentDiv.offsetHeight - draggableDiv.offsetHeight)) {
+                         draggableDiv.style.left = `${x}px`;
+                         draggableDiv.style.top = `${y}px`;
+
+                    }
+               }
+          });
+     </script>
 </body>
 
 </html>
