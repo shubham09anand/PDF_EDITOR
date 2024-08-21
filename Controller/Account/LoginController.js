@@ -1,4 +1,5 @@
 const User = require("../../Models/UserSignupModel");
+const jwt = require("jsonwebtoken");
 
 const signUp = async (req, res) => {
      try {
@@ -14,12 +15,16 @@ const signUp = async (req, res) => {
                const newUser = await User.create(userData);
 
                if (newUser) {
-                    res.status(200).json({
-                         status: 200,
-                         success: true,
-                         message: 'User registered successfully',
-                         user: newUser._id,
-                    });
+                    const token = jwt.sign({ userId: userData.userName }, "f_35Lightnig" , { expiresIn: "1d" });
+                    if (token) {
+                         res.status(200).json({
+                              status: 200,
+                              success: true,
+                              message: 'User registered successfully',
+                              user: newUser,
+                              token: token,
+                         });
+                    }
                }
                
           } else {

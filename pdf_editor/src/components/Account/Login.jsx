@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setLoginData } from "../../Features/Counter/LoginSlice";
 import { NavLink, useNavigate } from "react-router-dom";
-
+import API from '../../Api/Api';
 import Intro from "./Intro";
 
 const Login = () => {
@@ -31,7 +29,7 @@ const Login = () => {
      const handleLogin = async (e) => {
           e.preventDefault();
           try {
-               const response = await axios.post("http://127.0.0.1:8080/auth/login", { userName, password: userPassword });
+               const response = await API.post("/login", { userName, password: userPassword });
                setUserLoginDetails(response.data);
           } catch (error) {
                toast.warning("Something Went Wrong");

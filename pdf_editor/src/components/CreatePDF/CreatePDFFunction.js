@@ -1,5 +1,6 @@
 import axios from 'axios';
 import API from '../../Api/Api';
+import html2pdf from 'html2pdf.js';
 
 export const getDocumentContent = async (docID, userId) => {
      try {
@@ -7,6 +8,7 @@ export const getDocumentContent = async (docID, userId) => {
           return res
      } catch (error) {
           console.error(error);
+          return
      }
 }
 
@@ -57,3 +59,18 @@ export const generateAiImage = async (userInput) => {
      }
 };
 
+export const generatePdf = async () => {
+     const element = document.getElementById('container');
+
+     // Define PDF options
+     const options = {
+         margin: [10, 10],
+         filename: 'output.pdf',
+         image: { type: 'jpeg', quality: 0.98 },
+         html2canvas: { scale: 2 },
+         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+     };
+ 
+     // Generate PDF from HTML content
+     html2pdf().from(element).set(options).save();
+};
