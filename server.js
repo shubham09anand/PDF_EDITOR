@@ -33,7 +33,6 @@ io.on("connection", socket => {
   });
 
   socket.on('send-changes', delta => {
-    console.log(delta);
 
     const documentId = socket.documentId;
     if (documentId) {
@@ -48,15 +47,12 @@ io.on("connection", socket => {
   });
 });
 
-// Helper function to apply a delta to a document
 function applyDelta(doc, delta) {
-  // Quill's delta objects should be merged into the existing document
-  const QuillDelta = require('quill-delta'); // Ensure quill-delta is installed
+  const QuillDelta = require('quill-delta');
   const currentDoc = new QuillDelta(doc);
   const updatedDoc = currentDoc.compose(delta);
   return updatedDoc;
 }
-
 
 const port =  process.env.PORTS || 8080;
 
@@ -65,7 +61,6 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 connectDB();
-
 
 // Including existing routes
 app.use("/auth", require('./Routes/DocumentRoute.js'));

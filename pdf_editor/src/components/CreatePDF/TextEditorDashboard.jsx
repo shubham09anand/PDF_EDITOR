@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
 import avatar3 from '../../Assets/images/avatars/avatar-3.jpg';
 import VidoeCall from "./SupportFiles/VidoeCall";
 import ImageAi from "./SupportFiles/ImageAi";
@@ -16,13 +15,12 @@ import { nameDoc, saveDoc } from './CreatePDFFunction';
 const TextEditorDashboard = ({ getQuillContent }) => {
 
      const location = useLocation();
+     const docId = location.pathname.split("/");
+     const docAdmin = "66bcd5b9ad0ff7688f004212";
+
      const [docName, setDocName] = useState("Dummy 20");
      const [editorDisplay, setEditorDisplay] = useState(true);
      const [supportDisplay, setSupportDisplay] = useState(0);
-
-     const docId = location.pathname.split("/");
-     const docAdmin = "6608f032efa3e1a31913d0f3";
-
      const [link, setLink] = useState();
 
      useEffect(() => {
@@ -30,7 +28,7 @@ const TextEditorDashboard = ({ getQuillContent }) => {
      }, [link])
 
      const handleSaveDoc = () => {
-          const quillContent = getQuillContent();
+          const quillContent = getQuillContent;
           console.log(quillContent);
 
           saveDoc(docId[docId.length - 1], docName, docAdmin, quillContent)
@@ -74,27 +72,27 @@ const TextEditorDashboard = ({ getQuillContent }) => {
      return (
           <>
                <ToastContainer />
-               <nav className="w-full absolute bottom- z-20 border-4 backdrop-blur-lg flex justify-between bg-transparent">
-                    <div className="relative border-none bg-clip-padding dark:bg-neutral-700 flex w-full">
-                         <div className="h-fit border-r-0 bg-white relative w-fit">
-                              <div className="mr-2 bg-slate-100 px-2 flex">
-                                   <ul className='flex flex-co place-content-center'>
-                                        <li className={`hidden p-3 transition duration-300 ease-in-out cursor-pointer rounded-xl relative mx-auto ${editorDisplay ? "w-fit" : "w-full"}`}>
+               <nav className="w-fit z-20 border-r backdrop-blur-lg justify-between bg-transparent">
+                    <div className="relative border-none bg-clip-padding w-full">
+                         <div className="h-fit border-r-0 bg-white relative w-full">
+                              <div className="mr-2 px-2">
+                                   <ul className='place-content-center'>
+                                        <li className="hidden p-3 transition duration-300 ease-in-out cursor-pointer rounded-xl relative mx-auto w-full">
                                              <div>
                                                   <div className="flex items-start space-x-4">
                                                        <div className="shrink-0">
-                                                            <div className={`${editorDisplay ? "pr-0" : "pr-3"}`}>
+                                                            <div>
                                                                  <div
                                                                       className="bg-gray-300 rounded-full">
                                                                       <img src={avatar3} alt="" className='w-14 h-14 rounded-full' />
                                                                  </div>
                                                             </div>
                                                        </div>
-                                                       <div className={`${editorDisplay ? "grow hidden" : ""}`}>
-                                                            <p className="-mb-.5 font-bold text-neutral-800 dark:text-white">
+                                                       <div>
+                                                            <p className="-mb-.5 font-bold text-neutral-800">
                                                                  Jhon Doe
                                                             </p>
-                                                            <p className="text-neutral-500 dark:text-neutral-200 text-sm">
+                                                            <p className="text-sm">
                                                                  Admin
                                                             </p>
                                                        </div>
@@ -105,7 +103,7 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                              <div>
                                                   <div className="flex items-start space-x-2">
                                                        <div className="shrink-0">
-                                                            <div className={`${editorDisplay ? "pr-0" : "pr-3"}`}>
+                                                            <div>
                                                                  <div
                                                                       className="bg-gray-300 p-2 rounded-full">
                                                                       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-7 h-7">
@@ -115,9 +113,9 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                                                  </div>
                                                             </div>
                                                        </div>
-                                                       <div className={`flex space-x-2 ${editorDisplay ? "grow hidden" : ""}`}>
+                                                       <div className={`space-x-2 flex ${editorDisplay ? "hidden" : "block"}`}>
                                                             <input onChange={(e) => setDocName(e.target.value)} value={docName} type="text" className="mt-2 w-60 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Name Your Project" />
-                                                            <div onClick={handleNameDoc} className='bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
+                                                            <div onClick={handleNameDoc} className='bg-red-500 w-fit h-fit rounded-md flex place-content-center items-center p-1 mt-2'>
                                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">
                                                                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                                                  </svg>
@@ -128,14 +126,14 @@ const TextEditorDashboard = ({ getQuillContent }) => {
                                         </li>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
                                    </ul>
-                                   <ul className='flex'>
+                                   <ul>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.link} option={"Link"} description={"Copy This Link Send To Thise Whom You Want To Work With."} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={1} editorDisplay={editorDisplay} svg={optionSVG.video} option={"Video"} description={"Vidoe Call, Share Screen, Messaging"} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={2} editorDisplay={editorDisplay} svg={optionSVG.project} option={"Project"} description={"Upload Photos And Share With Other People Who Are In Team."} />
                                    </ul>
-                                   <ul className='flex'>
+                                   <ul>
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={3} editorDisplay={editorDisplay} svg={optionSVG.aiImage} option={"Text-To-Image Support"} description={"Text To Image Support."} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={4} editorDisplay={editorDisplay} svg={optionSVG.aiText} option={"Text-To-Text Support"} description={"AI Assistance For Text Support."} />

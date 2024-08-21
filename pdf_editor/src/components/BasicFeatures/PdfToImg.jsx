@@ -17,7 +17,7 @@ const PdfToImg = () => {
      const [loading, setLoading] = useState(false)
 
      const handleFileChange = async (e) => {
-          console.log(e.target.files)
+          // console.log(e.target.files)
           if (e.target.files[0].type !== 'application/pdf') {
                toast.error("Only PDF are allowed")
                return;
@@ -82,7 +82,7 @@ const PdfToImg = () => {
      const handlePageSelection = (pageIndex, imageUrl, e) => {
           e.stopPropagation();
           const index = pageDelete.indexOf(pageIndex);
-          console.log(selectedPage)
+          // console.log(selectedPage)
           if (index === -1) {
                setPageDelete([...pageDelete, pageIndex]);
                setSelectedPage([...selectedPage, imageUrl])
@@ -98,7 +98,7 @@ const PdfToImg = () => {
 
      const handleDownloadImage = () => {
           selectedPage.forEach((url, index) => {
-               console.log(selectedPage)
+               // console.log(selectedPage)
                const anchor = document.createElement('a');
                anchor.href = url;
                anchor.download = `Photo-${index + 1}`;
@@ -139,7 +139,7 @@ const PdfToImg = () => {
                     {selectedPage.length > 0 && (
                          <>
                               <div className='font-thin text-gray-700 text-center mt-2'>Tap on Image which you want to convert into image</div>
-                              <div className='font-extrabold text-gray-700 w-80 mx-auto overflow-x-scroll text-center text-wrap'>Page Slected : {pageDelete.map(index => index + 1).join(", ")}</div>
+                              <div className='font-extrabold text-gray-700 w-80 mx-auto overflow-x-scroll text-center'>Page Selected: {pageDelete.sort((a, b) => a - b).map(index => index + 1).join(", ")}</div>
                               <div onClick={handleDownloadImage} className='mb-4 mx-auto w-fit cursor-pointer active:opacity-80 items-center text-center place-content-center '>
                                    <div style={{ textDecoration: "none" }} className='px-5 py-3 space-x-4 flex place-content-center items-center bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] w-fit mt-5 text-white font-semibold text-2xl rounded-lg active:opacity-70 mx-auto'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-8" viewBox="0 0 16 16">

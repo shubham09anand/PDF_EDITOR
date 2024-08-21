@@ -41,7 +41,7 @@ const Layout = () => {
                          <Route path="/word_to_pdf" element={<WordToPdf />} />
                          <Route path="/add_page_number" element={<AddPageNumber />} />
                          <Route path="/create_pdf" element={<PreviousDocs />} />
-                         <Route path="/create_doc/" exact>
+                         <Route path="/create_doc/">
                               <Route path="/create_doc/" element={<Navigate replace to={`/create_doc/document/${uuidv4()}`} />} />
                          </Route>
                          <Route path="/create_doc/document/:id" element={<TextEditior isFocused={isFocused} controllDisplay={controllDisplay} />} />

@@ -3,11 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { validateLink } from './CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import axios from 'axios';
 import moment from 'moment';
-import addPdf from "../../Assets/images/icons/addPdf.png";
-import uploadFile from "../../Assets/images/icons/uploadFile.png";
-// import "../../Style/abc.css";
+import API from '../../Api/Api';
 
 const PreviousDocs = () => {
 
@@ -18,7 +15,7 @@ const PreviousDocs = () => {
      const userId = "66bcd5b9ad0ff7688f004212";
 
      useEffect(() => {
-          axios.post("http://127.0.0.1:8080/auth/getDocumentList", { userId: userId }).then((req) => {
+          API.post("/getDocumentList", { userId: userId }).then((req) => {
                setDoc(req.data.doc);
           }).catch((error) => {
                console.log(error)
@@ -39,12 +36,12 @@ const PreviousDocs = () => {
           }
           else {
                validateLink(docId[docId.length - 1]).then((res) => {
-                    // console.log(res)
+                    console.log(res)
                     if (res.data.status === 0 || res.data.success === false) {
                          toast.error("Invalid Link")
                          return
                     }
-                    else{
+                    else {
                          navigate(`/create_doc/document/${docId[docId.length - 1]}`);
                     }
                })
@@ -52,121 +49,76 @@ const PreviousDocs = () => {
      }
 
      return (
-          
-          <div className='sm:pl-2 w-full h-fit'>
-               {process.env.server}
+          <div className='sm:pl-2 w-3/5 mx-auto h-fit pt-20'>
                <ToastContainer />
-               <div className='w-full space-x-2 px-2 md:space-x-10 flex lg:hidden py-2'>
-                    <div onClick={() => setListDisplay(0)} className='shadow-inner rounded-lg w-full border-2 font-semibold text-sm text-center py-2 pl-2 cursor-pointer'>Your Previous Work</div>
-                    <div onClick={() => setListDisplay(1)} className='shadow-inner rounded-lg w-full border-2 font-semibold text-sm text-center py-2 pl-2 cursor-pointer'>Make A New PDF</div>
-               </div>
-               <div className='flex space-x-'>
-                    {
-                         listDisplay === 0 && (
-                              <div className='w-full lg:w-3/4'>
-                                   <h3 className="text-3xl pl-3 font-bold dark:text-white">Previous Files</h3>
-                                   <div className="mt-3 max-w-screen-lg px-2">
-                                        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-                                             <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-                                                  <thead className="text-xs uppercase bg-gray-500 text-white">
-                                                       <tr>
-                                                            <th scope="col" className="px-6 py-3 text-center">
-                                                                 File name
-                                                            </th>
-                                                            <th scope="col" className="px-6 py-3 text-center hidden md:block">
-                                                                 Date
-                                                            </th>
-                                                            <th scope="col" className="px-6 py-3 text-center">
-                                                                 Download
-                                                            </th>
-                                                            <th scope="col" className="px-6 py-3 text-center">
-                                                                 Edit
-                                                            </th>
-                                                       </tr>
-                                                  </thead>
-                                                  <tbody>
-                                                       {doc?.map((file, index) => (
-                                                            <tr key={index} className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                                                 <th scope="row" className="sm:pl-4 py-4 font-medium text-gray-900 whitespace-nowrap overflow-hidden dark:text-white relative">
-                                                                      <div className='flex pr-2 w-fit place-content-start md:pl-3 items-center space-x-3 rounded-3xl md:bg-gray-300 py-1.5 text-clip'>
-                                                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="hidden md:block w-6 h-6">
-                                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                                                           </svg>
-                                                                           <div className='max-w-32 w-fit sm:max-w-80 text-wrap md:text-base max-h-10 md:max-h-6 truncate px-1'>{file?.docName}</div>
-                                                                      </div>
-                                                                      <div className='pl-4 md:hidden bg-gray-200 rounded-3xl w-fit h-fit px-2 py-1 ml-2'>{moment(file.createdAt)?.format('YYYY-MM-DD')}</div>
-                                                                 </th>
-                                                                 <td className="px-6 py-4 text-center hidden md:block">
-                                                                      {moment(file.createdAt)?.format('YYYY-MM-DD')}
-                                                                 </td>
-                                                                 <td className="px-6 py-">
-                                                                      <div className=' cursor-pointer w-fit h-fit mx-auto px-2 py-1 bg-red-500 rounded-3xl'>
-                                                                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="w-6 h-6 mx-auto">
-                                                                                <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                                                           </svg>
-                                                                      </div>
-                                                                 </td>
-                                                                 <td className="px-6 py-4">
-                                                                      <Link to={`/create_doc/document/${file?.docID}`} className="font-medium text-blue-600 dark:text-blue-500 hover:underline">
-                                                                           <div className='w-fit h-fit mx-auto cursor-pointer'>
-                                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
-                                                                                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                                                                </svg>
-                                                                           </div>
-                                                                      </Link>
-                                                                 </td>
-                                                            </tr>
-                                                       ))}
-                                                  </tbody>
-                                             </table>
-                                        </div>
-                                   </div>
 
-                                   {
-                                        doc.length === 0 && (
-                                             <div className="text-md w-full text-center pt-10 font-semibold mb-3">No Previous Files</div>
-                                        )
-                                   }
-                              </div>
-                         )
-                    }
-
-                    {
-                         listDisplay === 1 && (
-                              <div className='pl-5 pr-5 sm:w-3/4 md:w-1/2 mx-auto pt-12 lg:hidden'>
-                                   <Link to="/create_doc" className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-400 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
-                                        <img src={addPdf} alt="" className='w-16 h-16 lg:w-24 lg:h-24' />
-                                        <div className='no-underline font-semibold w-fit mx-auto text-center text-lg'>Create A New Document</div>
-                                   </Link>
-                                   <div className='cursor-pointer px-3 h-32 w-full flex items-center border-b rounded-lg bg-gray-400 hover:bg-slate-500 my-2 active:opacity-20 duration-700'>
-                                        <img src={uploadFile} alt="" className='w-[5rem] h-[5rem] lg:w-[7rem] lg:h-[7rem]' />
-                                        <div className='font-semibold w-fit mx-auto text-center text-lg'>Upload A Exisiting PDF and Work</div>
-                                   </div>
-                              </div>
-                         )
-                    }
-
-                    <div className='px-10 w-1/2 mx-auto pt-12 hidden lg:block'>
-                         <div to="/create_doc" className='p-2 w-full flex items-center border-b bg-gray-200 my-2'>
-                              <img src={addPdf} alt="" className='w-[70px] h-[70px]'/>
-                              <div className='ml-2'>
-                                   <div className='w-fit'>Join A Meeting</div>
-                                   <div className='flex place-content-center items-center gap-x-2'>
-                                        <input onChange={(e) => setJoinLink(e.target.value)} value={joinLink} type="text" className="mt-1 w-60 lg:w-80 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Enter the link of Document" />
-                                        <div onClick={joinDoc} className='cursor-pointer bg-red-500 rounded-md flex place-content-center items-center p-1 mt-2'>
-                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                                             </svg>
-                                        </div>
-                                   </div>
-                              </div>
+               <div className='flex items-center gap-x-5 pl-2 w-full'>
+                    <Link style={{textDecoration:"none"}} to="/create_doc" className='w-80 flex place-content-center items-center gap-x-5  bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-md h-fit cursor-pointer px-4 py-2'>
+                         <svg xmlns="http://www.w3.org/2000/svg" fill="white" className="bi bi-file-pdf-fill size-6" viewBox="0 0 16 16">
+                              <path d="M5.523 10.424q.21-.124.459-.238a8 8 0 0 1-.45.606c-.28.337-.498.516-.635.572l-.035.012a.3.3 0 0 1-.026-.044c-.056-.11-.054-.216.04-.36.106-.165.319-.354.647-.548m2.455-1.647q-.178.037-.356.078a21 21 0 0 0 .5-1.05 12 12 0 0 0 .51.858q-.326.048-.654.114m2.525.939a4 4 0 0 1-.435-.41q.344.007.612.054c.317.057.466.147.518.209a.1.1 0 0 1 .026.064.44.44 0 0 1-.06.2.3.3 0 0 1-.094.124.1.1 0 0 1-.069.015c-.09-.003-.258-.066-.498-.256M8.278 4.97c-.04.244-.108.524-.2.829a5 5 0 0 1-.089-.346c-.076-.353-.087-.63-.046-.822.038-.177.11-.248.196-.283a.5.5 0 0 1 .145-.04c.013.03.028.092.032.198q.008.183-.038.465z" />
+                              <path fillRule="evenodd" d="M4 0h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2m.165 11.668c.09.18.23.343.438.419.207.075.412.04.58-.03.318-.13.635-.436.926-.786.333-.401.683-.927 1.021-1.51a11.6 11.6 0 0 1 1.997-.406c.3.383.61.713.91.95.28.22.603.403.934.417a.86.86 0 0 0 .51-.138c.155-.101.27-.247.354-.416.09-.181.145-.37.138-.563a.84.84 0 0 0-.2-.518c-.226-.27-.596-.4-.96-.465a5.8 5.8 0 0 0-1.335-.05 11 11 0 0 1-.98-1.686c.25-.66.437-1.284.52-1.794.036-.218.055-.426.048-.614a1.24 1.24 0 0 0-.127-.538.7.7 0 0 0-.477-.365c-.202-.043-.41 0-.601.077-.377.15-.576.47-.651.823-.073.34-.04.736.046 1.136.088.406.238.848.43 1.295a20 20 0 0 1-1.062 2.227 7.7 7.7 0 0 0-1.482.645c-.37.22-.699.48-.897.787-.21.326-.275.714-.08 1.103" />
+                         </svg>
+                         <div className='text-lg font-semibold text-white'>New Document</div>
+                    </Link>
+                    <div className='flex gap-x-5 w-full'>
+                         <div className='border-2 border-black rounded-md px-2 flex place-content-center items-center w-full'>
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="gray" className="size-6">
+                                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244" />
+                              </svg>
+                              <input onChange={(e)=> setJoinLink(e.target.value)} value={joinLink} type="text" id="input-group-1" className="w-full border-gray-300 text-gray-900 text-sm rounded-lg outline-none block ps-5 p-2.5" placeholder="Enter the link" />
                          </div>
-                         <Link style={{textDecoration:"none"}} to="/create_doc" className='cursor-pointer p-2 w-full flex items-center border-b bg-gray-200 my-2 active:opacity-20 duration-700'>
-                              <img src={addPdf} alt="" className='w-[70px] h-[70px]' />
-                              <div className='w-fit text-2xl pl-3'>Create A New Document</div>
-                         </Link>
+
+                         <div onClick={joinDoc} className='text-lg font-semibold text-white  bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] px-4 py-2 cursor-pointer rounded-md w-fit h-fit'>Join</div>
                     </div>
                </div>
+
+               {
+                    listDisplay === 0 && (
+                         <div className='w-full mt-2'>
+                              <div className='text-lg font-semibold pl-2 mb-2'>Recent documents</div>
+                              <div className="px-2">
+                                   <div className="relative p-2 overflow-x-auto border">
+                                        {doc?.map((file, index) => (
+                                             <div key={index} className='mx-auto py-2 px-2 bg-[#fafaf9] border border-gray-500 rounded-md flex place-content-center items-center justify-between mb-2 w-full'>
+                                                  <div className='flex place-content-center items-center gap-x-5'>
+                                                       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/400px-PDF_file_icon.svg.png" alt="" className='w-8 h-10' />
+                                                       <div className='text-black font-semibold text-sm'>{file?.docName}</div>
+                                                  </div>
+
+                                                  <div className='text-gray-600 font-semibold'>{moment(file.createdAt)?.format('YYYY-MM-DD')}</div>
+
+                                                  <div className='w-fit h-fit'>
+                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                       </svg>
+                                                  </div>
+
+                                                  <Link to={`/create_doc/document/${file?.docID}`} className='w-fit h-fit font-semibold flex place-content-center items-center gap-x-5'>
+                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                                                       </svg>
+                                                  </Link>
+
+                                                  <div className='w-fit h-fit font-semibold flex place-content-center items-center gap-x-5'>
+                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
+                                                       </svg>
+                                                  </div>
+                                             </div>
+                                        ))}
+                                   </div>
+                              </div>
+
+                              {
+                                   doc.length === 0 && (
+                                        <div className="text-md w-full text-center pt-10 font-semibold mb-3">No Previous Files</div>
+                                   )
+                              }
+
+                         </div>
+                    )
+               }
+
           </div>
      )
 }
