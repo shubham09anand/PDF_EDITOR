@@ -49,7 +49,8 @@ const PreviousDocs = () => {
      }
 
      return (
-          <div className='sm:pl-2 w-3/5 mx-auto h-fit pt-20'>
+          <div className='sm:pl-2 w-4/5 mx-auto h-fit pt-20'>
+               
                <ToastContainer />
 
                <div className='flex items-center gap-x-5 pl-2 w-full'>
@@ -82,7 +83,7 @@ const PreviousDocs = () => {
                                              <div key={index} className='mx-auto py-2 px-2 bg-[#fafaf9] border border-gray-500 rounded-md flex place-content-center items-center justify-between mb-2 w-full'>
                                                   <div className='flex place-content-center items-center gap-x-5'>
                                                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/400px-PDF_file_icon.svg.png" alt="" className='w-8 h-10' />
-                                                       <div className='text-black font-semibold text-sm'>{file?.docName}</div>
+                                                       <div className='text-black font-semibold text-sm w-48 truncate border-r'>{`${file?.docName}`}</div>
                                                   </div>
 
                                                   <div className='text-gray-600 font-semibold'>{moment(file.createdAt)?.format('YYYY-MM-DD')}</div>

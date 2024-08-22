@@ -18,8 +18,8 @@ const Home = () => {
      return (
           <section className="pt-5 text-gray-600 body-font w-full xl:p-2 xl:absolute right-0 h-8 -z-10 mt-0">
                <div className="container py-2 pt- mx-auto w-fit">
-                    <div className="select-none pb-10 flex flex-wrap place-content-center -m-4 gap-y-3 sm:gap-5 items-center mx-auto w-fit">
-                         <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                    <div className="select-none pb-10 flex flex-wrap place-content-center -m-4 gap-y-3 sm:gap-5 items-center mx-auto w-full">
+                         <div className="hidden place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={editFiles} />
                               </div>
@@ -28,7 +28,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Edit PDF</h2>
                               </div>
                          </div>
-                         <Link style={{ textDecoration: "none" }} to="/word_to_pdf" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/word_to_pdf" className="hidden  place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={pdfToword} />
                               </div>
@@ -37,7 +37,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Convert Format</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to="/merge_pdf" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/merge_pdf" className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={mergFiles} />
                               </div>
@@ -46,7 +46,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Merge PDF</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to="/split_pdf" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/split_pdf" className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={splitFiles} />
                               </div>
@@ -55,7 +55,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Split PDF</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to={`/create_pdf`} className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to={`/create_pdf`} className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={uplaodFiles} />
                               </div>
@@ -64,7 +64,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Create PDF</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to="/shuffle_pdf" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/shuffle_pdf" className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={oraganisePages} />
                               </div>
@@ -73,7 +73,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Reorganise Page</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to="/delete_pages" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/delete_pages" className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-">
 
                                    <div className='w-[70px] h-[88px] scale-90 bg-gradient-to-tr relative from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-lg flex place-content-center items-center '>
@@ -98,14 +98,13 @@ const Home = () => {
                                              </div>
                                         </div>
                                    </div>
-                                   {/* <img alt="ecommerce" className="object-cover object-center w-20 h-20 block" draggable={false} src={deletePages} /> */}
                               </div>
                               <div className="mt-4">
                                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">Delete Pages</h3>
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Delete Pages</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to="/pdf_to_img" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/pdf_to_img" className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="PDFImage" className="object-cover object-center w-20 h-20 block" draggable={false} src={image} />
                               </div>
@@ -114,7 +113,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">PDF To Image</h2>
                               </div>
                          </Link>
-                         <Link style={{ textDecoration: "none" }} to="/add_page_number" className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/add_page_number" className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 overflow-hidden">
                                    <img alt="ecommerce" className=" object-center w-20 h-20 block" draggable={false} src={pageNumber} />
                               </div>
@@ -123,7 +122,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Add Page Number</h2>
                               </div>
                          </Link>
-                         <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <div className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 overflow-hidden">
                                    <div className='w-40 h-20 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-lg flex place-content-center items-center relative'>
                                         <div className='absolute w-40 h-20 backdrop-blur-[10px] rounded-lg z-20'></div>
@@ -136,7 +135,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Evade Plagrisim</h2>
                               </div>
                          </div>
-                         <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <div className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 overflow-hidden">
                                    <img alt="ecommerce" className=" object-center w-20 h-20 block" draggable={false} src={compressPDF} />
                               </div>
@@ -145,7 +144,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Compress PDF</h2>
                               </div>
                          </div>
-                         <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <div className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 overflow-hidden">
                                    <img alt="ecommerce" className=" object-center w-20 h-20 block" draggable={false} src={pdfOCR} />
                               </div>
@@ -154,7 +153,7 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Perform OCR</h2>
                               </div>
                          </div>
-                         <div className="place-content-center items-center flex flex-col lg:w-1/5 sm:w-2/5 xl:w-1/4 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <div className="place-content-center items-center flex flex-col lg:w-1/4 sm:w-2/5 hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 overflow-hidden">
                                    <img alt="ecommerce" className=" object-center w-20 h-20 block" draggable={false} src={addWatermark} />
                               </div>

@@ -20,6 +20,9 @@ const { validateLink } = require("../Controller/Document/ValidateLink");
 // route to fetch existing document data
 const { getDocumentData } = require("../Controller/Document/getDoumentData");
 
+// route to download the pdf
+const { generatePDF } = require("../Controller/Document/getDocumentPDF");
+
 
 router.post('/createDoc', createDoc);
 router.post('/updateDoc', updateDoc);
@@ -27,6 +30,7 @@ router.post('/updateDocName', updateDocName);
 router.post('/getDocumentList', getDocument);
 router.post('/validateLink', validateLink);
 router.post('/getDocumentData', getDocumentData);
+router.post('/generate-pdf', generatePDF);
 
 
 module.exports = router;

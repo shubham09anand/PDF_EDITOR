@@ -2,12 +2,27 @@ const express = require('express');
 const cors = require("cors");
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
-
 dotenv.config();
-
 const app = express();
-
 const connectDB = require("./DatabseConnection/connection.js");
+
+const port = process.env.PORTS || 8080;
+
+app.use(bodyParser.json({ limit: '100mb' }));
+app.use(cors());
+app.use(express.json());
+app.use(bodyParser.json());
+connectDB();
+
+// Including existing routes
+app.use("/auth", require('./Routes/DocumentRoute.js'));
+app.use("/auth", require('./Routes/AccountRoutes.js'));
+app.use("/auth", require('./Routes/SupportRoutes.js'));
+app.use("/auth", require('./Routes/WebScraping.js'));
+
+app.listen(port, () => {
+  console.log("Node is running at :" + port);
+});
 
 const io = require('socket.io')(3001, {
   cors: {
@@ -33,7 +48,6 @@ io.on("connection", socket => {
   });
 
   socket.on('send-changes', delta => {
-
     const documentId = socket.documentId;
     if (documentId) {
       // Apply the delta to the document and broadcast the changes
@@ -47,27 +61,11 @@ io.on("connection", socket => {
   });
 });
 
+// Helper function to apply a delta to a document
 function applyDelta(doc, delta) {
-  const QuillDelta = require('quill-delta');
+  // Quill's delta objects should be merged into the existing document
+  const QuillDelta = require('quill-delta'); // Ensure quill-delta is installed
   const currentDoc = new QuillDelta(doc);
   const updatedDoc = currentDoc.compose(delta);
   return updatedDoc;
 }
-
-const port =  process.env.PORTS || 8080;
-
-app.use(bodyParser.json({ limit: '100mb' }));
-app.use(cors());
-app.use(express.json());
-app.use(bodyParser.json());
-connectDB();
-
-// Including existing routes
-app.use("/auth", require('./Routes/DocumentRoute.js'));
-app.use("/auth", require('./Routes/AccountRoutes.js'));
-app.use("/auth", require('./Routes/SupportRoutes.js'));
-app.use("/auth", require('./Routes/WebScraping.js'));
-
-app.listen(port, () => {
-  console.log("Node is running at :" + port);
-});

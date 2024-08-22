@@ -1,6 +1,5 @@
 import axios from 'axios';
 import API from '../../Api/Api';
-import html2pdf from 'html2pdf.js';
 
 export const getDocumentContent = async (docID, userId) => {
      try {
@@ -15,7 +14,7 @@ export const getDocumentContent = async (docID, userId) => {
 export const saveDoc = async (docId, docName, docAdmin, docContent) => {
      try {
           const res = await axios.post("http://127.0.0.1:8080/auth/createDoc", { docID: docId, docName: docName, docAdmin: docAdmin, docContent: docContent });
-          console.log(res.status);
+          return res
      } catch (error) {
           console.error(error);
      }
@@ -59,18 +58,22 @@ export const generateAiImage = async (userInput) => {
      }
 };
 
-export const generatePdf = async () => {
-     const element = document.getElementById('container');
+export const handleGeneratePdf = async (rawHTML) => {
+     try {
+          const response = await API.post('/generate-pdf', { htmlContent: rawHTML }, { responseType: 'blob' });
 
-     // Define PDF options
-     const options = {
-         margin: [10, 10],
-         filename: 'output.pdf',
-         image: { type: 'jpeg', quality: 0.98 },
-         html2canvas: { scale: 2 },
-         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-     };
- 
-     // Generate PDF from HTML content
-     html2pdf().from(element).set(options).save();
+          // Create a URL for the PDF and download it
+          const pdfBlob = new Blob([response.data], { type: 'application/pdf' });
+          const pdfUrl = URL.createObjectURL(pdfBlob);
+
+          const link = document.createElement('a');
+          link.href = pdfUrl;
+          link.setAttribute('download', 'generated.pdf');
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+
+     } catch (error) {
+          console.error('Failed to generate PDF:', error);
+     }
 };

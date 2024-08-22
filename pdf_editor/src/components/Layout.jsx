@@ -27,7 +27,7 @@ const Layout = () => {
      return (
          <>
            <div>
-               <Header controllDisplay={controllDisplay}/>
+               {/* <Header controllDisplay={controllDisplay}/> */}
                <div className='pt-16 w-screen'>
                     <Routes>
                          <Route path="/" element={<Home />} />

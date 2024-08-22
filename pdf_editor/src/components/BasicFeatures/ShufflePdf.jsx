@@ -2,30 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { PDFDocument } from 'pdf-lib';
 import LoadingPages from '../Animation/LoadingPages';
+import AboutFeature from './Components/AboutFeature';
+import UploadFile from './Components/UploadFile';
+import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ShufflePdf = () => {
-
   const [status, setStatus] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [images, setImages] = useState([]);
-  const [pageShuffle, setPageShuffle] = useState([]);
-  const [blob, setBlog] = useState(null);
-
+  const [pageOrder, setPageOrder] = useState([]);
+  const [blob, setBlob] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = async (e) => {
     if (e.target.files[0].type !== 'application/pdf') {
-      toast.error("Only PDF are allowed")
+      toast.error("Only PDFs are allowed");
       return;
     }
-    const files = (e.target.files);
+    const files = Array.from(e.target.files);
     setSelectedFiles(files);
+    setLoading(true);
   };
 
   useEffect(() => {
-    handleConversion();
+    if (selectedFiles.length > 0) {
+      handleConversion();
+    }
   }, [selectedFiles]);
 
   const convertToImage = async (file) => {
@@ -74,44 +80,75 @@ const ShufflePdf = () => {
       convertedImages.push(...images);
     }
     setImages(convertedImages);
+    setPageOrder(convertedImages.map((_, index) => index));
+    setLoading(false);
   };
 
+  const handleDragStart = (index) => {
+    setPageOrder((prevOrder) => {
+      const newOrder = [...prevOrder];
+      newOrder.draggedIndex = index;
+      return newOrder;
+    });
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleDrop = (e, index) => {
+    e.preventDefault();
+    const draggedIndex = e.dataTransfer.getData('text/plain');
+    const newPageOrder = [...pageOrder];
+    const draggedPage = newPageOrder.splice(draggedIndex, 1)[0];
+    newPageOrder.splice(index, 0, draggedPage);
+    setPageOrder(newPageOrder);
+  };
+
+  const handleDragEnd = () => {
+    setPageOrder((prevOrder) => {
+      const newOrder = [...prevOrder];
+      delete newOrder.draggedIndex;
+      return newOrder;
+    });
+  };
+
+  const generatePDF = async () => {
+    const pdfDoc = await PDFDocument.create();
+
+    for (const index of pageOrder) {
+      const file = selectedFiles[0];
+      const pageUrl = URL.createObjectURL(file);
+      const existingPdfBytes = await fetch(pageUrl).then(res => res.arrayBuffer());
+      const existingPdfDoc = await PDFDocument.load(existingPdfBytes);
+      const [page] = await pdfDoc.copyPages(existingPdfDoc, [index]);
+      pdfDoc.addPage(page);
+    }
+
+    const pdfBytes = await pdfDoc.save();
+    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+    const url = URL.createObjectURL(blob);
+    setBlob(url);
+  };
 
   return (
     <div className='w-full'>
-      <ToastContainer/>
-      <div className='text-center space-y-3 pt-4'>
-        <div className='text-4xl lg:text-5xl font-bold'>Organize PDF</div>
-        <div className='text-xl lg:text-2xl font-medium px-4'>Sort, add and delete PDF pages. Drag and drop the page thumbnails and sort them in our PDF organizer.</div>
-      </div>
+      <ToastContainer />
+
+      <AboutFeature featureHeading={'Organize PDF'} featureDescription={"Sort, add, and delete PDF pages. Drag and drop the page thumbnails and sort them in our PDF organizer."} />
+
+      {loading && images.length === 0 && <LoadingPages />}
 
       {selectedFiles.length === 0 && (
-        <div className="mt-10 mx-auto flex items-center justify-center w-1/3 bg-[#e5322d] rounded-lg cursor-pointer">
-          <label htmlFor="dropzone-file" className="flex flex-col items-center justify-center w-full h-40 rounded-lg cursor-pointer">
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-              </svg>
-              <p className="mb-2 text-4xl text-white"><span className="font-semibold">Click to upload Pdf</span></p>
-              <p className="text-base text-white">Uplaod Your Pdfs</p>
-            </div>
-            <input id="dropzone-file" type="file" multiple className="hidden" onChange={handleFileChange} onClick={() => setStatus(true)} />
-          </label>
-        </div>
+        <UploadFile handleFileChange={handleFileChange} multiple={false} />
       )}
-      {status && selectedFiles.length > 0 && images.length === 0 && <LoadingPages />}
 
       {images.length > 0 && (
-        <div className='flex mx-auto flex-wrap p-2 w-fit lg:ga place-content-center'>
-          {images.map((imageUrl, index) => (
-            <div
-              key={index}
-              draggable={true}
-
-              className={`p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl ${pageShuffle.includes(index) ? 'opacity-40' : ''}`}
-            >
+        <div className='flex mx-auto flex-wrap p-2 w-fit lg:gap-2 place-content-center'>
+          {pageOrder.map((index) => (
+            <div key={index} draggable onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index); }} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} className='p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl'>
               <div className='w-fit mx-auto'>
-                <img draggable={true} className='shadow-[1px_1px_4px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-move' src={imageUrl} alt={`Page ${index + 1}`} />
+                <img className='shadow-[1px_1px_4px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-move' src={images[index]} alt={`Page ${index + 1}`} />
                 <div className='text-center text-sm text-gray-500'>Page {index + 1}</div>
               </div>
             </div>
@@ -119,20 +156,29 @@ const ShufflePdf = () => {
         </div>
       )}
 
-      {pageShuffle.length > 0 && (<div className='px-4 py-2 bg-red-600 text-white w-fit h-fit rounded-lg'>Remove pages</div>)}
+      {pageOrder.length > 0 && (
 
-      <div>
-        {blob && (
-          <div className='mt-20 mx-auto w-fit items-center text-center place-content-center'>
-            <a href={blob} download={`deleted.pdf`} className='flex items-center bg-[#e5322d] w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 rounded-md active:opacity-70 mx-auto'>
-              <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth=".5" stroke="black" className="w-12 h-12 text-gray-600">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-              </svg>
-              <div>Download Modifed PDF</div>
-            </a>
+        <div className='flex gap-x-3 w-fit px-4 py-2 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5]  text-white rounded-md mx-auto cursor-pointer'>
+          <div className='flex gap-x-1'>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+            </svg>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+            </svg>
+
           </div>
-        )}
-      </div>
+          <div onClick={generatePDF}>Reorder The Pages</div>
+        </div>
+
+      )}
+
+      {blob && (
+        <DownLoadEditedPDF blob={blob} />
+      )}
     </div>
   );
 };
