@@ -2,21 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import avatar3 from '../../Assets/images/avatars/avatar-3.jpg';
-import VidoeCall from "./SupportFiles/VidoeCall";
-import ImageAi from "./SupportFiles/ImageAi";
-import TextAi from "./SupportFiles/TextAi";
-import ContentSupport from "./SupportFiles/ContentSupport";
-import ProjectStroage from "./SupportFiles/ProjectStroage";
+// import VidoeCall from "./SupportFiles/VidoeCall";
+// import ImageAi from "./SupportFiles/ImageAi";
+// import TextAi from "./SupportFiles/TextAi";
+// import ContentSupport from "./SupportFiles/ContentSupport";
+// import ProjectStroage from "./SupportFiles/ProjectStroage";
 import TextEditiorOptions from './TextEditiorOptions';
 
 import { useLocation } from 'react-router-dom';
-import { nameDoc, saveDoc } from './CreatePDFFunction';
+import { handleGeneratePdf, nameDoc, saveDoc } from './CreatePDFFunction';
 
-const TextEditorDashboard = ({ currentContent }) => {
+const TextEditorDashboard = ({ data, documentContent, documentName }) => {
 
      const optionSVG = {
           save: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-6 h-6"><path fillRule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clipRule="evenodd" /></svg>,
           link: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-6 h-6"><path fillRule="evenodd" d="M19.902 4.098a3.75 3.75 0 0 0-5.304 0l-4.5 4.5a3.75 3.75 0 0 0 1.035 6.037.75.75 0 0 1-.646 1.353 5.25 5.25 0 0 1-1.449-8.45l4.5-4.5a5.25 5.25 0 1 1 7.424 7.424l-1.757 1.757a.75.75 0 1 1-1.06-1.06l1.757-1.757a3.75 3.75 0 0 0 0-5.304Zm-7.389 4.267a.75.75 0 0 1 1-.353 5.25 5.25 0 0 1 1.449 8.45l-4.5 4.5a5.25 5.25 0 1 1-7.424-7.424l1.757-1.757a.75.75 0 1 1 1.06 1.06l-1.757 1.757a3.75 3.75 0 1 0 5.304 5.304l4.5-4.5a3.75 3.75 0 0 0-1.035-6.037.75.75 0 0 1-.354-1Z" clipRule="evenodd" /></svg>,
+          download: <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6"><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5 12 21m0 0-7.5-7.5M12 21V3" /></svg>,
           video: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-6 h-6"><path d="M4.5 4.5a3 3 0 0 0-3 3v9a3 3 0 0 0 3 3h8.25a3 3 0 0 0 3-3v-9a3 3 0 0 0-3-3H4.5ZM19.94 18.75l-2.69-2.69V7.94l2.69-2.69c.944-.945 2.56-.276 2.56 1.06v11.38c0 1.336-1.616 2.005-2.56 1.06Z" /></svg>,
           project: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-6 h-6"><path d="M19.5 21a3 3 0 0 0 3-3v-4.5a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3V18a3 3 0 0 0 3 3h15ZM1.5 10.146V6a3 3 0 0 1 3-3h5.379a2.25 2.25 0 0 1 1.59.659l2.122 2.121c.14.141.331.22.53.22H19.5a3 3 0 0 1 3 3v1.146A4.483 4.483 0 0 0 19.5 9h-15a4.483 4.483 0 0 0-3 1.146Z" /></svg>,
           aiImage: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-8 h-8 p-1"><path fillRule="evenodd" d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clipRule="evenodd" /></svg>,
@@ -28,7 +29,7 @@ const TextEditorDashboard = ({ currentContent }) => {
      const docId = location.pathname.split("/")[3];
      const docAdmin = "66bcd5b9ad0ff7688f004212";
 
-     const [docName, setDocName] = useState("Dummy 20");
+     const [docName, setDocName] = useState("Enter A Name");
      const [editorDisplay, setEditorDisplay] = useState(true);
      const [supportDisplay, setSupportDisplay] = useState(0);
      const [link, setLink] = useState();
@@ -36,18 +37,24 @@ const TextEditorDashboard = ({ currentContent }) => {
      useEffect(() => {
           setLink(location.pathname);
      }, [link])
-     
-     console.log(currentContent?.ops);
-     const handleSaveDoc = () => {
-          const quillContent = currentContent;
 
-          saveDoc(docId[docId.length - 1], docName, docAdmin, quillContent)
-               .then(() => {
-                    toast.success("Document saved successfully");
-               })
-               .catch(() => {
-                    toast.error(`Failed to save document`);
-               });
+     useEffect(()=>{
+          setDocName(documentName)
+     },[documentContent])
+
+     const saveDocument = async () => {
+
+          const quillContent = data;
+
+          console.log(quillContent);
+          try {
+               const response = await saveDoc(docId, docName, docAdmin, quillContent);
+               if (response?.data?.success) {
+                    toast.success("Document saved successfully!");
+               }
+          } catch (error) {
+               toast.error("Failed to save the document.");
+          }
      };
 
      const handleNameDoc = () => {
@@ -57,7 +64,6 @@ const TextEditorDashboard = ({ currentContent }) => {
           }
           nameDoc(docId, docName)
                .then((status) => {
-                    console.log(status);
                     if (status === 1) {
                          toast.success("Document name updated successfully");
                     } else {
@@ -68,6 +74,25 @@ const TextEditorDashboard = ({ currentContent }) => {
                     toast.error(`Failed to update document name: ${error.message}`);
                });
      };
+
+     const handleCopyLink = async () => {
+          try {
+               await window.navigator.clipboard.writeText(`${window.location.origin}${location.pathname}`);
+               toast.success("Link Copied")
+          } catch (err) {
+               toast.error("Link Failed")
+          }
+     }
+
+     const genratePDF = async () => {
+          try {
+               await handleGeneratePdf(documentContent);
+               toast.success("PDF Created")
+           } catch (error) {
+               toast.error("Failed to generate PDF.");
+           }
+  
+      };
 
      return (
           <>
@@ -124,10 +149,18 @@ const TextEditorDashboard = ({ currentContent }) => {
                                                   </div>
                                              </div>
                                         </li>
-                                        <TextEditiorOptions onClick={handleSaveDoc} optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
+                                        <div onClick={saveDocument}>
+                                             <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
+                                        </div>
                                    </ul>
                                    <ul>
-                                        <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.link} option={"Link"} description={"Copy This Link Send To Thise Whom You Want To Work With."} />
+                                        <div onClick={handleCopyLink}>
+                                             <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.link} option={"Link"} description={"Copy This Link Send To Thise Whom You Want To Work With."} />
+                                        </div>
+
+                                        <div onClick={genratePDF}>
+                                             <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.download} option={"Download"} description={"Save The Document As PDF"} />
+                                        </div>
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={1} editorDisplay={editorDisplay} svg={optionSVG.video} option={"Video"} description={"Vidoe Call, Share Screen, Messaging"} />
 
@@ -147,11 +180,6 @@ const TextEditorDashboard = ({ currentContent }) => {
                                    </svg>
                               </div>
                          </div>
-                         <div className={supportDisplay === 1 ? 'block w-full h' : 'hidden w-full'}><VidoeCall /></div>
-                         <div className={supportDisplay === 2 ? 'block w-full h' : 'hidden w-full'}><ProjectStroage /></div>
-                         <div className={supportDisplay === 3 ? 'block w-full h' : 'hidden w-full'}><ImageAi /></div>
-                         <div className={supportDisplay === 4 ? 'block w-full h' : 'hidden w-full'}><TextAi /></div>
-                         <div className={supportDisplay === 5 ? 'block w-full h' : 'hidden w-full'}><ContentSupport /></div>
                     </div>
                </nav>
           </>

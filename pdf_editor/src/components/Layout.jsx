@@ -28,7 +28,7 @@ const Layout = () => {
          <>
            <div>
                {/* <Header controllDisplay={controllDisplay}/> */}
-               <div className='pt-16 w-screen'>
+               <div className='pt- w-screen'>
                     <Routes>
                          <Route path="/" element={<Home />} />
                          <Route path="/signup" element={<Signup />} />

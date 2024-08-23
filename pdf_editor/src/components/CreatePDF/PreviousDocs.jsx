@@ -5,14 +5,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import moment from 'moment';
 import API from '../../Api/Api';
+import '../../Style/abc.css'
 
 const PreviousDocs = () => {
 
+     const userId = "66bcd5b9ad0ff7688f004212";
      const navigate = useNavigate();
      const [doc, setDoc] = useState([]);
      const [joinLink, setJoinLink] = useState("");
      const [listDisplay, setListDisplay] = useState(0)
-     const userId = "66bcd5b9ad0ff7688f004212";
 
      useEffect(() => {
           API.post("/getDocumentList", { userId: userId }).then((req) => {
@@ -49,7 +50,7 @@ const PreviousDocs = () => {
      }
 
      return (
-          <div className='sm:pl-2 w-4/5 mx-auto h-fit pt-20'>
+          <div className='sm:pl-2 w-4/5 mx-auto h-fit pt-0'>
                
                <ToastContainer />
 
@@ -119,7 +120,6 @@ const PreviousDocs = () => {
                          </div>
                     )
                }
-
           </div>
      )
 }

@@ -8,6 +8,7 @@ import DW from "../../../Assets/images/icons/DW.png";
 import CNN from "../../../Assets/images/icons/CNN.jpeg";
 import sunNews from "../../../Assets/images/icons/sunNews.png";
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
+import API from '../../../Api/Api';
 
 const ContentSupport = () => {
 
@@ -54,10 +55,12 @@ const ContentSupport = () => {
                return;
           }
           setButton(false);
-          axios.post("http://127.0.0.1:8080/auth/googleSearch",
-               { queery: queery, selectedOrigin: selectedOrigin }).then((res) => {
-                    setLinks(res.data.apiResult.items);
-                    setItemDisplay(1);
+          API.post("/googleSearch", { queery: queery, selectedOrigin: selectedOrigin }).
+               then((res) => {
+                    if (res.data?.apiResult?.items) {
+                         setLinks(res.data?.apiResult?.items);
+                         setItemDisplay(1);
+                    }
                }).catch(() => {
                     toast.error(`Process Failed With Stauats Code`)
                }).finally(() => {
@@ -70,12 +73,11 @@ const ContentSupport = () => {
                toast.error("Enter a text in input Field");
                return;
           }
-
           setSelectedArticle([link])
           steSummaryState(true);
           setButton(false);
-          axios.post("http://127.0.0.1:8080/auth/scrapeWebpage",
-               { slectedLink: link, conetntSnippet: snippet, contentTitle: tilte }).then((res) => {
+          API.post("/scrapeWebpage", { slectedLink: link, conetntSnippet: snippet, contentTitle: tilte }).
+               then((res) => {
                     setSummary(res.data)
                     setItemDisplay(2);
                     steSummaryState(false);
@@ -88,6 +90,24 @@ const ContentSupport = () => {
                     setButton(true)
                })
      }
+
+
+     const downloadImage = async (url, filename) => {
+          try {
+               const response = await fetch(url);
+               if (!response.ok) throw new Error('Network response was not ok');
+
+               const blob = await response.blob();
+               const link = document.createElement('a');
+               link.href = URL.createObjectURL(blob);
+               link.download = filename;
+               document.body.appendChild(link); // Append to body to make it work in Firefox
+               link.click();
+               document.body.removeChild(link); // Clean up
+          } catch (error) {
+               console.error('Error downloading the image:', error);
+          }
+     };
 
      return (
           <div className="p-2 lg:p-5 w-full flex bg-teal-lightest font-sans mx-auto h-fu backdrop-blur-2xl relative">
@@ -102,21 +122,32 @@ const ContentSupport = () => {
                               <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
                                    <div className='flex place-content-center items-center space-x-5'>
                                         {
-                                             links.length !== 0 && (
+                                             links && links?.length !== 0 ? (
                                                   <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                                                   </svg>
-                                             )
+                                             ) :
+                                                  <div>No Links Found Realted To Your Querry</div>
                                         }
                                    </div>
                                    <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
+                                   <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Dropdown button
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+</div>
                                    <div className="dropdown w-60 mx-auto">
                                         <button className="border border-black w-60 btn bg-[#ffffff] dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                              {selectedOrigin}
                                         </button>
                                         <ul className="dropdown-menu w-60">
                                              {
-                                                  newsOutletLinks.map((items, index) => (
+                                                  newsOutletLinks?.map((items, index) => (
                                                        <li key={index} onClick={() => setSelectedOrigin(items.link)}>
                                                             <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
                                                                  <img src={items.photo} alt="" className='w-8 h-8' />
@@ -157,7 +188,7 @@ const ContentSupport = () => {
                                         )
                                    }
                               </div>
-                              {links.map((link, index) => (
+                              {links?.map((link, index) => (
                                    <div key={index} className="flex items-center">
                                         <div className="relative w-full">
                                              <input id="website-url" type="text" className="bg-gray-50 border-r-0 border rounded-l-xl font-extrabold border-gray-300 text-gray-500 outline-none text-sm block w-full p-3" value={link.link} readOnly />
@@ -197,7 +228,7 @@ const ContentSupport = () => {
                          }
 
                          <div className="md:p-4">
-                              <p className="mb-3 text-gray-600 dark:text-gray-400 sm:border-s-4 md:pl-4">
+                              <p className="mb-3 text-gray-600 sm:border-s-4 md:pl-4">
                                    {summary?.genaratedSummary?.generatedText.split('\n').map((line, index) => (
                                         <React.Fragment key={index}>
                                              {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
@@ -214,7 +245,7 @@ const ContentSupport = () => {
                                              <br />
                                         </React.Fragment>
                                    ))}
-                              <a target='_blank' rel='noreferrer' className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
+                                   <a target='_blank' rel='noreferrer' className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
                               </p>
                          </div>
                     </div>
@@ -227,27 +258,28 @@ const ContentSupport = () => {
                               <div className="heading text-center font-bold text-3xl my-3 text-gray-800">Genrate Images</div>
                          </div>
                          <div className="-m-1 mb-20 w-fit mx-auto flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example">
-                              {
-                                   links.map((link, index) => (
-                                        <div key={index} className='relative w-fit m-1 mx-auto'>
-                                             <div className='flex space-x-4 absolute top-3 right-3 bg-white rounded-md'>
+                              {links?.map((link, index) => {
+                                   const imageUrl = link?.pagemap?.cse_image[0]?.src;
+
+                                   return (
+                                        <div onContextMenu={(e) => e.preventDefault()} key={index} className="relative w-fit m-1 mx-auto">
+                                             <div className="flex space-x-4 absolute top-3 right-3 bg-white rounded-md">
                                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
                                                   </svg>
-                                                  <a href={link} download={`${queery}_${index}.png`}>
-                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                                       </svg>
-                                                  </a>
-                                                  <svg onClick={() => setSelectedImage(link?.pagemap.cse_image[0]?.src)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                  <svg onClick={() => downloadImage(imageUrl, `${queery}_${index}.png`)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                  </svg>
+                                                  <svg onClick={() => setSelectedImage(imageUrl)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                                                   </svg>
                                              </div>
-                                             <img className="object-cover object-center shadow w-80 h-56 max-w-full rounded-lg" src={link?.pagemap.cse_image[0]?.src} alt={`${queery}_${index}`} />
+                                             <img className="object-cover object-center shadow w-80 h-56 max-w-full rounded-lg" src={imageUrl} alt={`${queery}_${index}`} />
                                         </div>
-                                   ))
-                              }
+                                   );
+                              })}
                          </div>
+
                     </div>
 
                     {
@@ -257,7 +289,6 @@ const ContentSupport = () => {
                                    <svg onClick={() => setSelectedImage(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 backdrop-blur-3xl cursor-pointer rounded-full absolute top-5 right-10">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                    </svg>
-
                               </div>
                          )
                     }

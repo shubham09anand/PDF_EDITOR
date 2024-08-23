@@ -5,9 +5,10 @@ import { io } from "socket.io-client";
 import { useLocation } from 'react-router-dom';
 import { saveDoc, getDocumentContent, handleGeneratePdf } from './CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
+import TextEditorDashboard from './TextEditorDashboard';
 import ImageResize from 'quill-image-resize-module-react';
 import 'react-toastify/dist/ReactToastify.css';
-import '../../Style/abc.css'
+import '../../Style/abc.css';
 
 const TextEditor = () => {
 
@@ -16,26 +17,25 @@ const TextEditor = () => {
     const docId = location.pathname.split("/")[3];
     const [socket, setSocket] = useState(null);
     const [quill, setQuill] = useState(null);
-    const [initialLoadComplete, setInitialLoadComplete] = useState(false)
+    const [initialLoadComplete, setInitialLoadComplete] = useState(false);
+    const [content, setContent] = useState(null);
+    const [rawHTML, setRawHTML] = useState(null);
+    const [docName, setDocName] = useState("")
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
         ['blockquote', 'code-block'],
         ['link', 'image', 'formula'],
-
         [{ 'header': 1 }, { 'header': 2 }],
         [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
         [{ 'script': 'sub' }, { 'script': 'super' }],
         [{ 'indent': '-1' }, { 'indent': '+1' }],
         [{ 'direction': 'rtl' }],
-
         [{ 'size': ['small', false, 'large', 'huge'] }],
         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-
         [{ 'color': [] }, { 'background': [] }],
         [{ 'font': [] }],
         [{ 'align': [] }],
-
         ['clean']
     ];
 
@@ -56,17 +56,11 @@ const TextEditor = () => {
             const documentResponse = await getDocumentContent(docId, userId);
 
             if (documentResponse?.data) {
-
-                const documentData = documentResponse?.data?.doc?.docContent?.ops
-
-                console.log(documentData)
-
+                setDocName(documentResponse?.data?.doc?.docName)
+                const documentData = documentResponse?.data?.doc?.docContent?.ops;
                 quill.setContents(documentData);
-
                 quill.enable();
-
                 setInitialLoadComplete(true);
-
             } else {
                 toast.error("Failed to load document content.");
             }
@@ -79,7 +73,7 @@ const TextEditor = () => {
     useEffect(() => {
         if (socket === null || quill === null) return;
 
-        socket.once("load-document", document => {
+        socket.once("load-document", () => {
             quill.enable();
         });
 
@@ -127,7 +121,7 @@ const TextEditor = () => {
                 toolbar: toolbarOptions,
                 imageResize: {
                     parchment: Quill.import('parchment')
-               }
+                }
             },
             theme: 'snow'
         });
@@ -136,42 +130,32 @@ const TextEditor = () => {
         setQuill(q);
     }, [userId]);
 
-    const saveDocument = async () => {
+
+    useEffect(() => {
         if (quill === null) return;
 
-        const extractedContent = quill.getContents();
+        const updateContent = () => {
+            setContent(quill.getContents());
+            const editorHTML = quill.root.innerHTML;
+            setRawHTML(editorHTML)
+        };
 
-        try {
-            const response = await saveDoc(docId, "Dummy", userId, extractedContent);
-            if (response?.data?.success) {
-                toast.success("Document saved successfully!");
-            }
-        } catch (error) {
-            toast.error("Failed to save the document.");
-        }
-    };
+        updateContent();
 
-    const genratePDF = async () => {
-        if (quill === null) return;
-    
-        const editorHTML = quill.root.innerHTML;
-    
-        try {
-            await handleGeneratePdf(editorHTML);
-        } catch (error) {
-            toast.error("Failed to generate PDF.");
-        }
-    };
-    
+        // Listen to text-change to update content
+        quill.on('text-change', updateContent);
+
+        return () => {
+            quill.off('text-change', updateContent);
+        };
+    }, [quill]);
+
     return (
         <div>
-            <ToastContainer/>
-        <div>
-            <div id='container' ref={wrapperRef}></div>
-        </div>
-            <div className="flex gap-4 absolute z-20">
-                <div onClick={saveDocument} className="px-6 py-2 min-w-[120px] text-center text-white bg-violet-600 border border-violet-600 rounded active:text-violet-500 hover:bg-transparent hover:text-violet-600 focus:outline-none focus:ring">Save</div>
-                <div onClick={genratePDF} className="px-6 py-2 min-w-[120px] text-center text-violet-600 border border-violet-600 rounded hover:bg-violet-600 hover:text-white active:bg-indigo-500 focus:outline-none focus:ring">Download</div>
+            <ToastContainer />
+            <div className='flex'>
+                <TextEditorDashboard data={content} documentContent={rawHTML} documentName={docName} />
+                <div id='container' ref={wrapperRef}></div>
             </div>
         </div>
     );

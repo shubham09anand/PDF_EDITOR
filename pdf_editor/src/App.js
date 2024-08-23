@@ -1,6 +1,8 @@
 import './App.css';
-import TextEditor from './components/CreatePDF/TextEditior';
 import Layout from './components/Layout';
+// import TextAi from "./components/CreatePDF/SupportFiles/TextAi";
+import ContentSupport from "./components/CreatePDF/SupportFiles/ContentSupport";
+// import ProjectStroage from "./SupportFiles/ProjectStroage";
 
 function App() {
   return (
