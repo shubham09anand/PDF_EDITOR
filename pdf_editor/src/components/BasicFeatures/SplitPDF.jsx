@@ -160,7 +160,7 @@ const SplitPDF = () => {
                                    <div className='text-sm text-center text-black font-semibold'>Total Number of page in PDF {pdfTotalPage}</div>
                                    <div>
                                         <div className="max-w-80 mb-4 mx-auto">
-                                             <label htmlFor="number-input" className="block mb-2 text-sm text-gray-900 dark:text-white font-semibold">Split PDF into</label>
+                                             <label htmlFor="number-input" className="block mb-2 text-sm text-gray-900 font-semibold">Split PDF into</label>
                                              <input
                                                   onChange={handlepdfSplitCountChange}
                                                   value={pdfSplitCount}
@@ -176,8 +176,8 @@ const SplitPDF = () => {
                                              <div key={index} className='overflow-x-scroll example'>
                                                   <div key={index} className="overflow-x-scroll example relative mx-auto w-fit mt-3 px-3 pb-3 space-x-9 lg:space-x-16 flex items-center">
                                                        <div className='relative'>
-                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Splitted Pdf</label>
-                                                            <div className="my-auto h-fit mt-5 py-2 relative cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg w-80 flex flex-col place-content-center items-center">
+                                                            <label htmlFor="number-input" className="block text-sm text-gray-900 font-semibold mb-3">Splitted Pdf</label>
+                                                            <div className="my-auto h-fit py-2 relative cursor-move mx-auto bg-white border-2 shadow-inner animate-pulse border-gray-200 rounded-lg w-80 flex flex-col place-content-center items-center">
                                                                  <div className='text-xs rounded-full text-center flex place-content-center items-center w-4 h-4 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white absolute z-10 -top-2 -left-2 animate-bounce'>{index + 1}</div>
                                                                  <div className="flex space-x-4 h-full w-full">
                                                                       <div className="bg-white border-r-2 border-black px-3 h-full my-auto flex place-content-center items-center">
@@ -195,11 +195,11 @@ const SplitPDF = () => {
                                                        <div className='relative h-fit'>
                                                             <div className='space-x-9 lg:space-x-16 flex items-center'>
                                                                  <div>
-                                                                      <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">Start Page</label>
+                                                                      <label htmlFor="number-input" className="block text-sm text-gray-900 font-semibold mb-3">Start Page</label>
                                                                       <input onChange={(e) => handleSplitRangeChange(index, 0, e.target.value)} value={pageRanges[index][0]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="1" required />
                                                                  </div>
                                                                  <div>
-                                                                      <label htmlFor="number-input" className="block text-sm text-gray-900 dark:text-white font-semibold mb-3">End Page</label>
+                                                                      <label htmlFor="number-input" className="block text-sm text-gray-900 font-semibold mb-3">End Page</label>
                                                                       <input onChange={(e) => handleSplitRangeChange(index, 1, e.target.value)} value={pageRanges[index][1]} type="text" id="number-input" className="bg-gray-50 border border-gray-300 text-gray-900 min-w-40 max-w-60 text-sm rounded-lg outline-none font-semibold block w-full p-2.5" placeholder="2" required />
                                                                  </div>
                                                             </div>

@@ -13,8 +13,6 @@ import WordToPdf from './BasicFeatures/WordToPdf';
 import AddPageNumber from './BasicFeatures/AddPageNumber';
 import Header from './Header';
 import PreviousDocs from './CreatePDF/PreviousDocs';
-import Login from './Account/Login';
-import Signup from './Account/Signup';
 
 const Layout = () => {
 
@@ -31,8 +29,6 @@ const Layout = () => {
                <div className='pt- w-screen'>
                     <Routes>
                          <Route path="/" element={<Home />} />
-                         <Route path="/signup" element={<Signup />} />
-                         <Route path="/login" element={<Login />} />
                          <Route path="/split_pdf" element={<SplitPDF />} />
                          <Route path="/pdf_to_img" element={<PdfToImg />} />
                          <Route path="/delete_pages" element={<DeletePages />} />
