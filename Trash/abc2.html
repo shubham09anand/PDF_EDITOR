@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>Document</title>
+</head>
+
+<script>
+     function replaceSpacesWithSpan(htmlString) {
+    // Create a temporary element to parse the HTML string
+    var tempElement = document.createElement('div');
+    tempElement.innerHTML = htmlString;
+
+    // Get all elements inside the temporary element
+    var elements = tempElement.querySelectorAll('*');
+
+    // Iterate over each element and replace spaces with span tags
+    elements.forEach(function(element) {
+        if (element.childNodes.length === 1 && element.childNodes[0].nodeType === Node.TEXT_NODE) {
+            // Replace spaces with span tags containing commas
+            var innerText = element.innerText.replace(/\s+/g, function(match) {
+                return '<span style="color: white; user-select: none;">, </span>';
+            });
+            // Update the inner HTML of the element
+            element.innerHTML = innerText;
+        }
+    });
+
+    // Return the modified HTML string
+    return tempElement.innerHTML;
+}
+
+// Example usage
+var htmlText = `<h2><strong class="ql-size-huge">What is the 12-12-12 decluttering method? </strong></h2><p><span class="ql-size-large">This idea comes from <a href="https://www.becomingminimalist.com/14-decluttering-tasks" rel="noopener noreferrer" target="_blank" class="ql-size-large"><u>Joshua Becker of Becoming Minimalist</u></a><span class="ql-size-large">. He has rounded up 14 achievable methods you can use to declutter, and 12-12-12 tops the list. It's simple: Every day, you find 12 things to throw away, 12 things to donate, and 12 things to be put away where they actually go. </span></p><p><span class="ql-size-large">Twelve is a good number to work with. It’s small enough to feel achievable, but big enough to present a bit of a challenge. The first five or so things you throw away will be easy: Find some trash and some broken stuff and toss it. But then keep going, being a little more judicious (or ambitious) so you can hit 12. </span></p><p><span class="ql-size-large">Pre-determining how many items you want to get rid of helps you stay on task and gives you a more concrete goal, which is key if you tend to back off a cleaning project when you start feeling overwhelmed. If you surpass 12 in any category, good for you! But keeping that as the benchmark can give you a little push when you're struggling.</span></p>`;
+
+var modifiedText = replaceSpacesWithSpan(htmlText);
+console.log(modifiedText);
+
+</script>
+<body>
+     
+</body>
+</html>
