@@ -1,38 +1,9 @@
 import axios from 'axios';
 import API from '../../Api/Api';
 
-export const getDocumentContent = async (docID, userId) => {
-     try {
-          const res = await API.post("/getDocumentData", { docID: docID, userId: userId });
-          return res
-     } catch (error) {
-          console.error(error);
-          return
-     }
-}
-
-export const saveDoc = async (docId, docName, docAdmin, docContent) => {
-     try {
-          const res = await axios.post("http://127.0.0.1:8080/auth/createDoc", { docID: docId, docName: docName, docAdmin: docAdmin, docContent: docContent });
-          return res
-     } catch (error) {
-          console.error(error);
-     }
-};
-
-export const nameDoc = async (docId, newName) => {
-     try {
-          const res = await axios.post("http://127.0.0.1:8080/auth/updateDocName", { docID: docId, newName: newName });
-          // console.log(res.data);
-          return res.data.status
-     } catch (error) {
-          console.error(error);
-     }
-};
-
 export const projectStroage = async (projectId, projectStorageContent) => {
      try {
-          const res = await axios.post("http://127.0.0.1:8080/auth/projectStroage", { projectId: projectId, projectStorageContent: projectStorageContent });
+          const res = await API.post("/projectStroage", { projectId: projectId, projectStorageContent: projectStorageContent });
           // console.log(res.data);
           return res
      } catch (error) {
@@ -51,7 +22,7 @@ export const validateLink = async (docId) => {
 
 export const generateAiImage = async (userInput) => {
      try {
-          const res = await axios.post("http://127.0.0.1:8080/auth/aiImage", { userInput: userInput });
+          const res = await API.post("/aiImage", { userInput: userInput });
           return res
      } catch (error) {
           console.error(error);

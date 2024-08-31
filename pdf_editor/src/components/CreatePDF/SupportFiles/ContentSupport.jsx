@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import bbcNews from "../../../Assets/images/icons/bbcNews.png";
@@ -91,7 +90,6 @@ const ContentSupport = () => {
                })
      }
 
-
      const downloadImage = async (url, filename) => {
           try {
                const response = await fetch(url);
@@ -132,15 +130,15 @@ const ContentSupport = () => {
                                    </div>
                                    <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
                                    <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Dropdown button
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-  </div>
-</div>
+                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                             Dropdown button
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                             <a class="dropdown-item" href="#">Action</a>
+                                             <a class="dropdown-item" href="#">Another action</a>
+                                             <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                   </div>
                                    <div className="dropdown w-60 mx-auto">
                                         <button className="border border-black w-60 btn bg-[#ffffff] dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                              {selectedOrigin}

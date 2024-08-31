@@ -10,7 +10,7 @@ import avatar3 from '../../Assets/images/avatars/avatar-3.jpg';
 import TextEditiorOptions from './TextEditiorOptions';
 
 import { useLocation } from 'react-router-dom';
-import { handleGeneratePdf, nameDoc, saveDoc } from './CreatePDFFunction';
+import { handleGeneratePdf } from './CreatePDFFunction';
 
 const TextEditorDashboard = ({ data, documentContent, documentName }) => {
 
@@ -26,54 +26,22 @@ const TextEditorDashboard = ({ data, documentContent, documentName }) => {
      }
 
      const location = useLocation();
-     const docId = location.pathname.split("/")[3];
-     const docAdmin = "66bcd5b9ad0ff7688f004212";
 
      const [docName, setDocName] = useState("Enter A Name");
      const [editorDisplay, setEditorDisplay] = useState(true);
+     // eslint-disable-next-line
      const [supportDisplay, setSupportDisplay] = useState(0);
      const [link, setLink] = useState();
 
      useEffect(() => {
           setLink(location.pathname);
+          // eslint-disable-next-line 
      }, [link])
 
      useEffect(()=>{
           setDocName(documentName)
+          // eslint-disable-next-line
      },[documentContent])
-
-     const saveDocument = async () => {
-
-          const quillContent = data;
-
-          console.log(quillContent);
-          try {
-               const response = await saveDoc(docId, docName, docAdmin, quillContent);
-               if (response?.data?.success) {
-                    toast.success("Document saved successfully!");
-               }
-          } catch (error) {
-               toast.error("Failed to save the document.");
-          }
-     };
-
-     const handleNameDoc = () => {
-          if (docName === "") {
-               toast.info("A Name for Doc Is Required");
-               return;
-          }
-          nameDoc(docId, docName)
-               .then((status) => {
-                    if (status === 1) {
-                         toast.success("Document name updated successfully");
-                    } else {
-                         toast.error("Something Went Wrong");
-                    }
-               })
-               .catch((error) => {
-                    toast.error(`Failed to update document name: ${error.message}`);
-               });
-     };
 
      const handleCopyLink = async () => {
           try {
@@ -140,7 +108,7 @@ const TextEditorDashboard = ({ data, documentContent, documentName }) => {
                                                        </div>
                                                        <div className={`space-x-2 flex ${editorDisplay ? "hidden" : "block"}`}>
                                                             <input onChange={(e) => setDocName(e.target.value)} value={docName} type="text" className="mt-2 w-60 py-1 pl-2 pr-4 text-gray-700 bg-white border border-gray-500 rounded-md outline-none" placeholder="Name Your Project" />
-                                                            <div onClick={handleNameDoc} className='bg-red-500 w-fit h-fit rounded-md flex place-content-center items-center p-1 mt-2'>
+                                                            <div className='bg-red-500 w-fit h-fit rounded-md flex place-content-center items-center p-1 mt-2'>
                                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="white" className="w-6 h-6 p-1">
                                                                       <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                                                  </svg>
@@ -149,7 +117,7 @@ const TextEditorDashboard = ({ data, documentContent, documentName }) => {
                                                   </div>
                                              </div>
                                         </li>
-                                        <div onClick={saveDocument}>
+                                        <div>
                                              <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
                                         </div>
                                    </ul>

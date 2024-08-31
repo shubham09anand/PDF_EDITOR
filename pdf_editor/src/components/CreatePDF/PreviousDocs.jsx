@@ -1,32 +1,18 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { validateLink } from './CreatePDFFunction';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import moment from 'moment';
-import API from '../../Api/Api';
 import '../../Style/abc.css'
 
 const PreviousDocs = () => {
 
-     const userId = "66bcd5b9ad0ff7688f004212";
      const navigate = useNavigate();
-     const [doc, setDoc] = useState([]);
      const [joinLink, setJoinLink] = useState("");
-     const [listDisplay, setListDisplay] = useState(0)
-
-     useEffect(() => {
-          API.post("/getDocumentList", { userId: userId }).then((req) => {
-               setDoc(req.data.doc);
-          }).catch((error) => {
-               console.log(error)
-               toast.error("Something Went Wrong While Loading Previous Document")
-          })
-     }, [userId])
 
      const joinDoc = () => {
           const docId = joinLink.split("/");
-          console.log(docId)
+          // console.log(docId)
           if (joinLink === "" || joinLink === null) {
                toast.info("Enter A Room Link")
                return
@@ -37,7 +23,7 @@ const PreviousDocs = () => {
           }
           else {
                validateLink(docId[docId.length - 1]).then((res) => {
-                    console.log(res)
+                    // console.log(res)
                     if (res.data.status === 0 || res.data.success === false) {
                          toast.error("Invalid Link")
                          return
@@ -73,53 +59,6 @@ const PreviousDocs = () => {
                          <div onClick={joinDoc} className='text-lg font-semibold text-white  bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] px-4 py-2 cursor-pointer rounded-md w-fit h-fit'>Join</div>
                     </div>
                </div>
-
-               {
-                    listDisplay === 0 && (
-                         <div className='w-full mt-2'>
-                              <div className='text-lg font-semibold pl-2 mb-2'>Recent documents</div>
-                              <div className="px-2">
-                                   <div className="relative p-2 overflow-x-auto border">
-                                        {doc?.map((file, index) => (
-                                             <div key={index} className='mx-auto py-2 px-2 bg-[#fafaf9] border border-gray-500 rounded-md flex place-content-center items-center justify-between mb-2 w-full'>
-                                                  <div className='flex place-content-center items-center gap-x-5'>
-                                                       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/PDF_file_icon.svg/400px-PDF_file_icon.svg.png" alt="" className='w-8 h-10' />
-                                                       <div className='text-black font-semibold text-sm w-48 truncate border-r'>{`${file?.docName}`}</div>
-                                                  </div>
-
-                                                  <div className='text-gray-600 font-semibold'>{moment(file.createdAt)?.format('YYYY-MM-DD')}</div>
-
-                                                  <div className='w-fit h-fit'>
-                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                                       </svg>
-                                                  </div>
-
-                                                  <Link to={`/create_doc/document/${file?.docID}`} className='w-fit h-fit font-semibold flex place-content-center items-center gap-x-5'>
-                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                       </svg>
-                                                  </Link>
-
-                                                  <div className='w-fit h-fit font-semibold flex place-content-center items-center gap-x-5'>
-                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                                                            <path strokeLinecap="round" strokeLinejoin="round" d="m20.25 7.5-.625 10.632a2.25 2.25 0 0 1-2.247 2.118H6.622a2.25 2.25 0 0 1-2.247-2.118L3.75 7.5m6 4.125 2.25 2.25m0 0 2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125Z" />
-                                                       </svg>
-                                                  </div>
-                                             </div>
-                                        ))}
-                                   </div>
-                              </div>
-
-                              {
-                                   doc.length === 0 && (
-                                        <div className="text-md w-full text-center pt-10 font-semibold mb-3">No Previous Files</div>
-                                   )
-                              }
-
-                         </div>
-                    )
-               }
           </div>
      )
 }

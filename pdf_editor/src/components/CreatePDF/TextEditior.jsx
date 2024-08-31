@@ -3,8 +3,7 @@ import Quill from 'quill';
 import "quill/dist/quill.snow.css";
 import { io } from "socket.io-client";
 import { useLocation } from 'react-router-dom';
-import { saveDoc, getDocumentContent, handleGeneratePdf } from './CreatePDFFunction';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer} from 'react-toastify';
 import TextEditorDashboard from './TextEditorDashboard';
 import ImageResize from 'quill-image-resize-module-react';
 import 'react-toastify/dist/ReactToastify.css';
@@ -17,10 +16,8 @@ const TextEditor = () => {
     const docId = location.pathname.split("/")[3];
     const [socket, setSocket] = useState(null);
     const [quill, setQuill] = useState(null);
-    const [initialLoadComplete, setInitialLoadComplete] = useState(false);
     const [content, setContent] = useState(null);
     const [rawHTML, setRawHTML] = useState(null);
-    const [docName, setDocName] = useState("")
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -47,28 +44,6 @@ const TextEditor = () => {
             s.disconnect();
         };
     }, []);
-
-    //getting previous content of document
-    useEffect(() => {
-        if (socket === null || quill === null || initialLoadComplete) return;
-
-        const fetchDocument = async () => {
-            const documentResponse = await getDocumentContent(docId, userId);
-
-            if (documentResponse?.data) {
-                setDocName(documentResponse?.data?.doc?.docName)
-                const documentData = documentResponse?.data?.doc?.docContent?.ops;
-                quill.setContents(documentData);
-                quill.enable();
-                setInitialLoadComplete(true);
-            } else {
-                toast.error("Failed to load document content.");
-            }
-        };
-
-        fetchDocument();
-
-    }, [socket, quill, docId, userId, initialLoadComplete]);
 
     useEffect(() => {
         if (socket === null || quill === null) return;
@@ -125,9 +100,8 @@ const TextEditor = () => {
             },
             theme: 'snow'
         });
-        q.disable();
-        q.setText("Loading...");
         setQuill(q);
+        // eslint-disable-next-line
     }, [userId]);
 
 
@@ -154,7 +128,7 @@ const TextEditor = () => {
         <div>
             <ToastContainer />
             <div className='flex'>
-                <TextEditorDashboard data={content} documentContent={rawHTML} documentName={docName} />
+                <TextEditorDashboard data={content} documentContent={rawHTML}/>
                 <div id='container' ref={wrapperRef}></div>
             </div>
         </div>

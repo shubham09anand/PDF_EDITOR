@@ -3,6 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 
+
 const GenrateImage = () => {
      const [imageQueery, setImageQueery] = useState("");
      const [scrapImages, setScrapImages] = useState();
