@@ -54,6 +54,7 @@ const ContentSupport = () => {
                return;
           }
           setButton(false);
+          // eslint-disable-next-line
           API.post("/googleSearch", { queery: queery, selectedOrigin: selectedOrigin }).
                then((res) => {
                     if (res.data?.apiResult?.items) {
@@ -75,12 +76,12 @@ const ContentSupport = () => {
           setSelectedArticle([link])
           steSummaryState(true);
           setButton(false);
+          // eslint-disable-next-line
           API.post("/scrapeWebpage", { slectedLink: link, conetntSnippet: snippet, contentTitle: tilte }).
                then((res) => {
                     setSummary(res.data)
                     setItemDisplay(2);
                     steSummaryState(false);
-                    // console.log(res.data)
                }).catch(() => {
                     // console.log(error)
                     toast.error(`Process Failed With Stauats Code`)
@@ -134,9 +135,9 @@ const ContentSupport = () => {
                                              Dropdown button
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                             <a class="dropdown-item" href="#">Action</a>
-                                             <a class="dropdown-item" href="#">Another action</a>
-                                             <a class="dropdown-item" href="#">Something else here</a>
+                                             <a class="dropdown-item" href="./">Action</a>
+                                             <a class="dropdown-item" href="./">Another action</a>
+                                             <a class="dropdown-item" href="./">Something else here</a>
                                         </div>
                                    </div>
                                    <div className="dropdown w-60 mx-auto">

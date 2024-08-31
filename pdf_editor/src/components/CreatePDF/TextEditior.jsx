@@ -11,13 +11,10 @@ import '../../Style/abc.css';
 
 const TextEditor = () => {
 
-    const userId = "66bcd5b9ad0ff7688f004212";
     const location = useLocation();
     const docId = location.pathname.split("/")[3];
     const [socket, setSocket] = useState(null);
     const [quill, setQuill] = useState(null);
-    const [content, setContent] = useState(null);
-    const [rawHTML, setRawHTML] = useState(null);
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -102,33 +99,13 @@ const TextEditor = () => {
         });
         setQuill(q);
         // eslint-disable-next-line
-    }, [userId]);
-
-
-    useEffect(() => {
-        if (quill === null) return;
-
-        const updateContent = () => {
-            setContent(quill.getContents());
-            const editorHTML = quill.root.innerHTML;
-            setRawHTML(editorHTML)
-        };
-
-        updateContent();
-
-        // Listen to text-change to update content
-        quill.on('text-change', updateContent);
-
-        return () => {
-            quill.off('text-change', updateContent);
-        };
-    }, [quill]);
+    }, [docId]);
 
     return (
         <div>
             <ToastContainer />
             <div className='flex'>
-                <TextEditorDashboard data={content} documentContent={rawHTML}/>
+                <TextEditorDashboard/>
                 <div id='container' ref={wrapperRef}></div>
             </div>
         </div>

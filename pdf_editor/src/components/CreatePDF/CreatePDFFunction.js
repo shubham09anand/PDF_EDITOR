@@ -1,4 +1,3 @@
-import axios from 'axios';
 import API from '../../Api/Api';
 
 export const projectStroage = async (projectId, projectStorageContent) => {
