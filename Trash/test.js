@@ -5,7 +5,7 @@ const fs = require('fs');
 const fontSize = 60;
 
 const fontFamily = 'Arial';
-const text = 'Hello, world!';
+const text = 'Dangreous';
 
 // Measure the text size
 const textMetrics = measureTextSize(text, fontSize, fontFamily);
