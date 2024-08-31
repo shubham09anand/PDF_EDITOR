@@ -15,6 +15,8 @@ const TextEditor = () => {
     const docId = location.pathname.split("/")[3];
     const [socket, setSocket] = useState(null);
     const [quill, setQuill] = useState(null);
+    const [content, setContent] = useState(null);
+    const [rawHTML, setRawHTML] = useState(null);
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -101,11 +103,30 @@ const TextEditor = () => {
         // eslint-disable-next-line
     }, [docId]);
 
+    useEffect(() => {
+        if (quill === null) return;
+
+        const updateContent = () => {
+            setContent(quill.getContents());
+            const editorHTML = quill.root.innerHTML;
+            setRawHTML(editorHTML)
+        };
+
+        updateContent();
+
+        // Listen to text-change to update content
+        quill.on('text-change', updateContent);
+
+        return () => {
+            quill.off('text-change', updateContent);
+        };
+    }, [quill]);
+
     return (
         <div>
             <ToastContainer />
             <div className='flex'>
-                <TextEditorDashboard/>
+                <TextEditorDashboard data={content} documentContent={rawHTML}/>
                 <div id='container' ref={wrapperRef}></div>
             </div>
         </div>

@@ -12,7 +12,7 @@ import TextEditiorOptions from './TextEditiorOptions';
 import { useLocation } from 'react-router-dom';
 import { handleGeneratePdf } from './CreatePDFFunction';
 
-const TextEditorDashboard = ({ data, documentContent, documentName }) => {
+const TextEditorDashboard = ({documentContent}) => {
 
      const optionSVG = {
           save: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-6 h-6"><path fillRule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clipRule="evenodd" /></svg>,
@@ -37,11 +37,6 @@ const TextEditorDashboard = ({ data, documentContent, documentName }) => {
           setLink(location.pathname);
           // eslint-disable-next-line 
      }, [link])
-
-     useEffect(()=>{
-          setDocName(documentName)
-          // eslint-disable-next-line
-     },[documentContent])
 
      const handleCopyLink = async () => {
           try {
@@ -117,9 +112,6 @@ const TextEditorDashboard = ({ data, documentContent, documentName }) => {
                                                   </div>
                                              </div>
                                         </li>
-                                        <div>
-                                             <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.save} option={"Save"} description={"Save Your Work For Future Work."} />
-                                        </div>
                                    </ul>
                                    <ul>
                                         <div onClick={handleCopyLink}>
@@ -129,8 +121,6 @@ const TextEditorDashboard = ({ data, documentContent, documentName }) => {
                                         <div onClick={genratePDF}>
                                              <TextEditiorOptions optionDisplay={setSupportDisplay} editorDisplay={editorDisplay} svg={optionSVG.download} option={"Download"} description={"Save The Document As PDF"} />
                                         </div>
-
-                                        <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={1} editorDisplay={editorDisplay} svg={optionSVG.video} option={"Video"} description={"Vidoe Call, Share Screen, Messaging"} />
 
                                         <TextEditiorOptions optionDisplay={setSupportDisplay} displayValue={2} editorDisplay={editorDisplay} svg={optionSVG.project} option={"Project"} description={"Upload Photos And Share With Other People Who Are In Team."} />
                                    </ul>
