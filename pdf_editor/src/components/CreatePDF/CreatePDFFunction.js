@@ -10,15 +10,6 @@ export const projectStroage = async (projectId, projectStorageContent) => {
      }
 };
 
-export const validateLink = async (docId) => {
-     try {
-          const res = await API.post("/validateLink", { docId: docId });
-          return res
-     } catch (error) {
-          console.error(error);
-     }
-};
-
 export const generateAiImage = async (userInput) => {
      try {
           const res = await API.post("/aiImage", { userInput: userInput });

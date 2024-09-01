@@ -3,20 +3,20 @@ import Quill from 'quill';
 import "quill/dist/quill.snow.css";
 import { io } from "socket.io-client";
 import { useLocation } from 'react-router-dom';
-import { ToastContainer} from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import TextEditorDashboard from './TextEditorDashboard';
 import ImageResize from 'quill-image-resize-module-react';
 import 'react-toastify/dist/ReactToastify.css';
 import '../../Style/abc.css';
 
 const TextEditor = () => {
-
     const location = useLocation();
     const docId = location.pathname.split("/")[3];
     const [socket, setSocket] = useState(null);
     const [quill, setQuill] = useState(null);
     const [content, setContent] = useState(null);
     const [rawHTML, setRawHTML] = useState(null);
+    const [joinedUsers, setJoinedUsers] = useState([]);
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -33,21 +33,22 @@ const TextEditor = () => {
         [{ 'font': [] }],
         [{ 'align': [] }],
         ['clean']
-    ];
+        ];
 
     useEffect(() => {
-        const s = io("http://localhost:3001");
+        const s = io("http://localhost:8080");
         setSocket(s);
 
         return () => {
-            s.disconnect();
+            s.disconnect({name:"Shubham"});
         };
     }, []);
 
     useEffect(() => {
         if (socket === null || quill === null) return;
 
-        socket.once("load-document", () => {
+        socket.once("load-document", (delta) => {
+            quill.setContents(delta);
             quill.enable();
         });
 
@@ -109,7 +110,7 @@ const TextEditor = () => {
         const updateContent = () => {
             setContent(quill.getContents());
             const editorHTML = quill.root.innerHTML;
-            setRawHTML(editorHTML)
+            setRawHTML(editorHTML);
         };
 
         updateContent();
@@ -122,11 +123,37 @@ const TextEditor = () => {
         };
     }, [quill]);
 
+    useEffect(() => {
+        if (quill === null || socket === null) return;
+
+        const handleNewUser = (newUserData) => {
+            setJoinedUsers(prevUsers => [...prevUsers, newUserData.name]);
+        };
+
+        const handleCurrentUsers = (users) => {
+            setJoinedUsers(users);
+        };
+
+        const handleUserLeft = (userData) => {
+            setJoinedUsers(prevUsers => prevUsers.filter(user => user !== userData.name));
+        };
+
+        socket.on('new-user', handleNewUser);
+        socket.on('current-users', handleCurrentUsers);
+        socket.on('user-left', handleUserLeft);
+
+        return () => {
+            socket.off('new-user', handleNewUser);
+            socket.off('current-users', handleCurrentUsers);
+            socket.off('user-left', handleUserLeft);
+        };
+    }, [quill, socket]);
+
     return (
         <div>
             <ToastContainer />
             <div className='flex'>
-                <TextEditorDashboard data={content} documentContent={rawHTML}/>
+                <TextEditorDashboard data={content} documentContent={rawHTML} />
                 <div id='container' ref={wrapperRef}></div>
             </div>
         </div>
