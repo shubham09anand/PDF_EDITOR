@@ -37,9 +37,7 @@ const PreviousDocs = () => {
 
      return (
           <div className='sm:pl-2 w-4/5 mx-auto h-fit pt-0'>
-               
                <ToastContainer />
-
                <div className='flex items-center gap-x-5 pl-2 w-full'>
                     <Link style={{textDecoration:"none"}} to="/create_doc" className='w-80 flex place-content-center items-center gap-x-5  bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-md h-fit cursor-pointer px-4 py-2'>
                          <svg xmlns="http://www.w3.org/2000/svg" fill="white" className="bi bi-file-pdf-fill size-6" viewBox="0 0 16 16">

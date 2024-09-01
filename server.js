@@ -52,6 +52,7 @@ io.on("connection", socket => {
     if (documentId) {
       // Apply the delta to the document and broadcast the changes
       documents[documentId] = applyDelta(documents[documentId], delta);
+
       socket.broadcast.to(documentId).emit("receive-changes", delta);
     }
   });
@@ -61,7 +62,6 @@ io.on("connection", socket => {
   });
 });
 
-// Helper function to apply a delta to a document
 function applyDelta(doc, delta) {
   // Quill's delta objects should be merged into the existing document
   const QuillDelta = require('quill-delta'); // Ensure quill-delta is installed
