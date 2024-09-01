@@ -1,82 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-     <meta charset="UTF-8">
-     <title>PDF.js Parsing Example</title>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js"></script>
-</head>
-
-<style>
-     .pdf-text {
-          /* white-space: pre-wrap; */
-     }
-</style>
-
-<body>
-
-     <div id="output"></div>
-
-</body>
-<script>
-     document.addEventListener('DOMContentLoaded', () => {
-    const url = 'notes.pdf'; // Replace with the path to your PDF file
-    const outputDiv = document.getElementById('output');
-
-    // Function to extract text and styling from a single page
-    const extractTextWithStylingFromPage = (page) => {
-        return page.getTextContent().then((textContent) => {
-            let previousY, previousX;
-            let text = '';
-            textContent.items.forEach((item) => {
-                const currentY = item.transform[5]; // Y position of the text
-                const currentX = item.transform[4]; // X position of the text
-
-                // Insert a line break if the current Y position is significantly different from the previous Y position
-                if (previousY && Math.abs(previousY - currentY) > 10) {
-                    text += '<br>';
-                }
-                // Insert a space if the current X position is significantly different from the previous X position (indicating a new word)
-                if (previousX && Math.abs(previousX - currentX) > 5) {
-                    text += ' ';
-                }
-
-                const style = `font-size: ${item.transform[0]}px;`; // Approximate font size
-                text += `<span style="${style}">${item.str}</span> `;
-                previousY = currentY;
-                previousX = currentX;
-            });
-            return text;
-        });
-    };
-
-    // Load the PDF document
-    pdfjsLib.getDocument(url).promise.then((pdf) => {
-        const numPages = pdf.numPages;
-        let textPromises = [];
-
-        // Iterate through each page and extract text with styling
-        for (let i = 1; i <= numPages; i++) {
-            textPromises.push(
-                pdf.getPage(i).then(extractTextWithStylingFromPage)
-            );
-        }
-
-        // Process all text extraction promises
-        Promise.all(textPromises).then((texts) => {
-            texts.forEach((text, pageIndex) => {
-                const pageDiv = document.createElement('div');
-                pageDiv.classList.add('pdf-text');
-                pageDiv.innerHTML = `Page ${pageIndex + 1}: <br>${text}`;
-                outputDiv.appendChild(pageDiv);
-            });
-        });
-    }).catch((error) => {
-        console.error('Error loading PDF:', error);
-    });
-});
-
-</script>
-
-</html>
+const toolbarOptions = [
+['bold', 'italic', 'underline', 'strike'],
+['blockquote', 'code-block'],
+['link', 'image', 'formula'],
+[{ 'header': 1 }, { 'header': 2 }],
+[{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+[{ 'script': 'sub' }, { 'script': 'super' }],
+[{ 'indent': '-1' }, { 'indent': '+1' }],
+[{ 'direction': 'rtl' }],
+[{ 'size': ['small', false, 'large', 'huge'] }],
+[{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+[{ 'color': [] }, { 'background': [] }],
+[{ 'font': [] }],
+[{ 'align': [] }],
+['clean']
+];

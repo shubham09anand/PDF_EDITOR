@@ -40,7 +40,7 @@ const TextEditor = () => {
         setSocket(s);
 
         return () => {
-            s.disconnect({name:"Shubham"});
+            s.disconnect();
         };
     }, []);
 

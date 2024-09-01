@@ -76,8 +76,8 @@ io.on("connection", socket => {
     socket.emit('current-users', users[docId]);
   });
 
-  socket.on('disconnect', (data,data1) => {
-    console.log(data1)
+  socket.on('disconnect', () => {
+
     const documentId = socket.documentId;
     if (documentId && users[documentId]) {
       const userName = socket.username;
