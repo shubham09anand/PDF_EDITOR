@@ -29,6 +29,7 @@ const PdfToImg = () => {
 
      useEffect(() => {
           handleConversion();
+     // eslint-disable-next-line
      }, [selectedFiles]);
 
      const convertToImage = async (file) => {

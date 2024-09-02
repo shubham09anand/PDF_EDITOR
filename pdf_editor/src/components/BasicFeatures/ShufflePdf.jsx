@@ -11,7 +11,7 @@ import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ShufflePdf = () => {
-  const [status, setStatus] = useState(false);
+  // const [status, setStatus] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [images, setImages] = useState([]);
   const [pageOrder, setPageOrder] = useState([]);
@@ -32,6 +32,7 @@ const ShufflePdf = () => {
     if (selectedFiles.length > 0) {
       handleConversion();
     }
+    // eslint-disable-next-line
   }, [selectedFiles]);
 
   const convertToImage = async (file) => {

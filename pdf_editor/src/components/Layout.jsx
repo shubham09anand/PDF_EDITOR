@@ -19,13 +19,11 @@ const Layout = () => {
      const [isFocused, setIsFocused] = useState(false);
 
      const controllDisplay = (value) => {
-         setIsFocused(value)
+          setIsFocused(value)
      }
 
      return (
-         <>
-           <div>
-               {/* <Header controllDisplay={controllDisplay}/> */}
+          <>
                <div className='pt- w-screen'>
                     <Routes>
                          <Route path="/" element={<Home />} />
@@ -43,8 +41,7 @@ const Layout = () => {
                          <Route path="/create_doc/document/:id" element={<TextEditior isFocused={isFocused} controllDisplay={controllDisplay} />} />
                     </Routes>
                </div>
-          </div>
-         </>
+          </>
      )
 }
 

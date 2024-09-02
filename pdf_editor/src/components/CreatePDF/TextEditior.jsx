@@ -17,6 +17,7 @@ const TextEditor = () => {
     const [content, setContent] = useState(null);
     const [rawHTML, setRawHTML] = useState(null);
     const [joinedUsers, setJoinedUsers] = useState([]);
+    const [display, setDisplay] = useState(0);
 
     const toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'],
@@ -33,7 +34,7 @@ const TextEditor = () => {
         [{ 'font': [] }],
         [{ 'align': [] }],
         ['clean']
-        ];
+    ];
 
     useEffect(() => {
         const s = io("http://localhost:8080");
@@ -150,13 +151,11 @@ const TextEditor = () => {
     }, [quill, socket]);
 
     return (
-        <div>
+        <>
             <ToastContainer />
-            <div className='flex'>
-                <TextEditorDashboard data={content} documentContent={rawHTML} />
-                <div id='container' ref={wrapperRef}></div>
-            </div>
-        </div>
+            <TextEditorDashboard display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
+            <div id='container' className={`${display === 0 ? 'block' : 'hidden'}`} ref={wrapperRef}></div>
+        </>
     );
 };
 

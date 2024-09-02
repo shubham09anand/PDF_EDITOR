@@ -28,6 +28,7 @@ const DeletePages = () => {
 
      useEffect(() => {
           handleConversion();
+          // eslint-disable-next-line
      }, [selectedFiles]);
 
      const convertToImage = async (file) => {
@@ -150,6 +151,7 @@ const DeletePages = () => {
           if (selectedFiles.length > 0) {
                removePages();
           }
+          // eslint-disable-next-line
      }, [])
 
      pageDelete.forEach((e)=>{

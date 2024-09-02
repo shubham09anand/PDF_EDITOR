@@ -8,6 +8,7 @@ const ImageAi = () => {
      const [userQueery, setUserQueery] = useState("");
      const [status, setStatus] = useState(true);
      const [button, setButton] = useState(false);
+     // eslint-disable-next-line
      const [generatedImage, setGeneratedImage] = useState();
 
      const handleAiImageGenrator = () => {
@@ -26,7 +27,7 @@ const ImageAi = () => {
      }
 
      return (
-          <div className='p-2 w-full h-screen backdrop-blur-2xl'>
+          <div className='p-2 w-full backdrop-blur-2xl'>
                <ToastContainer />
                <div className='w-fit mx-auto'>
                     <div className='w-fit mx-auto flex place-content-center items-center space-x-3 mt-3'>

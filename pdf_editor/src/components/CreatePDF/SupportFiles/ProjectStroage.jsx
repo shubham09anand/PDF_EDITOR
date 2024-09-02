@@ -66,7 +66,7 @@ const ProjectStorage = () => {
           <div className='w-full'>
                <ToastContainer />
                <div className="container py-2 w-full backdrop-blur-2xl">
-                    <div className="my-10 overflow-hidden rounded-sm bg-white shadow-lg w-1/2 mx-auto">
+                    <div className="my-10 rounded-sm bg-white shadow-lg w-full lg:w-1/2 mx-auto">
                          <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
                               <div>Upload Files</div>
                               <svg onClick={() => setDisplayUpload(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
@@ -116,8 +116,8 @@ const ProjectStorage = () => {
                     </div>
 
                     {displayUpload && (
-                         <div className='w-4/5 mx-auto'>
-                              <div className='font-semibold text-2xl text-gray-800 mb-2  ml-32'>Previous</div>
+                         <div className='mx-auto'>
+                              <div className='font-semibold text-2xl text-gray-800 mb-2'>Previous</div>
                               <div className={`-m-1 mb-20 w-fit  flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example place-content-center px-2 mx-auto ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
                                    {image.map((url, index) => (
                                         <div key={index} className="flex w-40 h-40 sm:w-48 sm:h-48 md:w-56 lg:w-72 md:h-56 lg:h-60 relative flex-wrap">
