@@ -1,40 +1,24 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import Quill from 'quill';
-import "quill/dist/quill.snow.css";
-import { io } from "socket.io-client";
+import React, { useMemo, useEffect, useRef, useState } from 'react';
+import JoditEditor from 'jodit-react';
 import { useLocation } from 'react-router-dom';
-import { ToastContainer } from 'react-toastify';
+import { io } from 'socket.io-client';
+import ImageAi from "./SupportFiles/ImageAi";
+import TextAi from "./SupportFiles/TextAi";
+import ContentSupport from "./SupportFiles/ContentSupport";
+import ProjectStroage from "./SupportFiles/ProjectStroage";
 import TextEditorDashboard from './TextEditorDashboard';
-import ImageResize from 'quill-image-resize-module-react';
-import 'react-toastify/dist/ReactToastify.css';
-import '../../Style/abc.css';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
+import Fonts from './Fonts'
 
 const TextEditor = () => {
     const location = useLocation();
     const docId = location.pathname.split("/")[3];
+    const editor = useRef(null);
+    const [content, setContent] = useState('');
     const [socket, setSocket] = useState(null);
-    const [quill, setQuill] = useState(null);
-    const [content, setContent] = useState(null);
-    const [rawHTML, setRawHTML] = useState(null);
-    const [joinedUsers, setJoinedUsers] = useState([]);
     const [display, setDisplay] = useState(0);
-
-    const toolbarOptions = [
-        ['bold', 'italic', 'underline', 'strike'],
-        ['blockquote', 'code-block'],
-        ['link', 'image', 'formula'],
-        [{ 'header': 1 }, { 'header': 2 }],
-        [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
-        [{ 'script': 'sub' }, { 'script': 'super' }],
-        [{ 'indent': '-1' }, { 'indent': '+1' }],
-        [{ 'direction': 'rtl' }],
-        [{ 'size': ['small', false, 'large', 'huge'] }],
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        [{ 'color': [] }, { 'background': [] }],
-        [{ 'font': [] }],
-        [{ 'align': [] }],
-        ['clean']
-    ];
+    const [pdfGenration, setPdfGenration] = useState(0);
+    const [rawHTML, setRawHTML] = useState(null);
 
     useEffect(() => {
         const s = io("http://localhost:8080");
@@ -45,117 +29,124 @@ const TextEditor = () => {
         };
     }, []);
 
-    useEffect(() => {
-        if (socket === null || quill === null) return;
+    // Add custom font configuration
+    const config = useMemo(() => ({
+        height: 800,
+        readonly: false,
+        placeholder: 'Type here...',
+        spellcheck: true,
+        buttons: [
+            'source', '|',
+            'bold',
+            'strikethrough',
+            'underline',
+            'italic', '|',
+            'ul',
+            'ol', '|',
+            'outdent', 'indent', '|',
+            'font',
+            'fontsize',
+            'brush',
+            'paragraph', '|',
+            'image',
+            'video',
+            'table',
+            'link', '|',
+            'align', 'undo', 'redo', '|',
+            'speechRecognize', '|',
+            'hr',
+            'eraser',
+            'copyformat', '|',
+            'symbol',
+            'fullsize',
+            'print',
+        ],
+        uploader: {
+            url: '/upload',
+            insertImageAsBase64URI: true,
+        },
+        controls: {
+            font: {
+                list: {
+                    'Amatic SC, sans-serif': 'Amatic SC',
+                    'Assistant, sans-serif': 'Assistant',
+                    'Grey Qo, sans-serif': 'Grey Qo',
+                    'Mea Culpa, cursive': 'Mea Culpa',
+                    'Playwrite CU, sans-serif': 'Playwrite CU',
+                    'Roboto, sans-serif': 'Roboto',
+                    'Work Sans, sans-serif': 'Work Sans',
+                    'Arial, sans-serif': 'Arial',
+                    'Georgia, serif': 'Georgia',
+                    'Impact, Charcoal, sans-serif': 'Impact',
+                    'Tahoma, Geneva, sans-serif': 'Tahoma',
+                    'Verdana, Geneva, sans-serif': 'Verdana'
+                }
+            }
+        }
+    }), []);
 
-        socket.once("load-document", (delta) => {
-            quill.setContents(delta);
-            quill.enable();
+    useEffect(() => {
+        if (!socket) return;
+
+        // Join the room for the specific document
+        socket.emit("join-room", docId);
+
+        // Load initial document content
+        socket.once("load-document", (data) => {
+            setContent(data);
+            setRawHTML(data); // Initialize raw HTML content
         });
 
         socket.emit("get-document", docId);
-    }, [socket, quill, docId]);
 
-    useEffect(() => {
-        if (socket == null || quill === null) return;
-
-        const handler = (delta, oldDelta, source) => {
-            if (source !== 'user') return;
-            socket.emit("send-changes", delta);
-        };
-
-        quill.on('text-change', handler);
-
-        return () => {
-            quill.off('text-change', handler);
-        };
-    }, [socket, quill]);
-
-    useEffect(() => {
-        if (socket == null || quill === null) return;
-
-        const handler = delta => {
-            quill.updateContents(delta);
-        };
-
-        socket.on("receive-changes", handler);
-
-        return () => {
-            socket.off('receive-changes', handler);
-        };
-    }, [socket, quill]);
-
-    const wrapperRef = useCallback((wrapper) => {
-        if (wrapper == null) return;
-
-        wrapper.innerHTML = "";
-        const editor = document.createElement("div");
-        wrapper.append(editor);
-        Quill.register('modules/imageResize', ImageResize);
-        const q = new Quill(editor, {
-            modules: {
-                toolbar: toolbarOptions,
-                imageResize: {
-                    parchment: Quill.import('parchment')
-                }
-            },
-            theme: 'snow'
+        socket.on("receive-changes", (newContent) => {
+            setContent(newContent);
+            setRawHTML(newContent); // Update raw HTML content
         });
-        setQuill(q);
-        // eslint-disable-next-line
-    }, [docId]);
-
-    useEffect(() => {
-        if (quill === null) return;
-
-        const updateContent = () => {
-            setContent(quill.getContents());
-            const editorHTML = quill.root.innerHTML;
-            setRawHTML(editorHTML);
-        };
-
-        updateContent();
-
-        // Listen to text-change to update content
-        quill.on('text-change', updateContent);
 
         return () => {
-            quill.off('text-change', updateContent);
+            socket.off("receive-changes");
         };
-    }, [quill]);
+    }, [socket, docId]);
+
+    const handleContentChange = (newContent) => {
+        setContent(newContent);
+        if (editor.current) {
+            setRawHTML(editor.current.value); // Get raw HTML content from the editor
+        }
+        if (socket) {
+            socket.emit("send-changes", newContent);
+        }
+    };
 
     useEffect(() => {
-        if (quill === null || socket === null) return;
+        const quillContainer = document.getElementsByClassName('jodit-status-bar jodit-status-bar_resize-handle_true')[0];
 
-        const handleNewUser = (newUserData) => {
-            setJoinedUsers(prevUsers => [...prevUsers, newUserData.name]);
-        };
-
-        const handleCurrentUsers = (users) => {
-            setJoinedUsers(users);
-        };
-
-        const handleUserLeft = (userData) => {
-            setJoinedUsers(prevUsers => prevUsers.filter(user => user !== userData.name));
-        };
-
-        socket.on('new-user', handleNewUser);
-        socket.on('current-users', handleCurrentUsers);
-        socket.on('user-left', handleUserLeft);
-
-        return () => {
-            socket.off('new-user', handleNewUser);
-            socket.off('current-users', handleCurrentUsers);
-            socket.off('user-left', handleUserLeft);
-        };
-    }, [quill, socket]);
+        if (quillContainer) {
+            console.log("Hello");
+            quillContainer.style.display = 'none';
+        }
+    }, [editor]);
 
     return (
-        <>
-            <ToastContainer />
-            <TextEditorDashboard display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
-            <div id='container' className={`${display === 0 ? 'block' : 'hidden'}`} ref={wrapperRef}></div>
-        </>
+        <div className='h-screen'>
+            <Fonts/>    
+            {pdfGenration === null &&
+                <div className='absolute z-20 backdrop-blur-[2px] w-screen h-screen top-0'>
+                    <div className='h-full w-full flex-col flex place-content-center items-center mx-auto z-20'>
+                        <LoadingPlaneAnimation />
+                        <div className='text-lg font-semibold -mt-40'>Generating Your PDF...</div>
+                    </div>
+                </div>}
+            <div className='h-[90%]'>
+                <JoditEditor className={`${display === 0 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
+                <div className={`w-full h-full ${display === 1 ? 'block' : 'hidden'}`}><ImageAi /></div>
+                <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi /></div>
+                <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport /></div>
+                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage /></div>
+            </div>
+            <TextEditorDashboard pdfGenrationStatus={setPdfGenration} display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
+        </div>
     );
 };
 

@@ -1,13 +1,50 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
-import uploadImage from '../../../Assets/images/icons/uploadImage.webp'
-import minecrafrt from '../../../Assets/images/games/img-5.jpg'
+import uploadImage from '../../../Assets/images/icons/uploadImage.webp';
+import minecrafrt from '../../../Assets/images/games/img-5.jpg';
+import { downloadImage } from './SupportFilesFunction';
+import { io } from "socket.io-client";
+import { useLocation } from 'react-router-dom';
 
 const ProjectStorage = () => {
 
+     const location = useLocation();
+     const docId = location.pathname.split("/")[3];
      const [currImg, setCurrImg] = useState(0);
      const [displayUpload, setDisplayUpload] = useState(true)
      const [fileUploaded, setFileUploaded] = useState([]);
+     const [preview, setPreview] = useState(null);
+     const [socket, setSocket] = useState(null);
+
+     useEffect(() => {
+          const s = io("http://localhost:8080");
+          setSocket(s);
+
+          return () => {
+               s.disconnect();
+          };
+     }, []);
+
+     const sendPhoto = () => {
+          if (!socket) return;
+
+          console.log("Sending photos");
+          socket.emit('send-photos', { fileUploaded, docId });
+
+     };
+
+     useEffect(() => {
+          if (!socket) return;
+
+          socket.on('receive-photos', (data) => {
+               console.log('Received photo:', data);
+               console.log('Received data:', data);
+          });
+
+          return () => {
+               socket.off('receive-photos');
+          };
+     }, [socket]);
 
      const imgPrev = () => {
           if (currImg === 0) {
@@ -53,27 +90,47 @@ const ProjectStorage = () => {
      };
 
      const image = [
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp",
+          "https://images.pexels.com/photos/1257860/pexels-photo-1257860.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://cdn.mos.cms.futurecdn.net/NaCymkW7W9rEDAtVtqcBza-970-80.jpg.webp",
+          "https://images.pexels.com/photos/2896668/pexels-photo-2896668.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://images.pexels.com/photos/48814/penguins-emperor-antarctic-life-48814.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://cdn.mos.cms.futurecdn.net/SAWUwXoJpQFxbDsgBMkRgB-1200-80.jpg.webp",
           minecrafrt,
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(73).webp",
-          "https://tecdn.b-cdn.net/img/Photos/Horizontal/Nature/4-col/img%20(74).webp",
-          minecrafrt
-
+          "https://images.pexels.com/photos/1257860/pexels-photo-1257860.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://cdn.mos.cms.futurecdn.net/NaCymkW7W9rEDAtVtqcBza-970-80.jpg.webp",
+          "https://images.pexels.com/photos/2896668/pexels-photo-2896668.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://images.pexels.com/photos/48814/penguins-emperor-antarctic-life-48814.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://cdn.mos.cms.futurecdn.net/SAWUwXoJpQFxbDsgBMkRgB-1200-80.jpg.webp",
+          minecrafrt,
+          "https://images.pexels.com/photos/1257860/pexels-photo-1257860.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://cdn.mos.cms.futurecdn.net/NaCymkW7W9rEDAtVtqcBza-970-80.jpg.webp",
+          "https://images.pexels.com/photos/2896668/pexels-photo-2896668.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://images.pexels.com/photos/48814/penguins-emperor-antarctic-life-48814.jpeg?auto=compress&cs=tinysrgb&w=600",
+          "https://cdn.mos.cms.futurecdn.net/SAWUwXoJpQFxbDsgBMkRgB-1200-80.jpg.webp",
+          minecrafrt,
      ];
+
+     const controlPreview = (url) => {
+          window.scrollTo(0, 0);
+          setPreview(url)
+     }
 
      return (
           <div className='w-full'>
                <ToastContainer />
                <div className="container py-2 w-full backdrop-blur-2xl">
-                    <div className="my-10 rounded-sm bg-white shadow-lg w-full lg:w-1/2 mx-auto">
+                    <div className="my-0 rounded-sm bg-white shadow-lg w-full lg:w-1/2 mx-auto">
                          <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
                               <div>Upload Files</div>
                               <svg onClick={() => setDisplayUpload(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                               </svg>
                          </div>
-                         <div className={`space-y-4 px-4 transition-all duration-700 ${displayUpload ? "h-0" : "h-96"}`}>
+
+                         <div className={`space-y-4 px-4 transition-all duration-700 overflow-hidden ${displayUpload ? "h-0" : "h-96"}`}>
                               <div className='pt-4'>
                                    <div style={{ backgroundImage: `url(${uploadImage})` }} className={`flex flex-col items-center justify-center rounded-lg h-72 border-gray-900 border-dashed ${fileUploaded.length === 0 ? 'border-dashed' : 'border border-solid'}`}>
                                         {
@@ -102,43 +159,46 @@ const ProjectStorage = () => {
                                         }
                                    </div>
                               </div>
-                              {
-                                   fileUploaded.length > 0 ? (
-                                        <div className='flex place-content-center'>
-                                             <div className="cursor-pointer active:opacity-55 rounded-sm bg-black px-5 py-2 w-fit  font-semibold text-white select-none">Save In Project Storage</div>
-                                             <div onClick={handleRemoveImages} className="cursor-pointer active:opacity-55 rounded-sm bg-red-600 px-5 py-2 w-fit  font-semibold text-white select-none">Reupload</div>
-                                        </div>
-                                   ) : (
-                                        <p className="text-sm font-extralight text-center w-fit ">Upload Photos Here To Let Other Team Members See Them. These Photos Are Avilabel In This Project Only.</p>
-                                   )
+                              {fileUploaded.length > 0 ? (
+                                   <div className='flex place-content-center'>
+                                        <div onClick={sendPhoto} className="cursor-pointer p-2 active:opacity-55 rounded-sm bg-black px-5 w-fit  font-semibold text-white select-none">Send</div>
+                                        <div onClick={handleRemoveImages} className="cursor-pointer p-2 active:opacity-55 rounded-sm bg-red-600 px-5 w-fit  font-semibold text-white select-none">Reupload</div>
+                                   </div>
+                              ) : (
+                                   <p className="text-sm font-extralight text-center w-fit ">Upload Photos Here To Let Other Team Members See Them. These Photos Are Avilabel In This Project Only.</p>
+                              )
                               }
                          </div>
                     </div>
 
                     {displayUpload && (
-                         <div className='mx-auto'>
-                              <div className='font-semibold text-2xl text-gray-800 mb-2'>Previous</div>
-                              <div className={`-m-1 mb-20 w-fit  flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example place-content-center px-2 mx-auto ${displayUpload ? "h-fit max-h-[700px]" : "h-72"}`}>
-                                   {image.map((url, index) => (
-                                        <div key={index} className="flex w-40 h-40 sm:w-48 sm:h-48 md:w-56 lg:w-72 md:h-56 lg:h-60 relative flex-wrap">
-                                             <a href={url} download={`image_${index + 1}`}>
-                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20 cursor-pointer">
-                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                                                  </svg>
-                                             </a>
-                                             <div className="w-full p-1 md:p-2">
-                                                  <img
-                                                       alt="gallery"
-                                                       className="block h-full w-full rounded-lg object-cover object-center"
-                                                       src={url} />
-                                             </div>
+                         <>
+                              <div className='font-semibold flex text-2xl text-gray-800 mb-2 xl:mb-4 pl-16 xl:pl-36'>Previous</div>
+                              <div className={`mx-auto h-[600px] example ${preview === null ? 'overflow-y-scroll' : 'overflow-hidden'}`}>
+                                   {preview !== null &&
+                                        <div className='relative w-full'>
+                                             <img src={preview} alt="" className='w-full scale-x-90 left-0 absolute z-50' />
+                                             <svg onClick={() => setPreview(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 absolute right-5 cursor-pointer">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                             </svg>
                                         </div>
-                                   ))}
+                                   }
+                                   {preview === null &&
+                                        <div className='flex flex-wrap place-content-center items-center gap-4'>
+                                             {image.map((url, index) => (
+                                                  <div onClick={() => controlPreview(url)} style={{ backgroundImage: `url(${url})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', }} key={index} className="flex border-2 w-40 h-40 sm:w-48 sm:h-48 md:w-56 lg:w-72 md:h-56 lg:h-60 relative flex-wrap">
+                                                       <a onClick={() => downloadImage(url, `_${index}.png`)} href={url} download={`image_${index + 1}`}>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20 cursor-pointer">
+                                                                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
+                                                            </svg>
+                                                       </a>
+                                                  </div>
+                                             ))}
+                                        </div>
+                                   }
                               </div>
-                         </div>
-
+                         </>
                     )}
-
                </div>
           </div>
      );

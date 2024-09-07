@@ -8,6 +8,7 @@ import CNN from "../../../Assets/images/icons/CNN.jpeg";
 import sunNews from "../../../Assets/images/icons/sunNews.png";
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 import API from '../../../Api/Api';
+import { downloadImage } from './SupportFilesFunction';
 
 const ContentSupport = () => {
 
@@ -39,7 +40,7 @@ const ContentSupport = () => {
           },
      ]
      const [links, setLinks] = useState([]);
-     const [itemDisplay, setItemDisplay] = useState(0)
+     const [itemDisplay, setItemDisplay] = useState(0);
      const [queery, setQueery] = useState("");
      const [button, setButton] = useState(true);
      const [summary, setSummary] = useState(null);
@@ -91,76 +92,48 @@ const ContentSupport = () => {
                })
      }
 
-     const downloadImage = async (url, filename) => {
-          try {
-               const response = await fetch(url);
-               if (!response.ok) throw new Error('Network response was not ok');
-
-               const blob = await response.blob();
-               const link = document.createElement('a');
-               link.href = URL.createObjectURL(blob);
-               link.download = filename;
-               document.body.appendChild(link); // Append to body to make it work in Firefox
-               link.click();
-               document.body.removeChild(link); // Clean up
-          } catch (error) {
-               console.error('Error downloading the image:', error);
-          }
-     };
-
      return (
-          <div className="p-2 lg:p-5 w-full flex bg-teal-lightest font-sans mx-auto h-fu backdrop-blur-2xl relative">
+          <div className="min-h-screen p-2 w-full flex bg-teal-lightest font-sans mx-auto backdrop-blur-2xl relative">
                <ToastContainer />
-               <div className="h-screen m-4 w-[99%] md:w-4/5 lg:w-3/4 mx-auto">
-                    <div className="mb-4">
-                         <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
-                              <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
-                         </div>
-                         <div className='heading text-center w-full md:w-4/5 lg:w-3/4 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>
-                         <div className="flex flex-col place-content-center items-center w-full h-fit mt-3">
-                              <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
-                                   <div className='flex place-content-center items-center space-x-5'>
-                                        {
-                                             links && links?.length !== 0 ? (
-                                                  <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
-                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-                                                  </svg>
-                                             ) :
-                                                  <div>No Links Found Realted To Your Querry</div>
-                                        }
-                                   </div>
-                                   <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
-                                   <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                             Dropdown button
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                             <a class="dropdown-item" href="./">Action</a>
-                                             <a class="dropdown-item" href="./">Another action</a>
-                                             <a class="dropdown-item" href="./">Something else here</a>
-                                        </div>
-                                   </div>
-                                   <div className="dropdown w-60 mx-auto">
-                                        <button className="border border-black w-60 btn bg-[#ffffff] dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                             {selectedOrigin}
-                                        </button>
-                                        <ul className="dropdown-menu w-60">
-                                             {
-                                                  newsOutletLinks?.map((items, index) => (
-                                                       <li key={index} onClick={() => setSelectedOrigin(items.link)}>
-                                                            <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                                 <img src={items.photo} alt="" className='w-8 h-8' />
-                                                                 <span className="mx-1 px-2 font-extrabold">
-                                                                      {items.name}
-                                                                 </span>
-                                                            </div>
-                                                       </li>
-                                                  ))
-                                             }
-                                        </ul>
-                                   </div>
-                                   <button onClick={getLinks} className={`mx-auto btn border border-indigo-500 px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</button>
+               <div className="w-[99%] md:w-4/5 lg:w-3/4 mx-auto">
+
+                    <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
+                         <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
+                    </div>
+                    <div className='heading text-center w-full lg:w-3/4 xl:w-4/5 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need insights? Just input your key topics or interests, and we'll provide you with relevant article links along with concise summaries.</div>
+                    <div className="flex flex-col place-content-center items-center w-full h-fit mt-3">
+                         <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
+                              <div className='flex place-content-center items-center space-x-5'>
+                                   {
+                                        links && links?.length !== 0 ? (
+                                             <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+                                             </svg>
+                                        ) :
+                                             <div>No Links Found Realted To Your Querry</div>
+                                   }
                               </div>
+                              <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
+                              <div className="dropdown w-60 mx-auto">
+                                   <button className="border border-black w-60 btn bg-[#ffffff] dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        {selectedOrigin}
+                                   </button>
+                                   <ul className="dropdown-menu w-60">
+                                        {
+                                             newsOutletLinks?.map((items, index) => (
+                                                  <li key={index} onClick={() => setSelectedOrigin(items.link)}>
+                                                       <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
+                                                            <img src={items.photo} alt="" className='w-8 h-8' />
+                                                            <span className="mx-1 px-2 font-extrabold">
+                                                                 {items.name}
+                                                            </span>
+                                                       </div>
+                                                  </li>
+                                             ))
+                                        }
+                                   </ul>
+                              </div>
+                              <button onClick={getLinks} className={`mx-auto btn border border-indigo-500 px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</button>
                          </div>
                     </div>
 
@@ -210,12 +183,12 @@ const ContentSupport = () => {
                          </div>
                     </div>
 
-                    <div className={`h-6 ${itemDisplay === 2 ? "block" : "hidden"}`}>
+                    <div className={`h-6 relative ${itemDisplay === 2 ? "block" : "hidden"}`}>
                          <div className='flex place-content-center items-center my-2 space-x-5'>
                               <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                               </svg>
-                              <div className="heading text-center font-bold text-3xl text-gray-800">Genrated Summary</div>
+                              <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Genrated Summary</div>
                               <svg onClick={() => setItemDisplay(3)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                               </svg>
@@ -227,9 +200,10 @@ const ContentSupport = () => {
                          }
 
                          <div className="md:p-4">
-                              <p className="mb-3 text-gray-600 sm:border-s-4 md:pl-4">
+                              <p className="relative mb-3 overflow-y-scroll example h-[400px] text-gray-600 sm:border-s-4 md:pl-4">
                                    {summary?.genaratedSummary?.generatedText.split('\n').map((line, index) => (
                                         <React.Fragment key={index}>
+                                             <div className='w-fit h-fit px-2 py-1 rounded-xl absolute right-3 top-3'>Copy</div>
                                              {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
                                                   <React.Fragment key={partIndex}>
                                                        {part.startsWith('**') && part.endsWith('**') ? (
@@ -256,16 +230,13 @@ const ContentSupport = () => {
                               </svg>
                               <div className="heading text-center font-bold text-3xl my-3 text-gray-800">Genrate Images</div>
                          </div>
-                         <div className="-m-1 mb-20 w-fit mx-auto flex flex-wrap gap-2 md:-m-2 overflow-y-scroll example">
+                         <div className="-m-1 mb-20 h-[450px] place-content-center gap-3 w-fit mx-auto flex flex-wrap md:-m-2 overflow-y-scroll example">
                               {links?.map((link, index) => {
                                    const imageUrl = link?.pagemap?.cse_image[0]?.src;
 
                                    return (
-                                        <div onContextMenu={(e) => e.preventDefault()} key={index} className="relative w-fit m-1 mx-auto">
-                                             <div className="flex space-x-4 absolute top-3 right-3 bg-white rounded-md">
-                                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
-                                                       <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0 1 11.186 0Z" />
-                                                  </svg>
+                                        <div onContextMenu={(e) => e.preventDefault()} key={index} className="relative">
+                                             <div className="flex space-x- absolute top-3 right-3 bg-white rounded-md">
                                                   <svg onClick={() => downloadImage(imageUrl, `${queery}_${index}.png`)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                                   </svg>
@@ -283,7 +254,7 @@ const ContentSupport = () => {
 
                     {
                          selectedImage !== null && (
-                              <div className='w-[98%] h-[92%] absolute top-0 left-5'>
+                              <div className='w-screen h-screen absolute top-0 left-0'>
                                    <img src={selectedImage} alt="" className='w-full h-full absolute top-0 left-0' />
                                    <svg onClick={() => setSelectedImage(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 backdrop-blur-3xl cursor-pointer rounded-full absolute top-5 right-10">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />

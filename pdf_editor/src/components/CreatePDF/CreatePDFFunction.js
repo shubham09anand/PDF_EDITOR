@@ -33,8 +33,10 @@ export const handleGeneratePdf = async (rawHTML) => {
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
+          return 1
 
      } catch (error) {
           console.error('Failed to generate PDF:', error);
+          return 0
      }
 };

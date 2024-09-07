@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import 'react-toastify/dist/ReactToastify.css';
-// // import VidoeCall from "./SupportFiles/VidoeCall";
-import ImageAi from "./SupportFiles/ImageAi";
-import TextAi from "./SupportFiles/TextAi";
-import ContentSupport from "./SupportFiles/ContentSupport";
-import ProjectStroage from "./SupportFiles/ProjectStroage";
 import TextEditiorOptions from './TextEditiorOptions';
 
 import { useLocation } from 'react-router-dom';
 import { handleGeneratePdf } from './CreatePDFFunction';
 
-const TextEditorDashboard = ({ documentContent, display, setDisplay }) => {
+const TextEditorDashboard = ({ pdfGenrationStatus, documentContent, display, setDisplay }) => {
 
      const optionSVG = {
           save: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-6 h-6"><path fillRule="evenodd" d="M6.32 2.577a49.255 49.255 0 0 1 11.36 0c1.497.174 2.57 1.46 2.57 2.93V21a.75.75 0 0 1-1.085.67L12 18.089l-7.165 3.583A.75.75 0 0 1 3.75 21V5.507c0-1.47 1.073-2.756 2.57-2.93Z" clipRule="evenodd" /></svg>,
@@ -24,9 +19,7 @@ const TextEditorDashboard = ({ documentContent, display, setDisplay }) => {
      }
 
      const location = useLocation();
-
-     const [editorDisplay, setEditorDisplay] = useState(true);
-     // eslint-disable-next-line
+     const [copied, setCopied] = useState(0);
      const [link, setLink] = useState();
 
      useEffect(() => {
@@ -37,62 +30,78 @@ const TextEditorDashboard = ({ documentContent, display, setDisplay }) => {
      const handleCopyLink = async () => {
           try {
                await window.navigator.clipboard.writeText(`${window.location.origin}${location.pathname}`);
+               setCopied(1)
+               setTimeout(() => {
+                    setCopied(0)
+               }, 2000);
           } catch (err) {
           }
      }
 
      const genratePDF = async () => {
           try {
-               await handleGeneratePdf(documentContent);
+               pdfGenrationStatus(null)
+               const result = await handleGeneratePdf(documentContent);
+               if (result === 1) {
+                    pdfGenrationStatus(result)
+               } else if (result === 0) {
+                    pdfGenrationStatus(result)
+               }
           } catch (error) {
+               pdfGenrationStatus(0)
+               console.error('An error occurred:', error);
           }
-
      };
 
+
      return (
-          <>
-               {display === 1 && <ImageAi />}
-               {display === 2 && <TextAi />}
-               {display === 3 && <ContentSupport />}
-               {display === 4 && <ProjectStroage />}
-               
-               <nav className="w-full flex justify-center absolute bottom-0 z-20 border-r bg-white border-2">
-                    <div onClick={() => setDisplay(0)} className={`p-3 w-full flex place-content-center items-center transition duration-300 cursor-pointer relative ${display === 0 ? 'border-b-4 border-green-700' : ""}`}>
-                         <div className="flex items-start space-x-2">
-                              <div className="rounded-full">
-                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-7 h-7">
-                                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                        <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+          <nav className="w-full h-[10%] border-black border-2 flex justify-center border-r relative z-20 bg-white">
+               <div onClick={() => setDisplay(0)} className={`flex place-content-center items-center h-full w-full transition duration-300 cursor-pointer relative ${display === 0 ? 'border-b-4 border-green-700' : ""}`}>
+                    <div className="flex items-start space-x-2">
+                         <div className="rounded-full">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" className="w-7 h-7">
+                                   <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                   <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                              </svg>
+                         </div>
+                    </div>
+               </div>
+
+               <div onClick={handleCopyLink} className={`w-full flex place-content-center items-center`}>
+                    {copied === 0 && <TextEditiorOptions displayValue={display} svg={optionSVG.link} option={"Link"} />}
+
+                    {copied === 1 &&
+                         <div className='flex-col sm:flex place-content-center items-center gap-x-5'>
+                              <div className='text-sm mb-1 sm:mb-0 font-bold text-center'>Copied</div>
+                              <div className='w-fit h-fit p-1 bg-green-600 rounded-full mx-auto'>
+                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-4">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                                    </svg>
                               </div>
                          </div>
-                    </div>
+                    }
+               </div>
 
-                    <div onClick={handleCopyLink} className={`w-full`}>
-                         <TextEditiorOptions displayValue={display} svg={optionSVG.link} option={"Link"} />
-                    </div>
+               <div onClick={genratePDF} className={`w-full flex place-content-center items-center ${display === 0 ? 'block' : 'hidden'}`}>
+                    <TextEditiorOptions displayValue={display} svg={optionSVG.download} option={"Download"} />
+               </div>
 
-                    <div onClick={genratePDF} className={`w-full`}>
-                         <TextEditiorOptions displayValue={display} svg={optionSVG.download} option={"Download"} />
-                    </div>
+               {/* <div onClick={() => setDisplay(4)} className={`w-full flex place-content-center items-center ${display === 4 ? 'border-b-4 border-green-700' : ""}`}>
+                    <TextEditiorOptions displayValue={display} svg={optionSVG.project} option={"Project Storage"} />
+               </div> */}
 
-                    <div onClick={() => setDisplay(4)} className={`w-full ${display === 4 ? 'border-b-4 border-green-700' : ""}`}>
-                         <TextEditiorOptions displayValue={display} svg={optionSVG.project} option={"Project Storage"} />
-                    </div>
+               <div onClick={() => setDisplay(1)} className={`w-full flex place-content-center items-center ${display === 1 ? 'border-b-4 border-green-700' : ""}`}>
+                    <TextEditiorOptions displayValue={display} svg={optionSVG.aiImage} option={"Text-To-Image Support"} />
+               </div>
 
-                    <div onClick={() => setDisplay(1)} className={`w-full ${display === 1 ? 'border-b-4 border-green-700' : ""}`}>
-                         <TextEditiorOptions displayValue={display} svg={optionSVG.aiImage} option={"Text-To-Image Support"} />
-                    </div>
+               <div onClick={() => setDisplay(2)} className={`w-full flex place-content-center items-center ${display === 2 ? 'border-b-4 border-green-700' : ""}`}>
+                    <TextEditiorOptions displayValue={display} svg={optionSVG.aiText} option={"Text-To-Text Support"} />
+               </div>
 
-                    <div onClick={() => setDisplay(2)} className={`w-full ${display === 2 ? 'border-b-4 border-green-700' : ""}`}>
-                         <TextEditiorOptions displayValue={display} svg={optionSVG.aiText} option={"Text-To-Text Support"} />
-                    </div>
-
-                    <div onClick={() => setDisplay(3)} className={`w-full ${display === 3 ? 'border-b-4 border-green-700' : ""}`}>
-                         <TextEditiorOptions displayValue={display} svg={optionSVG.contentSupport} option={"Content Support"} />
-                    </div>
-               </nav>
-          </>
+               <div onClick={() => setDisplay(3)} className={`w-full flex place-content-center items-center ${display === 3 ? 'border-b-4 border-green-700' : ""}`}>
+                    <TextEditiorOptions displayValue={display} svg={optionSVG.contentSupport} option={"Content Support"} />
+               </div>
+          </nav>
      )
 }
 export default TextEditorDashboard

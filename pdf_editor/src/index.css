@@ -8,11 +8,11 @@
     }
 }
 
-.ql-editor{
+.ql-editor {
     height: 90%;
 }
 
-.ql-container{
+.ql-container {
     height: 20%;
 }
 
@@ -74,34 +74,10 @@
     animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-.tox-statusbar__branding {
-    display: none;
+.jodit-container {
+    height: 500px;
 }
 
-.mce-content-body {
-    padding: 20px;
+.jodit-wysiwyg {
+    height: 500px;
 }
-
-.trapizium {
-    /* display: inline-block; */
-    transform-style: preserve-3d;
-    padding: 4px 8px;
-    border-radius: 4px;
-    transform: perspective(80px) rotateX(35deg) translateZ(55px) translateY(5px);
-}
-
-@media (min-width: 638px) {
-    .ql-container {
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        padding-top: 1.54cm;
-        padding-left: 1.9cm;
-        padding-right: 1.32cm;
-        padding-bottom: 1.67cm;
-    }
-}
-
-.ql-font-roboto {
-    font-family: 'Roboto', sans-serif;
-  }
-
-  

@@ -27,7 +27,7 @@ const ImageAi = () => {
      }
 
      return (
-          <div className='p-2 w-full backdrop-blur-2xl'>
+          <div className='p-2 w-full backdrop-blur-2xl h-screen'>
                <ToastContainer />
                <div className='w-fit mx-auto'>
                     <div className='w-fit mx-auto flex place-content-center items-center space-x-3 mt-3'>
