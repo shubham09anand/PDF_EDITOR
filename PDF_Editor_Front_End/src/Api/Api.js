@@ -1,9 +1,9 @@
 import axios from "axios";
-// const API = axios.create({baseURL: "http://192.168.1.5:8080/auth"});
-const API = axios.create({baseURL: "http://127.0.0.1:8080/auth"});
+const API = axios.create({ baseURL: process.env.REACT_APP_API_URL__NETWORK });
 
-API.interceptors.request.use((req)=>{
-     return req;
+API.interceptors.request.use((req) => {
+  // You can add additional logic here, such as attaching tokens
+  return req;
 });
 
 export default API;

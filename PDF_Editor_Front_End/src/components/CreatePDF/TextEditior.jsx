@@ -24,7 +24,8 @@ const TextEditor = () => {
     const [buttonInfo, setButtonInfo] = useState(false)
 
     useEffect(() => {
-        const s = io("http://localhost:8080");
+        const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
+        // const s = io("http://localhost:8080");
         setSocket(s);
 
         return () => {

@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const http = require('http');
 const { Server } = require('socket.io');
+require('dotenv').config();
+
 
 const app = express();
 const server = http.createServer(app);
@@ -24,7 +26,7 @@ const documents = {};
 
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: process.env.REACT_APP_API_SOCKET_NETWORK,
     methods: ['GET', 'POST']
   }
 });
