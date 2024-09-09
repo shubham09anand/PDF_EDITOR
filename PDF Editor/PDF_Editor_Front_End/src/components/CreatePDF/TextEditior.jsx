@@ -33,6 +33,7 @@ const TextEditor = () => {
     }, []);
 
     // Add custom font configuration
+    // eslint-disable-next-line 
     const config = useMemo(() => TextEditorOption(), [buttonInfo]);
 
     useEffect(() => {
