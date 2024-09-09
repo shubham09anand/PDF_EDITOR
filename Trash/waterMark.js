@@ -16,29 +16,42 @@ const createPDF = async () => {
         const { width, height } = page.getSize();
 
         // Define the text to be placed in the PDF
-        const text = 'Centered Texwqsdwdwqdqwt';
+        const text = 'ABCDEFGHIGHKLM';
 
-        // Calculate the width and height of the text
-        const fontSize = 60;
-        const textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
-        const textHeight = timesRomanFont.heightAtSize(fontSize);
+        // Initial font size
+        let fontSize = 40;
 
-        // Calculate the x-coordinate to center the text horizontally
-        const textX = (width - textWidth) / 2;
+        // Calculate the diagonal length of the page
+        const diagonalLength = Math.sqrt(width ** 2 + height ** 2);
 
-        // Calculate the y-coordinate to center the text vertically
-        const textY = (height) / 1;
+        // Calculate the width of the text at the initial font size
+        let textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
 
-        // Draw centered text on the page
-        page.drawText(text, {
-            x: textX,
-            y: textY,
-            size: fontSize,
-            font: timesRomanFont,
-            color: rgb(0, 0.53, 0.7),
-            rotate: degrees(-45), // No rotation
-            opacity: 0.2, // Set opacity to 50%
-        });
+        // Adjust font size to fit within the diagonal length of the page
+        while (textWidth > diagonalLength - 40 && fontSize > 1) {  // 40 is some margin
+            fontSize -= 1;
+            textWidth = timesRomanFont.widthOfTextAtSize(text, fontSize);
+        }
+
+        // Calculate step sizes for positioning text instances
+        const stepX = textWidth + 20;  // Horizontal step size including padding
+        const stepY = fontSize * 1.5;  // Vertical step size (line height)
+        const padding = 20;  // Padding between text instances
+
+        // Draw multiple lines of text across the page
+        for (let y = 0; y < height; y += stepY) {
+            for (let x = -width; x < width + stepX; x += stepX) {
+                page.drawText(text, {
+                    x: x + padding,  // Apply padding to the x-coordinate
+                    y: height - y - fontSize / 2, // Adjust y-coordinate to center vertically
+                    size: fontSize,
+                    font: timesRomanFont,
+                    color: rgb(0, 0.53, 0.7),
+                    rotate: degrees(-45), // Apply a rotation if needed
+                    opacity: 0.2,
+                });
+            }
+        }
 
         // Save the PDF document to a buffer
         const pdfBytes = await pdfDoc.save();

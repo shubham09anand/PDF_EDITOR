@@ -2,13 +2,15 @@ import React, { useMemo, useEffect, useRef, useState } from 'react';
 import JoditEditor from 'jodit-react';
 import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
-import ImageAi from "./SupportFiles/ImageAi";
 import TextAi from "./SupportFiles/TextAi";
 import ContentSupport from "./SupportFiles/ContentSupport";
 import ProjectStroage from "./SupportFiles/ProjectStroage";
 import TextEditorDashboard from './TextEditorDashboard';
 import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 import Fonts from './Fonts'
+import { TextEditorOption } from './CreatePDFFunction';
+import ImageAi from './SupportFiles/ImageAi';
+
 
 const TextEditor = () => {
     const location = useLocation();
@@ -19,6 +21,7 @@ const TextEditor = () => {
     const [display, setDisplay] = useState(0);
     const [pdfGenration, setPdfGenration] = useState(0);
     const [rawHTML, setRawHTML] = useState(null);
+    const [buttonInfo, setButtonInfo] = useState(false)
 
     useEffect(() => {
         const s = io("http://localhost:8080");
@@ -30,64 +33,10 @@ const TextEditor = () => {
     }, []);
 
     // Add custom font configuration
-    const config = useMemo(() => ({
-        height: 800,
-        readonly: false,
-        placeholder: 'Type here...',
-        spellcheck: true,
-        buttons: [
-            'source', '|',
-            'bold',
-            'strikethrough',
-            'underline',
-            'italic', '|',
-            'ul',
-            'ol', '|',
-            'outdent', 'indent', '|',
-            'font',
-            'fontsize',
-            'brush',
-            'paragraph', '|',
-            'image',
-            'video',
-            'table',
-            'link', '|',
-            'align', 'undo', 'redo', '|',
-            'speechRecognize', '|',
-            'hr',
-            'eraser',
-            'copyformat', '|',
-            'symbol',
-            'fullsize',
-            'print',
-        ],
-        uploader: {
-            url: '/upload',
-            insertImageAsBase64URI: true,
-        },
-        controls: {
-            font: {
-                list: {
-                    'Amatic SC, sans-serif': 'Amatic SC',
-                    'Assistant, sans-serif': 'Assistant',
-                    'Grey Qo, sans-serif': 'Grey Qo',
-                    'Mea Culpa, cursive': 'Mea Culpa',
-                    'Playwrite CU, sans-serif': 'Playwrite CU',
-                    'Roboto, sans-serif': 'Roboto',
-                    'Work Sans, sans-serif': 'Work Sans',
-                    'Arial, sans-serif': 'Arial',
-                    'Georgia, serif': 'Georgia',
-                    'Impact, Charcoal, sans-serif': 'Impact',
-                    'Tahoma, Geneva, sans-serif': 'Tahoma',
-                    'Verdana, Geneva, sans-serif': 'Verdana'
-                }
-            }
-        }
-    }), []);
+    const config = useMemo(() => TextEditorOption(), [buttonInfo]);
 
     useEffect(() => {
         if (!socket) return;
-
         // Join the room for the specific document
         socket.emit("join-room", docId);
 
@@ -121,16 +70,38 @@ const TextEditor = () => {
 
     useEffect(() => {
         const quillContainer = document.getElementsByClassName('jodit-status-bar jodit-status-bar_resize-handle_true')[0];
+        const quillContainerResize = document.getElementsByClassName('jodit-editor__resize')[0];
+
+        if (quillContainerResize) {
+            quillContainerResize.style.display = 'none';
+        }
 
         if (quillContainer) {
-            console.log("Hello");
             quillContainer.style.display = 'none';
         }
-    }, [editor]);
+    }, [buttonInfo, editor]);
+
+    useEffect(() => {
+        const handleButtonClick = () => {
+            setButtonInfo(prevButtonInfo => !prevButtonInfo);
+        };
+
+        const quillKnowButton = document.getElementsByClassName('jodit-ui-group__Know-Options')[0];
+
+        if (quillKnowButton) {
+            quillKnowButton.addEventListener('click', handleButtonClick);
+        }
+
+        return () => {
+            if (quillKnowButton) {
+                quillKnowButton.removeEventListener('click', handleButtonClick);
+            }
+        };
+    }, [editor, buttonInfo]);
 
     return (
         <div className='h-screen'>
-            <Fonts/>    
+            <Fonts />
             {pdfGenration === null &&
                 <div className='absolute z-20 backdrop-blur-[2px] w-screen h-screen top-0'>
                     <div className='h-full w-full flex-col flex place-content-center items-center mx-auto z-20'>

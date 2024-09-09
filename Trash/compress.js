@@ -1,35 +1,19 @@
-const { PDFDocumentFactory, PDFDocumentWriter, drawText } = require('pdf-lib');
+const { exec } = require('child_process');
 const fs = require('fs');
 
-async function compressPDF(inputPath, outputPath) {
-  // Read the existing PDF
-  const pdfBytes = fs.readFileSync(inputPath);
+// Specify the input and output file paths
+const inputPath = 'input.pdf'; // Change this to your actual file path
+const outputPath = 'compressed-output.pdf'; // Output path for the compressed file
 
-  // Load the PDF
-  const pdfDoc = await PDFDocumentFactory.load(pdfBytes);
+// Ghostscript command to compress the PDF
+const command = `gswin64c -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dBATCH -sOutputFile=${outputPath} ${inputPath}`;
 
-  // Create a new PDF writer
-  const pdfWriter = PDFDocumentWriter.create();
+// Execute the Ghostscript command
+exec(command, (err) => {
+  if (err) {
+    console.error(`Error compressing PDF: ${err.message}`);
+    return;
+  }
 
-  // Add all pages to the new PDF
-  pdfWriter.addPagesOf(pdfDoc);
-
-  // Optimize and compress the PDF
-  pdfWriter.compress();
-
-  // Write the compressed PDF to a buffer
-  const pdfBytesCompressed = await pdfWriter.saveAsBytes();
-
-  // Write the buffer to the output file
-  fs.writeFileSync(outputPath, pdfBytesCompressed);
-
-  console.log(`PDF compressed and saved to ${outputPath}`);
-}
-
-// Usage example
-const inputFilePath = 'test.pdf';
-const outputFilePath = 'output_compressed.pdf';
-
-compressPDF(inputFilePath, outputFilePath).catch((err) => {
-  console.error('Error compressing PDF:', err);
+  console.log(`PDF compressed successfully and saved to ${outputPath}`);
 });

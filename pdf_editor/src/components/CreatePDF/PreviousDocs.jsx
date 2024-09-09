@@ -3,7 +3,6 @@ import { io } from "socket.io-client";
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import '../../Style/fonts.css'
 
 const PreviousDocs = () => {
 

@@ -4,8 +4,6 @@ const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const http = require('http');
 const { Server } = require('socket.io');
-const connectDB = require("./DatabseConnection/connection.js");
-
 
 const app = express();
 const server = http.createServer(app);
@@ -16,11 +14,9 @@ app.use(bodyParser.json({ limit: '100mb' }));
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
-connectDB();
 
 // Including existing routes
 app.use("/auth", require('./Routes/DocumentRoute.js'));
-app.use("/auth", require('./Routes/AccountRoutes.js'));
 app.use("/auth", require('./Routes/SupportRoutes.js'));
 app.use("/auth", require('./Routes/WebScraping.js'));
 

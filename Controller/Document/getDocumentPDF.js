@@ -9,9 +9,7 @@ const generatePDF = async (req, res) => {
 
     const quillHtmlContent = `
     ${rawHTML}
-
     `;
-
 
     await page.setContent(quillHtmlContent);
 
