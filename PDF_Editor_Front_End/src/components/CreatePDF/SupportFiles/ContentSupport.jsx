@@ -10,7 +10,7 @@ import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 import API from '../../../Api/Api';
 import { downloadImage } from './SupportFilesFunction';
 
-const ContentSupport = () => {
+const ContentSupport = ({editorHeight}) => {
 
      const newsOutletLinks = [
           {
@@ -92,10 +92,23 @@ const ContentSupport = () => {
                })
      }
 
+     const handleCopyText = async () =>{
+          if (summary === null) {
+               return
+          }
+          try {
+               await window.navigator.clipboard.writeText(summary?.genaratedSummary?.generatedText);
+               toast.success("Copies Succesfully")
+          } catch (err) {
+               toast.error("Copies Failed")
+           }
+     }
+
      return (
-          <div className="min-h-screen p-2 w-full flex bg-teal-lightest font-sans mx-auto backdrop-blur-2xl relative">
+          <div className={`p-2 w-full flex bg-teal-lightest font-sans mx-auto backdrop-blur-2xl relative h-[${(editorHeight)}px]`}>
                <ToastContainer />
-               <div className="w-[99%] md:w-4/5 lg:w-3/4 mx-auto">
+               {/* {links.length} */}
+               <div className={`w-[99%] md:w-4/5 lg:w-3/4 mx-auto`}>
 
                     <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                          <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
@@ -105,12 +118,12 @@ const ContentSupport = () => {
                          <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
                               <div className='flex place-content-center items-center space-x-5'>
                                    {
-                                        links && links?.length !== 0 ? (
+                                        links?.length !== 0 ? (
                                              <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
                                                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                                              </svg>
                                         ) :
-                                             <div>No Links Found Realted To Your Querry</div>
+                                             <div className='text-gray-500'>No Links Found Realted To Your Querry</div>
                                    }
                               </div>
                               <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
@@ -200,10 +213,10 @@ const ContentSupport = () => {
                          }
 
                          <div className="md:p-4">
-                              <p className="relative mb-3 overflow-y-scroll example h-[400px] text-gray-600 sm:border-s-4 md:pl-4">
+                              <p className="relative mb-3 overflow-y-scroll example h-[400px] text-gray-600 sm:border-s-4 pl-0 sm:pl-4 md:pl-4">
+                                   <span onClick={handleCopyText} className='rounded-md shadow-[2px_2px_2px_gray] w-fit h-fit p-1'>Copy</span>
                                    {summary?.genaratedSummary?.generatedText.split('\n').map((line, index) => (
                                         <React.Fragment key={index}>
-                                             <div className='w-fit h-fit px-2 py-1 rounded-xl absolute right-3 top-3'>Copy</div>
                                              {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
                                                   <React.Fragment key={partIndex}>
                                                        {part.startsWith('**') && part.endsWith('**') ? (
@@ -223,7 +236,7 @@ const ContentSupport = () => {
                          </div>
                     </div>
 
-                    <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>
+                    {/* <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>
                          <div className='flex place-content-center items-center space-x-5'>
                               <svg onClick={() => setItemDisplay(2)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
@@ -249,7 +262,6 @@ const ContentSupport = () => {
                                    );
                               })}
                          </div>
-
                     </div>
 
                     {
@@ -261,7 +273,7 @@ const ContentSupport = () => {
                                    </svg>
                               </div>
                          )
-                    }
+                    } */}
 
                </div>
           </div>

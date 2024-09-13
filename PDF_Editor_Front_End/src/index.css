@@ -81,3 +81,35 @@
 .jodit-wysiwyg {
     height: 500px;
 }
+
+@keyframes objAnimation {
+    0% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    100% {
+        transform: rotate(-15deg);
+    }
+}
+
+.object {
+    animation: objAnimation 10s infinite;
+}
+
+@keyframes ping {
+    50%, 100% {
+         transform: scale(1);
+         opacity: 1;
+    }
+}
+.animate-ping-object_ {
+    animation: ping 3s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+.jodit-status-bar__item .jodit-status-bar__item-right{
+    display: none;
+}

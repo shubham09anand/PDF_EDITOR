@@ -1,7 +1,7 @@
 const fetch = require("node-fetch");
 
 const ImageAiController = async (req, res) => {
-     console.log("AI Image");
+     // console.log("AI Image");
      console.log(req.body);
      try {
           const prompt = req.body.userInput;

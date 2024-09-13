@@ -174,10 +174,10 @@ const DeletePages = () => {
                     <div className='pt-5 flex mx-auto flex-wrap p-2 w-fit gap-14 place-content-center'>
                          {images.map((imageUrl, index) => (
                               <div key={index} onClick={(e) => handlePageSelection(index, e)} className={`gap-5 ${pageDelete.includes(index) ? 'opacity-40' : ''}`}>
-                                   <div className=''>
+                                   <>
                                         <img draggable={true} className='shadow-[1px_1px_10px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-pointer' src={imageUrl} alt={`Page ${index + 1}`} />
                                         <div className='text-gray-500 text-center text-sm mt-2 font-semibold'>Page {index + 1}</div>
-                                   </div>
+                                   </>
                               </div>
                          ))}
                     </div>

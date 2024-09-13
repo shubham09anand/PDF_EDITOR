@@ -6,7 +6,7 @@ const summaryGenration = async (summaryMetaData) => {
      try {
 
           if (summaryMetaData.articleTitle === "" || summaryMetaData.articleConentent === "" ) {
-               console.log("empty")
+               // console.log("empty")
           }
           const dummyText = `Could you please generate a summary of text for my academic project 300words to 500words. here is the text in json format which has one filed about the title of content and second filed is conent.
                {

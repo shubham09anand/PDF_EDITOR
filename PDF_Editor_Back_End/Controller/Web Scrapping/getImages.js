@@ -3,7 +3,7 @@ const axios = require('axios');
 const getImages = async (req, res) => {
      try {
 
-          console.log("image Api")
+          // console.log("image Api")
           const API_KEY = "AIzaSyDhXIKNv8WUsk9EJwJKA9MZ6TLFQmIb2WY";
           const SEARCH_ENGINE_ID = "402cb9ae467ab4a4e";
           const search_query = req.body.queery;

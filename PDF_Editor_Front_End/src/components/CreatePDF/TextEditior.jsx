@@ -21,7 +21,10 @@ const TextEditor = () => {
     const [display, setDisplay] = useState(0);
     const [pdfGenration, setPdfGenration] = useState(0);
     const [rawHTML, setRawHTML] = useState(null);
-    const [buttonInfo, setButtonInfo] = useState(false)
+    const [buttonInfo, setButtonInfo] = useState(false);
+    const [editorHeight, setEditorHeight] = useState(null);
+
+    console.log(rawHTML)
 
     useEffect(() => {
         const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
@@ -33,9 +36,8 @@ const TextEditor = () => {
         };
     }, []);
 
-    // Add custom font configuration
     // eslint-disable-next-line 
-    const config = useMemo(() => TextEditorOption(), [buttonInfo]);
+    const config = useMemo(() => TextEditorOption(editorHeight, buttonInfo), [buttonInfo,editorHeight]);
 
     useEffect(() => {
         if (!socket) return;
@@ -71,17 +73,44 @@ const TextEditor = () => {
     };
 
     useEffect(() => {
-        const quillContainer = document.getElementsByClassName('jodit-status-bar jodit-status-bar_resize-handle_true')[0];
-        const quillContainerResize = document.getElementsByClassName('jodit-editor__resize')[0];
-
+        const quillContainerResize = document.querySelector('.jodit-editor__resize');
+        const joditPagePadding = document.querySelector('.jodit-wysiwyg');
+        const joditWorkplaces = document.querySelectorAll('.jodit-workplace'); // Changed to querySelectorAll
+        const joditContainer = document.querySelector('.jodit-container');
+        const textEditorOption = document.getElementById('textEditorOption');
+        const joditStatusBar = document.querySelector('.jodit-status-bar-link');
+        const viewportHeight = window.innerHeight;
+    
+        if (textEditorOption) {
+            const elementHeight = textEditorOption.getBoundingClientRect().height;
+            const heightDifference = viewportHeight - elementHeight;
+            setEditorHeight(heightDifference);
+        }
+    
         if (quillContainerResize) {
             quillContainerResize.style.display = 'none';
         }
-
-        if (quillContainer) {
-            quillContainer.style.display = 'none';
+    
+        if (joditPagePadding) {
+            joditPagePadding.style.border = '0px';
         }
+    
+        if (joditWorkplaces.length > 0) {
+            joditWorkplaces.forEach(workplace => {
+                workplace.style.padding = '20px'; // Loop through each workplace and apply padding
+            });
+        }
+    
+        if (joditContainer) {
+            joditContainer.classList.remove('jodit-container');
+        }
+    
+        if (joditStatusBar) {
+            joditStatusBar.style.display = 'none';
+        }
+    
     }, [buttonInfo, editor]);
+    
 
     useEffect(() => {
         const handleButtonClick = () => {
@@ -102,21 +131,22 @@ const TextEditor = () => {
     }, [editor, buttonInfo]);
 
     return (
-        <div className='h-screen'>
+        <div className='h-screen flex flex-col justify-between'>
+            {/* {editorHeight} */}
             <Fonts />
             {pdfGenration === null &&
-                <div className='absolute z-20 backdrop-blur-[2px] w-screen h-screen top-0'>
+                <div className='absolute z-40 backdrop-blur-[2px] w-screen h-screen top-0'>
                     <div className='h-full w-full flex-col flex place-content-center items-center mx-auto z-20'>
                         <LoadingPlaneAnimation />
                         <div className='text-lg font-semibold -mt-40'>Generating Your PDF...</div>
                     </div>
                 </div>}
-            <div className='h-[90%]'>
+            <div className=''>
                 <JoditEditor className={`${display === 0 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
-                <div className={`w-full h-full ${display === 1 ? 'block' : 'hidden'}`}><ImageAi /></div>
-                <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi /></div>
-                <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport /></div>
-                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage /></div>
+                <div className={`w-full h-full ${display === 1 ? 'block' : 'hidden'}`}><ImageAi editorHeight={editorHeight} /></div>
+                <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi editorHeight={editorHeight} /></div>
+                <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport editorHeight={editorHeight} /></div>
+                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage editorHeight={editorHeight} /></div>
             </div>
             <TextEditorDashboard pdfGenrationStatus={setPdfGenration} display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
         </div>

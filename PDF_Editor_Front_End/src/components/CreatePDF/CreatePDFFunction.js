@@ -47,16 +47,16 @@ export const handleGeneratePdf = async (rawHTML) => {
  };
  
 
-export const TextEditorOption = (buttonInfo) => {
+export const TextEditorOption = (editorHeight,buttonInfo) => {
      return {
-          height: 700,
+          height: editorHeight,
           padding: 20,
           readonly: false,
           placeholder: 'Type here...',
           spellcheck: true,
           buttons: [
                'bold', 'strikethrough', 'underline', 'italic', '|',
-               'ul', 'ol', 'outdent', 'indent', 'align', '|',
+               'ul', 'ol', 'outdent', 'indent', 'align', 'lineHeight', '|',
                'font', 'fontsize', 'brush', 'paragraph', '|',
                'image', 'video', 'table', 'link', '|',
                'superscript', 'subscript', '|', 'spellcheck',
@@ -90,3 +90,4 @@ export const TextEditorOption = (buttonInfo) => {
           },
      };
 };
+

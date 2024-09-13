@@ -4,7 +4,7 @@ const { summaryGenration } = require('./summaryGenration');
 
 const scrapeWebpage = async (req, res) => {
      try {
-          console.log("Scrapper");
+          // console.log("Scrapper");
           const slectedLink = req.body.slectedLink;
           const conetntSnippet = req.body.conetntSnippet;
           const contentTitle = req.body.contentTitle;
