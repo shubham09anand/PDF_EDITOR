@@ -236,7 +236,7 @@ const ContentSupport = ({editorHeight}) => {
                          </div>
                     </div>
 
-                    {/* <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>
+                    <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>
                          <div className='flex place-content-center items-center space-x-5'>
                               <svg onClick={() => setItemDisplay(2)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
@@ -262,7 +262,7 @@ const ContentSupport = ({editorHeight}) => {
                                    );
                               })}
                          </div>
-                    </div>
+                    </div> 
 
                     {
                          selectedImage !== null && (
@@ -273,7 +273,7 @@ const ContentSupport = ({editorHeight}) => {
                                    </svg>
                               </div>
                          )
-                    } */}
+                    }
 
                </div>
           </div>
