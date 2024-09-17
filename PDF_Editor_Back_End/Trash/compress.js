@@ -1,0 +1,101 @@
+const { PDFDocument, rgb, degrees, StandardFonts } = require('pdf-lib');
+const fs = require('fs');
+const { cos, sin, PI } = Math;
+
+// Function to convert degrees to radians
+const degreesToRadians = (degrees) => degrees * (PI / 180);
+
+async function addRepeatingWatermark() {
+    // Load the existing PDF
+    const pdfBytes = fs.readFileSync('./AI.pdf');  // Load your PDF here
+    const pdfDoc = await PDFDocument.load(pdfBytes);
+
+    // Load bold font (you can load your custom font if needed)
+    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+
+    // Get the first page (you can loop through all pages if needed)
+    const pages = pdfDoc.getPages();
+    const firstPage = pages[0];
+
+    // Get page dimensions
+    const { width, height } = firstPage.getSize();
+
+    // Set the watermark text
+    const watermarkText = "PDFCollabrator";
+
+    // Define text style
+    const fontSize = 20;  // Adjust the font size
+    const opacity = 0.6;
+    const color = rgb(0.8, 0.8, 0.8);  // Light gray color for watermark
+    const rotationDegrees = 45;
+    const rotationRadians = degreesToRadians(rotationDegrees);
+
+    // Array to store the coordinates
+    const coordinates = [];
+
+    // Loop to add watermarks diagonally across the page
+    for (let y = 0; y < height; y += 150) {  // Adjust step for vertical spacing
+        for (let x = -100; x < width; x += 200) {  // Adjust step for horizontal spacing
+            // Draw bold watermark text
+            firstPage.drawText(watermarkText, {
+                x: x,
+                y: y,
+                size: fontSize,
+                color: color,
+                opacity: opacity,
+                font: boldFont,  // Use bold font
+                rotate: degrees(rotationDegrees),  // Diagonal rotation
+            });
+
+            // Add underline by drawing a line below the text
+            const textWidth = boldFont.widthOfTextAtSize(watermarkText, fontSize);
+            const underlineThickness = 1;  // Thickness of the underline
+
+            // Calculate the start and end points of the underline before rotation
+            const startX = x;
+            const startY = y - 5;  // Adjust Y to position the underline under the text
+            const endX = x + textWidth;
+            const endY = y - 5;
+
+            // Rotate the start and end points around the text position
+            const rotatePoint = (px, py) => {
+                const dx = px - x;
+                const dy = py - y;
+                return {
+                    x: x + dx * cos(rotationRadians) - dy * sin(rotationRadians),
+                    y: y + dx * sin(rotationRadians) + dy * cos(rotationRadians),
+                };
+            };
+
+            const { x: startXRotated, y: startYRotated } = rotatePoint(startX, startY);
+            const { x: endXRotated, y: endYRotated } = rotatePoint(endX, endY);
+
+            firstPage.drawLine({
+                start: { x: startXRotated, y: startYRotated },
+                end: { x: endXRotated, y: endYRotated },
+                thickness: underlineThickness,
+                color: color,
+                opacity: opacity,
+            });
+
+            // Store the coordinates
+            coordinates.push({ x, y });
+        }
+    }
+
+    // Serialize the PDFDocument to bytes
+    const pdfBytesUpdated = await pdfDoc.save();
+
+    // Write the modified PDF to file
+    fs.writeFileSync('./output.pdf', pdfBytesUpdated);
+
+    console.log('Watermark with italic and underline applied successfully');
+
+    // Return the coordinates
+    return coordinates;
+}
+
+// Call the function to add the watermark and get the coordinates
+addRepeatingWatermark().then(coordinates => {
+    console.log('Coordinates of watermarks:', coordinates);
+});

@@ -11,8 +11,8 @@ import MergePdf from './BasicFeatures/MergePdf';
 import ShufflePdf from './BasicFeatures/ShufflePdf';
 import WordToPdf from './BasicFeatures/WordToPdf';
 import AddPageNumber from './BasicFeatures/AddPageNumber';
-// import Header from './Header';
 import PreviousDocs from './CreatePDF/PreviousDocs';
+import AddWaterMark from './BasicFeatures/AddWaterMark';
 
 const Layout = () => {
 
@@ -34,6 +34,7 @@ const Layout = () => {
                          <Route path="/shuffle_pdf" element={<ShufflePdf />} />
                          <Route path="/word_to_pdf" element={<WordToPdf />} />
                          <Route path="/add_page_number" element={<AddPageNumber />} />
+                         <Route path="/add_water_mark" element={<AddWaterMark />} />
                          <Route path="/create_pdf" element={<PreviousDocs />} />
                          <Route path="/create_doc/">
                               <Route path="/create_doc/" element={<Navigate replace to={`/create_doc/document/${uuidv4()}`} />} />
