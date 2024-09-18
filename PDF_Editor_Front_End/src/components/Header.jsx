@@ -31,7 +31,7 @@ const Header = () => {
                 </ul>
             </nav>
             <div className="flex flex-1 items-center justify-end">
-                <a target="_blank" className="inline-flex justify-center whitespace-nowrap rounded-full bg-indigo-500 px-3 py-1.5 text-sm font-medium text-white shadow transition-colors hover:bg-indigo-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300" href="https://its.shubham09anand.in">Developer</a>
+                <a target="_blank" rel="noreferrer" className="inline-flex justify-center whitespace-nowrap rounded-full bg-indigo-500 px-3 py-1.5 text-sm font-medium text-white shadow transition-colors hover:bg-indigo-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300" href="https://its.shubham09anand.in">Developer</a>
             </div>
         </header>
     )
