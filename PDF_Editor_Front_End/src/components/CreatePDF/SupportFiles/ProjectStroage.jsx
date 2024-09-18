@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import uploadImage from '../../../Assets/images/icons/uploadImage.webp';
-import minecrafrt from '../../../Assets/images/games/img-5.jpg';
 import { downloadImage } from './SupportFilesFunction';
 import { io } from "socket.io-client";
 import { useLocation } from 'react-router-dom';
@@ -96,21 +95,18 @@ const ProjectStorage = () => {
           "https://images.pexels.com/photos/2896668/pexels-photo-2896668.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://images.pexels.com/photos/48814/penguins-emperor-antarctic-life-48814.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://cdn.mos.cms.futurecdn.net/SAWUwXoJpQFxbDsgBMkRgB-1200-80.jpg.webp",
-          minecrafrt,
           "https://images.pexels.com/photos/1257860/pexels-photo-1257860.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://cdn.mos.cms.futurecdn.net/NaCymkW7W9rEDAtVtqcBza-970-80.jpg.webp",
           "https://images.pexels.com/photos/2896668/pexels-photo-2896668.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://images.pexels.com/photos/48814/penguins-emperor-antarctic-life-48814.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://cdn.mos.cms.futurecdn.net/SAWUwXoJpQFxbDsgBMkRgB-1200-80.jpg.webp",
-          minecrafrt,
           "https://images.pexels.com/photos/1257860/pexels-photo-1257860.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://images.pexels.com/photos/572897/pexels-photo-572897.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://cdn.mos.cms.futurecdn.net/NaCymkW7W9rEDAtVtqcBza-970-80.jpg.webp",
           "https://images.pexels.com/photos/2896668/pexels-photo-2896668.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://images.pexels.com/photos/48814/penguins-emperor-antarctic-life-48814.jpeg?auto=compress&cs=tinysrgb&w=600",
           "https://cdn.mos.cms.futurecdn.net/SAWUwXoJpQFxbDsgBMkRgB-1200-80.jpg.webp",
-          minecrafrt,
      ];
 
      const controlPreview = (url) => {

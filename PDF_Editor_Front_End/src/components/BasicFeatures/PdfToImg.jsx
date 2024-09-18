@@ -17,7 +17,6 @@ const PdfToImg = () => {
      const [loading, setLoading] = useState(false)
 
      const handleFileChange = async (e) => {
-          // console.log(e.target.files)
           if (e.target.files[0].type !== 'application/pdf') {
                toast.error("Only PDF are allowed")
                return;

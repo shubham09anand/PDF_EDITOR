@@ -25,7 +25,7 @@ const TextEditor = () => {
     const [editorHeight, setEditorHeight] = useState(null);
 
     console.log(rawHTML)
-
+    
     useEffect(() => {
         const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
         // const s = io("http://localhost:8080");
@@ -114,7 +114,7 @@ const TextEditor = () => {
 
     useEffect(() => {
         const handleButtonClick = () => {
-            setButtonInfo(prevButtonInfo => !prevButtonInfo);
+            setButtonInfo(true);
         };
 
         const quillKnowButton = document.getElementsByClassName('jodit-ui-group__Know-Options')[0];
@@ -131,7 +131,7 @@ const TextEditor = () => {
     }, [editor, buttonInfo]);
 
     return (
-        <div className='h-screen flex flex-col justify-between'>
+        <div className='mt-3 h-screen flex flex-col justify-between'>
             {/* {editorHeight} */}
             <Fonts />
             {pdfGenration === null &&

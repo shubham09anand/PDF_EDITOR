@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Route, Routes, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import { v4 as uuidv4 } from "uuid";
 
 import Home from './Home';
@@ -13,6 +13,7 @@ import WordToPdf from './BasicFeatures/WordToPdf';
 import AddPageNumber from './BasicFeatures/AddPageNumber';
 import PreviousDocs from './CreatePDF/PreviousDocs';
 import AddWaterMark from './BasicFeatures/AddWaterMark';
+import Header from './Header';
 
 const Layout = () => {
 
@@ -22,9 +23,39 @@ const Layout = () => {
           setIsFocused(value)
      }
 
+     const location = useLocation();
+     const { pathname } = location;
+
+     const useDocumentTitle = (title) => {
+          useEffect(() => {
+               document.title = title;
+          }, [title]);
+     };
+
+     const titleMap = {
+          '/': 'Home - PDFCollbrator',
+          '/split_pdf': 'Split PDF - PDFCollbrator',
+          '/pdf_to_img': 'PDF to Image - PDFCollbrator',
+          '/delete_pages': 'Delete Pages - PDFCollbrator',
+          '/merge_pdf': 'Merge PDF - PDFCollbrator',
+          '/shuffle_pdf': 'Shuffle PDF - PDFCollbrator',
+          '/word_to_pdf': 'Word to PDF - PDFCollbrator',
+          '/add_page_number': 'Add Page Numbers - PDFCollbrator',
+          '/add_water_mark': 'Add Watermark - PDFCollbrator',
+          '/create_pdf': 'Previous Documents - PDFCollbrator',
+          '/create_doc': 'Create Document - PDFCollbrator',
+          '/create_doc/document/:id': 'Document Editor - PDFCollbrator',
+     };
+
+     let title = titleMap[pathname] || 'Default Title';
+
+
+     useDocumentTitle(title);
+
      return (
           <>
-               <div className='pt- w-screen'>
+               <Header/>
+               <div className='w-screen pt-10'>
                     <Routes>
                          <Route path="/" element={<Home />} />
                          <Route path="/split_pdf" element={<SplitPDF />} />

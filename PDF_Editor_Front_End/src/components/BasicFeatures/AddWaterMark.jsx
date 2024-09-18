@@ -22,7 +22,8 @@ const AddWaterMark = () => {
      const [rotation, setRotation] = useState(0);
      const [textOpacity, setTextOpacity] = useState(30);
      const [coordinates, setCoordinates] = useState([]);
-     const [blob, setBlob] = useState(null)
+     const [blob, setBlob] = useState(null);
+     const [editDisplay, setEditDisplay] = useState(false)
 
      const handleFileChange = async (e) => {
           if (e.target.files[0].type !== 'application/pdf') {
@@ -37,6 +38,13 @@ const AddWaterMark = () => {
           // Convert Color object to hex string
           setColor(newColor.toHexString());
      };
+
+     const reupload = () => {
+          setSelectedFiles([]);
+          setColorDisplay(false);
+          setWatermark("")
+          setBlob(null)
+     }
 
      const watermarkStyle = {
           fontSize: `${font * 0.7}px`,
@@ -58,10 +66,10 @@ const AddWaterMark = () => {
                     const degreesToRadians = (degrees) => degrees * (Math.PI / 180);
 
                     // Use the state values for the watermark text, font size, etc.
-                    const watermarkText = watermark; // from state
-                    const fontSize = font; // from state
-                    const opacity = textOpacity / 100; // from state
-                    const rotationDegrees = rotation; // from state
+                    const watermarkText = watermark;
+                    const fontSize = font;
+                    const opacity = textOpacity / 100;
+                    const rotationDegrees = rotation;
                     const rotationRadians = degreesToRadians(rotationDegrees);
 
                     // Convert color from hex to RGB
@@ -72,14 +80,13 @@ const AddWaterMark = () => {
                          const b = bigint & 255;
                          return rgb(r / 255, g / 255, b / 255);
                     };
-                    const watermarkColor = hexToRgb(color); // Convert state color to RGB
+                    const watermarkColor = hexToRgb(color);
 
                     try {
                          // Load the PDF file as an ArrayBuffer
                          const fileBuffer = await selectedFiles[0]?.arrayBuffer();
                          const pdfDoc = await PDFDocument.load(fileBuffer);
 
-                         // Embed the font
                          const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
                          const pages = pdfDoc.getPages();
@@ -92,23 +99,22 @@ const AddWaterMark = () => {
                               // Loop to add watermarks diagonally across each page
                               for (let y = 0; y < height; y += 150) {
                                    for (let x = -100; x < width; x += 200) {
-                                        // Draw bold watermark text using the state values
                                         page.drawText(watermarkText, {
                                              x: x,
                                              y: y,
                                              size: fontSize,
-                                             color: watermarkColor, // Use the converted color
-                                             opacity: opacity, // Use state opacity
+                                             color: watermarkColor,
+                                             opacity: opacity,
                                              font: boldFont,
-                                             rotate: degrees(rotationDegrees), // Use state rotation
+                                             rotate: degrees(rotationDegrees),
                                         });
 
-                                        // Optionally, add underline if `isUnderline` is true
+                                        // if isUnderline is true
                                         if (isUnderline) {
                                              const textWidth = boldFont.widthOfTextAtSize(watermarkText, fontSize);
-                                             const underlineThickness = 1;  // Thickness of the underline
+                                             const underlineThickness = 1;
                                              const startX = x;
-                                             const startY = y - 5;  // Adjust Y to position the underline under the text
+                                             const startY = y - 5;
                                              const endX = x + textWidth;
                                              const endY = y - 5;
 
@@ -129,25 +135,23 @@ const AddWaterMark = () => {
                                                   start: { x: startXRotated, y: startYRotated },
                                                   end: { x: endXRotated, y: endYRotated },
                                                   thickness: underlineThickness,
-                                                  color: watermarkColor, // Use the same color for underline
-                                                  opacity: opacity, // Use the same opacity for underline
+                                                  color: watermarkColor,
+                                                  opacity: opacity,
                                              });
                                         }
 
-                                        // Store the coordinates
                                         newCoordinates.push({ x, y });
                                    }
                               }
                          }
 
-                         // Save the updated PDF document
                          const pdfBytesUpdated = await pdfDoc.save();
 
-                         // Optionally, if you want to create a downloadable link:
+                         // blob of edited pdf
                          const blob = new Blob([pdfBytesUpdated], { type: 'application/pdf' });
                          const downloadUrl = URL.createObjectURL(blob);
-                         setBlob(downloadUrl); // Update the blob for download
-                         setCoordinates(newCoordinates); // Update the coordinates state
+                         setBlob(downloadUrl);
+                         setCoordinates(newCoordinates);
                     } catch (error) {
                          console.error("Error adding watermark:", error);
                     }
@@ -178,7 +182,7 @@ const AddWaterMark = () => {
      }
 
      return (
-          <div className='p-2 w-full'>
+          <div className='w-full md:pl-5'>
                <ToastContainer />
 
                <AboutFeature featureHeading={'Add Watermark to PDF'} featureDescription={'Easily add custom text or image watermarks to your PDF documents.'} />
@@ -188,21 +192,48 @@ const AddWaterMark = () => {
                }
 
                {selectedFiles.length !== 0 &&
-                    <div className='flex w-full place-content-center select-none mt-4'>
-                         <div className='w-3/5'>
-                              <div className='overflow-hidden w-[416.5px] h-[589.4px] border-[2px] border-black rounded-md mx-auto bg-white relative z-[50]'>
+                    <div className="mx-auto flex h-full w-fit mt-5 md:mb-10 shadow-sm p-2 rounded-lg">
+                         <div className="bg-white h-full mr-2 my-auto flex place-content-center items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-6" viewBox="0 0 16 16">
+                                   <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
+                                   <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
+                              </svg>
+                         </div>
+                         <div className='select-none flex place-content-center items-center pr-4'>
+                              <div className="text-sm truncate font-semibold text- max-w-48 overflow-x-scroll example">{selectedFiles[0]?.name}</div>
+                         </div>
+                         <div onClick={reupload} className="bg-white md:bg-transparent cursor-pointer hover:opacity-75 active:opacity-50 border-l-2 border-black px-3 h-full my-auto flex place-content-center items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                                   <path strokeLinecap="round" strok-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                              </svg>
+
+                         </div>
+                    </div>
+               }
+
+               {selectedFiles.length !== 0 &&
+                    <div className='flex relative w-full md:place-content-center select-none md:mt-4'>
+                         <div className='w-full lg:w-3/5 relative'>
+                              <div className='scale-[80%] sm:scale-100 -translate-y-5 md:translate-y-0 -translate-x-4 mb:-translate-x-2 lg:translate-x-0 overflow-hidden w-[416.5px] h-[589.4px] border-[2px] border-black rounded-md mx-auto bg-white relative z-[50]'>
                                    {positions.map((pos, index) => (
                                         <div key={index} style={{ ...watermarkStyle, position: 'absolute', top: pos.y, left: pos.x, transform: `translate(-50%, -50%) rotate(${rotation}deg)`, }}>
                                              {watermark}
                                         </div>
                                    ))}
-                                   <div className='text-5xl opacity-60 font-semibold z-50 bottom-5 right-5 absolute'><span className='font-normal'>A</span>4</div>
+                                   <div className='text-5xl opacity-60 font-semibold z-10 bottom-5 right-5 absolute'><span className='font-normal'>A</span>4</div>
                               </div>
+                              <svg onClick={() => setEditDisplay(true)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 absolute z-50 top-10 right-1 cursor-pointer md:hidden">
+                                   <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                              </svg>
                          </div>
 
-                         <div className='w-[40%] flex-col justify-between px-5 border-l-2'>
-                              <div className='text-gray-900 text-3xl font-semibold mb-3'>Water Mark Setting</div>
-
+                         <div className={`absolute right-0 top-8 z-50 md:static bg-white w-[100%] lg:w-[40%] flex-col place-content-center justify-between px-3 lg:px-5 md:border-l border-gray-200 ${editDisplay ? 'block' : 'hidden'}`}>
+                              <div className='flex justify-between w-full'>
+                                   <div className='text-gray-900 text-3xl font-semibold mb-3'>Water Mark Setting</div>
+                                   <svg onClick={() => setEditDisplay(false)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="rotate-180 size-6 mt-3 cursor-pointer md:hidden">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                   </svg>
+                              </div>
                               <div>
                                    <div className='mb-3'>
                                         <div className='text-gray-900 text-xl font-semibold mb-3'>Watermark Text:</div>
@@ -229,7 +260,7 @@ const AddWaterMark = () => {
                                    <div className='mb-2'>
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Font Size:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
-                                             <Slider value={font} color="primary" aria-label="slider" onChange={(_, newValue) => setFont(newValue)} />
+                                             <Slider max={100} value={font} color="primary" aria-label="slider" onChange={(_, newValue) => setFont(newValue)} />
                                              <input type="text" value={font} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>

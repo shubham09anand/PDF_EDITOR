@@ -1,44 +1,39 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import projectLogo from '../Assets/images/pdfIcons/pdfLogo.jpg';
 
-const Header = ({controllDisplay}) => {
-
-    const location = useLocation();
-    const currentPath = location.pathname;
-    const result = currentPath.startsWith("/create_doc/document");
+const Header = () => {
 
     return (
-        <div>
-            <nav className="bg-gray-400 h-16 z-20 flex fixed place-content-center items-center border-gray-200">
-                <div className="flex flex-wrap place-content-center items-center justify-between mx-auto w-screen p-2">
-                    <div className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Flowbite</span>
-                    </div>
-                    <button data-collapse-toggle="mega-menu-full-image" type="button" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600" aria-controls="mega-menu-full-image" aria-expanded="false">
-                        <span className="sr-only">Open main menu</span>
-                        <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
-                            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
-                        </svg>
-                    </button>
-                    <div id="mega-menu-full-image" className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1">
-                        <ul className="flex flex-col place-content-center items-center mt-4 font-medium md:flex-row md:mt-0 md:space-x-8 rtl:space-x-reverse">
-                            
-                            {
-                                !(currentPath === "/") &&
-                            <li>
-                                <a className="block py-2 px-3 text-gray-900 border-b border-gray-100 hover:bg-gray-50 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-blue-500 md:dark:hover:bg-transparent dark:border-gray-700" aria-current="page">Home</a>
-                            </li>
-                            }
-                            {
-                                result && (
-                                    <li onClick={()=> controllDisplay(true)}>More Options</li>
-                                )
-                            }
-                        </ul>
-                    </div>
-                </div>
+        <header className="fixed z-40 flex h-14 w-full items-center justify-between gap-3 bg-white px-3 shadow-sm">
+            <div className="flex flex-1 items-center">
+                {/* <a className="ml-0.5 inline-flex text-indigo-400 hover:text-indigo-500" href="#0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none">
+                        <path className="fill-current" fill-rule="evenodd" d="m14.862 0 2.763.738-2.073 7.709L21.67 2.35l2.022 2.015-5.656 5.637 8.475-2.263.74 2.753-7.726 2.063L28 14.82l-.74 2.753-7.672-2.05c.095-.412.146-.842.146-1.284 0-3.149-2.561-5.7-5.72-5.7a5.702 5.702 0 0 0-5.572 6.994L0 13.276l.74-2.753 7.726 2.063-6.204-6.183 2.023-2.016 5.656 5.637L7.67 1.58l2.762-.737 2.102 7.817L14.862 0Zm3.294 18.167a5.683 5.683 0 0 0 1.423-2.612l6.157 6.136-2.022 2.015-5.558-5.539Zm-.053.059a5.72 5.72 0 0 1-2.556 1.506l2.022 7.522 2.763-.738-2.23-8.29Zm-4.092 1.712c.493 0 .972-.062 1.428-.179L13.223 28l-2.762-.738 2.024-7.529c.486.134.998.205 1.526.205Zm-1.623-.232a5.721 5.721 0 0 1-2.512-1.528L4.305 23.73l2.022 2.016 6.06-6.04Zm-3.941-4.158a5.682 5.682 0 0 0 1.387 2.58L1.49 20.356l-.74-2.753 7.697-2.055Z" clip-rule="evenodd"></path>
+                    </svg>
+                </a> */}
+                <img src={projectLogo} alt="imggErr" className='w-10 h-10'/>
+                <div className='pl-2 font-semibold'>PDFCollaborator </div>
+            </div>
+            <nav className="hidden justify-center">
+                <ul className="flex flex-wrap items-center gap-3 text-sm font-medium md:gap-8">
+                    <li>
+                        <a className="inline-flex rounded-full px-3 py-1.5 text-slate-500 hover:text-indigo-500 [&amp;.active]:bg-indigo-100 [&amp;.active]:text-indigo-600" href="/active-link">Home</a>
+                    </li>
+                    <li>
+                        <a className="inline-flex rounded-full px-3 py-1.5 text-slate-500 hover:text-indigo-500 [&amp;.active]:bg-indigo-100 [&amp;.active]:text-indigo-600" href="/active-link/customers">Customers</a>
+                    </li>
+                    <li>
+                        <a className="inline-flex rounded-full px-3 py-1.5 text-slate-500 hover:text-indigo-500 [&amp;.active]:bg-indigo-100 [&amp;.active]:text-indigo-600 active" href="/active-link/partners">Partners</a>
+                    </li>
+                    <li>
+                        <a className="inline-flex rounded-full px-3 py-1.5 text-slate-500 hover:text-indigo-500 [&amp;.active]:bg-indigo-100 [&amp;.active]:text-indigo-600" href="/active-link/team">Team</a>
+                    </li>
+                </ul>
             </nav>
-        </div>
+            <div className="flex flex-1 items-center justify-end">
+                <a target="_blank" className="inline-flex justify-center whitespace-nowrap rounded-full bg-indigo-500 px-3 py-1.5 text-sm font-medium text-white shadow transition-colors hover:bg-indigo-600 focus-visible:outline-none focus-visible:ring focus-visible:ring-indigo-300" href="https://its.shubham09anand.in">Developer</a>
+            </div>
+        </header>
     )
 }
 
