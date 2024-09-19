@@ -6,13 +6,17 @@ import 'react-toastify/dist/ReactToastify.css';
 import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 import UploadFile from './Components/UploadFile';
 import AboutFeature from './Components/AboutFeature';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const AddPageNumber = () => {
+
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [newPdf, setNewPdf] = useState(null);
     const [blob, setBlob] = useState(null);
+    const [totalPage, setTotalPage] = useState(null);
+    const [processStatus, setProcessStatus] = useState(false);
 
     const handleFileChange = async (e) => {
         if (e.target.files[0].type !== 'application/pdf') {
@@ -26,11 +30,13 @@ const AddPageNumber = () => {
     useEffect(() => {
         if (selectedFiles.length > 0) {
             const addPageNumber = async () => {
+                setProcessStatus(true)
                 try {
                     const fileBuffer = await selectedFiles[0]?.arrayBuffer();
                     const pdfDoc = await PDFDocument.load(fileBuffer);
                     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                     const pages = pdfDoc.getPages();
+                    setTotalPage(pages.length);
 
                     for (let i = 0; i < pages.length; i++) {
                         const page = pages[i];
@@ -49,6 +55,9 @@ const AddPageNumber = () => {
                     console.error("Failed to process PDF:", error);
                     toast.error("Failed to process PDF.");
                 }
+                finally {
+                    setProcessStatus(false)
+                }
             };
             addPageNumber();
         }
@@ -58,6 +67,7 @@ const AddPageNumber = () => {
         if (newPdf !== null) {
             const blobUrl = URL.createObjectURL(new Blob([newPdf]));
             setBlob(blobUrl);
+            setProcessStatus(false);
         }
     }, [newPdf]);
 
@@ -73,7 +83,7 @@ const AddPageNumber = () => {
         <div className='w-full pt-4'>
             <ToastContainer />
             <AboutFeature featureHeading={'Add PDF Page Numbers'} featureDescription={'Add page numbers into PDFs with ease. Choose your positions, dimensions, typography.'} />
-            
+
             {selectedFiles.length === 0 &&
                 <UploadFile handleFileChange={handleFileChange} multiple={false} />
             }
@@ -94,7 +104,14 @@ const AddPageNumber = () => {
                                 </div>
                             </div>
                         </div>
+                        {totalPage !== null && <div className='font-semibold text-lg tracking-wide font-mono text-center'>Number of Pages {totalPage}</div>}
                     </div>
+                </div>
+            }
+
+            {processStatus && blob == null &&
+                <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+                    <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
                 </div>
             }
 

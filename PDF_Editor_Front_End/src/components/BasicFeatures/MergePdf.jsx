@@ -5,11 +5,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import UploadFile from './Components/UploadFile';
 import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 import AboutFeature from './Components/AboutFeature';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 
 const AddPageNumber = () => {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [blob, setBlog] = useState(null);
+  const [processStatus, setProcessStatus] = useState(false);
 
   const handleFileChange = (e) => {
     const fileList = Array.from(e.target.files);
@@ -27,6 +29,7 @@ const AddPageNumber = () => {
       alert("Please select at least one PDF file.");
     }
     else {
+      setProcessStatus(true)
       setLoading(true);
 
       try {
@@ -45,12 +48,14 @@ const AddPageNumber = () => {
         const mergedPdfBytes = await pdfDoc.save();
         const blobUrl = URL.createObjectURL(new Blob([mergedPdfBytes]));
         setBlog(blobUrl);
+        setProcessStatus(false)
 
       } catch (error) {
         console.error('Error merging PDFs:', error);
         alert('Error merging PDFs. Please try again.');
       } finally {
         setLoading(false);
+        setProcessStatus(false)
       }
     }
 
@@ -62,7 +67,7 @@ const AddPageNumber = () => {
       <ToastContainer />
 
       <AboutFeature featureHeading={'Merge PDF Files'} featureDescription={"Combine PDF's in the order you want with the easiest PDF merger available."} />
-      
+
       {files.length === 0 && (
         <UploadFile handleFileChange={handleFileChange} multiple={true} />
       )}
@@ -90,6 +95,11 @@ const AddPageNumber = () => {
         </>
       )}
 
+      {processStatus && blob == null &&
+      <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+        <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
+      </div>
+      }
 
       <div>
         {blob && (

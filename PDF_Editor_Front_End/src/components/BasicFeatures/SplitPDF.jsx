@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import UploadFile from './Components/UploadFile';
 import AboutFeature from './Components/AboutFeature';
 import { ToastContainer, toast } from 'react-toastify';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 
 const SplitPDF = () => {
 
@@ -13,6 +14,7 @@ const SplitPDF = () => {
      const [blob, setBlob] = useState([]);
      const [pageRanges, setPageRanges] = useState([['', '']]);
      const [warning, setWraning] = useState([]);
+     const [processStatus, setProcessStatus] = useState(false);
 
      // uploading file function
      const handleFileChange = (e) => {
@@ -35,7 +37,6 @@ const SplitPDF = () => {
                setPdfSplitCount(1);
           }
      }, [pdfSplitCount]);
-
 
      //get pdf Total Page count
      const handlePageCount = async () => {
@@ -65,30 +66,34 @@ const SplitPDF = () => {
           var isValueValid = true;
           var waringArray = [];
 
-          // Check the page number values
           pageRanges.forEach((e, index) => {
-               if (e[0] > e[1]) {
-                    // console.log(index)
+
+               const minValue = parseInt(e[0]);
+               const maxValue = parseInt(e[1]);
+
+               if (minValue > maxValue) {
                     isValueValid = false;
-                    waringArray.push(index)
+                    waringArray.push(index);
                     return;
                } else {
                     e.forEach((i) => {
-                         console.log(index)
-                         if (i <= 0 || isNaN(i) || i > numPages || i.trim() === "") {
+                         const num = parseInt(i);
+                         if (num <= 0 || isNaN(num) || num > numPages) {
                               isValueValid = false;
-                              waringArray.push(index)
+                              waringArray.push(index);
                               return;
                          }
-                    })
-
+                    });
                }
-               setWraning(waringArray)
-          })
+
+               setWraning(waringArray);
+          });
+
 
           // if page number values are correct then split pdf
           if (isValueValid) {
                try {
+                    setProcessStatus(true)
                     for (const e of pageRanges) {
                          const pdfDoc = await PDFDocument.create();
                          for (let i = e[0] - 1; i < e[1]; i++) {
@@ -101,8 +106,12 @@ const SplitPDF = () => {
                          blobsArray.push(blobUrl);
                     }
                     setBlob(blobsArray);
+                    setProcessStatus(false)
                } catch (error) {
-                    alert("Error");
+                    toast.error("PDF Spliting Failed");
+               }
+               finally {
+                    setProcessStatus(false);
                }
           }
      };
@@ -218,6 +227,13 @@ const SplitPDF = () => {
                          </div>
                     )
                }
+
+               {processStatus && blob.length == 0 &&
+                    <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+                         <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
+                    </div>
+               }
+
                {
                     blob.length > 0 &&
                     (

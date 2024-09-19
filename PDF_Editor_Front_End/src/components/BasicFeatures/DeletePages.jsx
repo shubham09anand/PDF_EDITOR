@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 import UploadFile from './Components/UploadFile';
 import AboutFeature from './Components/AboutFeature';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
@@ -15,7 +16,8 @@ const DeletePages = () => {
      const [selectedFiles, setSelectedFiles] = useState([]);
      const [images, setImages] = useState([]);
      const [pageDelete, setPageDelete] = useState([]);
-     const [blob, setBlog] = useState(null)
+     const [blob, setBlog] = useState(null);
+     const [processStatus, setProcessStatus] = useState(false);
 
      const handleFileChange = async (e) => {
           if (e.target.files[0].type !== 'application/pdf') {
@@ -108,6 +110,7 @@ const DeletePages = () => {
                </div>
 
                try {
+                    setProcessStatus(true)
 
                     // crating a null pdf
                     const pdfDoc = await PDFDocument.create();
@@ -140,9 +143,13 @@ const DeletePages = () => {
                     const mergedPdfBytes = await pdfDoc.save();
                     const blobUrl = URL.createObjectURL(new Blob([mergedPdfBytes]));
                     setBlog(blobUrl);
+                    setProcessStatus(false)
                } catch (error) {
                     console.error(`Error Deleting Pages PDFs:`, error);
                     alert('Error Deleting PDF’s Pages. Please try again After Refreshing The Page.');
+               }
+               finally{
+                    setProcessStatus(false)
                }
           }
      };
@@ -154,18 +161,14 @@ const DeletePages = () => {
           // eslint-disable-next-line
      }, [])
 
-     pageDelete.forEach((e)=>{
-          console.log(e);     
-     })
-
      return (
           <div className='p-2 w-full'>
                <ToastContainer />
 
-               <AboutFeature featureHeading={'Remove PDF Pages'} featureDescription={'Select and remove the PDF pages you don’t need. Get a new file without your deleted pages from your original File.'}/>
+               <AboutFeature featureHeading={'Remove PDF Pages'} featureDescription={'Select and remove the PDF pages you don’t need. Get a new file without your deleted pages from your original File.'} />
 
                {selectedFiles.length === 0 &&
-                    <UploadFile handleFileChange={handleFileChange} multiple={false}/>
+                    <UploadFile handleFileChange={handleFileChange} multiple={false} />
                }
 
                {selectedFiles.length > 0 && images.length === 0 && <LoadingPages />}
@@ -184,6 +187,13 @@ const DeletePages = () => {
                }
 
                {!blob && pageDelete.length > 0 && (<div onClick={removePages} className='px-4 py-2 select-none text-sm bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white w-fit h-fit rounded-lg mx-auto mt-5'>Remove pages</div>)}
+
+               {processStatus && blob == null &&
+                    <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+                         <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
+                    </div>
+               }
+
                <div>
                     {blob && (
                          <DownLoadEditedPDF blob={blob} />

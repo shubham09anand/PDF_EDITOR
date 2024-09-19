@@ -8,6 +8,7 @@ import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 import UploadFile from './Components/UploadFile';
 import AboutFeature from './Components/AboutFeature';
 import Slider from '@mui/material/Slider';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 
 const AddWaterMark = () => {
 
@@ -23,7 +24,8 @@ const AddWaterMark = () => {
      const [textOpacity, setTextOpacity] = useState(30);
      const [coordinates, setCoordinates] = useState([]);
      const [blob, setBlob] = useState(null);
-     const [editDisplay, setEditDisplay] = useState(false)
+     const [editDisplay, setEditDisplay] = useState(false);
+     const [processStatus, setProcessStatus] = useState(false);
 
      const handleFileChange = async (e) => {
           if (e.target.files[0].type !== 'application/pdf') {
@@ -63,6 +65,7 @@ const AddWaterMark = () => {
      useEffect(() => {
           if (selectedFiles.length === 1) {
                const addWaterMark = async () => {
+                    setProcessStatus(true);
                     const degreesToRadians = (degrees) => degrees * (Math.PI / 180);
 
                     // Use the state values for the watermark text, font size, etc.
@@ -152,6 +155,7 @@ const AddWaterMark = () => {
                          const downloadUrl = URL.createObjectURL(blob);
                          setBlob(downloadUrl);
                          setCoordinates(newCoordinates);
+                         setProcessStatus(false);
                     } catch (error) {
                          console.error("Error adding watermark:", error);
                     }
@@ -227,7 +231,7 @@ const AddWaterMark = () => {
                               </svg>
                          </div>
 
-                         <div className={`absolute right-0 top-8 z-50 md:static bg-white w-[100%] lg:w-[40%] flex-col place-content-center justify-between px-3 lg:px-5 md:border-l border-gray-200 ${editDisplay ? 'block' : 'hidden'}`}>
+                         <div className={`absolute right-0 top-8 z-50 md:block md:static bg-white w-[100%] lg:w-[40%] flex-col place-content-center justify-between px-3 lg:px-5 md:border-l border-gray-200 ${editDisplay ? 'block' : 'hidden'}`}>
                               <div className='flex justify-between w-full'>
                                    <div className='text-gray-900 text-3xl font-semibold mb-3'>Water Mark Setting</div>
                                    <svg onClick={() => setEditDisplay(false)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="rotate-180 size-6 mt-3 cursor-pointer md:hidden">
@@ -285,7 +289,14 @@ const AddWaterMark = () => {
                                         <DownLoadEditedPDF blob={blob} />
                                    }
                               </div>
+
                          </div>
+                    </div>
+               }
+
+               {processStatus && blob == null &&
+                    <div className='fixed top-0 z-[1000900] w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+                         <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
                     </div>
                }
 

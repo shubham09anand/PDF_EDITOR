@@ -7,16 +7,17 @@ import LoadingPages from '../Animation/LoadingPages';
 import AboutFeature from './Components/AboutFeature';
 import UploadFile from './Components/UploadFile';
 import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 const ShufflePdf = () => {
-  // const [status, setStatus] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [images, setImages] = useState([]);
   const [pageOrder, setPageOrder] = useState([]);
   const [blob, setBlob] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [processStatus, setProcessStatus] = useState(false)
 
   const handleFileChange = async (e) => {
     if (e.target.files[0].type !== 'application/pdf') {
@@ -115,22 +116,31 @@ const ShufflePdf = () => {
   };
 
   const generatePDF = async () => {
-    const pdfDoc = await PDFDocument.create();
+    try {
+      setProcessStatus(true);
 
-    for (const index of pageOrder) {
-      const file = selectedFiles[0];
-      const pageUrl = URL.createObjectURL(file);
-      const existingPdfBytes = await fetch(pageUrl).then(res => res.arrayBuffer());
-      const existingPdfDoc = await PDFDocument.load(existingPdfBytes);
-      const [page] = await pdfDoc.copyPages(existingPdfDoc, [index]);
-      pdfDoc.addPage(page);
+      const pdfDoc = await PDFDocument.create();
+
+      for (const index of pageOrder) {
+        const file = selectedFiles[0];
+        const pageUrl = URL.createObjectURL(file);
+        const existingPdfBytes = await fetch(pageUrl).then(res => res.arrayBuffer());
+        const existingPdfDoc = await PDFDocument.load(existingPdfBytes);
+        const [page] = await pdfDoc.copyPages(existingPdfDoc, [index]);
+        pdfDoc.addPage(page);
+      }
+
+      const pdfBytes = await pdfDoc.save();
+      const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+      const url = URL.createObjectURL(blob);
+
+      setBlob(url);
+      setProcessStatus(false);
+    } catch (error) {
+      toast.error("Error Shuffling PDF");
     }
-
-    const pdfBytes = await pdfDoc.save();
-    const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-    const url = URL.createObjectURL(blob);
-    setBlob(url);
   };
+
 
   return (
     <div className='w-full'>
@@ -159,7 +169,7 @@ const ShufflePdf = () => {
 
       {pageOrder.length > 0 && (
 
-        <div className='flex gap-x-3 w-fit px-4 py-2 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5]  text-white rounded-md mx-auto cursor-pointer'>
+        <div onClick={generatePDF} className='mb-5 select-none flex gap-x-3 w-fit px-4 py-2 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5]  text-white rounded-md mx-auto cursor-pointer'>
           <div className='flex gap-x-1'>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
@@ -172,10 +182,16 @@ const ShufflePdf = () => {
             </svg>
 
           </div>
-          <div onClick={generatePDF}>Reorder The Pages</div>
+          <div>Reorder The Pages</div>
         </div>
 
       )}
+
+      {processStatus && blob == null &&
+        <div className='fixed top-0 z-30 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+          <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
+        </div>
+      }
 
       {blob && (
         <DownLoadEditedPDF blob={blob} />
