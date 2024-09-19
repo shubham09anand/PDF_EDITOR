@@ -62,109 +62,112 @@ const AddWaterMark = () => {
           color: color,
      };
 
-     useEffect(() => {
+     const addWaterMark = async () => {
           if (selectedFiles.length === 1) {
-               const addWaterMark = async () => {
-                    setProcessStatus(true);
-                    const degreesToRadians = (degrees) => degrees * (Math.PI / 180);
+               setProcessStatus(true);
+               const degreesToRadians = (degrees) => degrees * (Math.PI / 180);
 
-                    // Use the state values for the watermark text, font size, etc.
-                    const watermarkText = watermark;
-                    const fontSize = font;
-                    const opacity = textOpacity / 100;
-                    const rotationDegrees = rotation;
-                    const rotationRadians = degreesToRadians(rotationDegrees);
+               // Use the state values for the watermark text, font size, etc.
+               const watermarkText = watermark;
+               const fontSize = font;
+               const opacity = textOpacity / 100;
+               const rotationDegrees = rotation;
+               const rotationRadians = degreesToRadians(rotationDegrees);
 
-                    // Convert color from hex to RGB
-                    const hexToRgb = (hex) => {
-                         const bigint = parseInt(hex.slice(1), 16);
-                         const r = (bigint >> 16) & 255;
-                         const g = (bigint >> 8) & 255;
-                         const b = bigint & 255;
-                         return rgb(r / 255, g / 255, b / 255);
-                    };
-                    const watermarkColor = hexToRgb(color);
+               // Convert color from hex to RGB
+               const hexToRgb = (hex) => {
+                    const bigint = parseInt(hex.slice(1), 16);
+                    const r = (bigint >> 16) & 255;
+                    const g = (bigint >> 8) & 255;
+                    const b = bigint & 255;
+                    return rgb(r / 255, g / 255, b / 255);
+               };
+               const watermarkColor = hexToRgb(color);
 
-                    try {
-                         // Load the PDF file as an ArrayBuffer
-                         const fileBuffer = await selectedFiles[0]?.arrayBuffer();
-                         const pdfDoc = await PDFDocument.load(fileBuffer);
+               try {
+                    // Load the PDF file as an ArrayBuffer
+                    const fileBuffer = await selectedFiles[0]?.arrayBuffer();
+                    const pdfDoc = await PDFDocument.load(fileBuffer);
 
-                         const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
+                    const boldFont = await pdfDoc.embedFont(StandardFonts.HelveticaBold);
 
-                         const pages = pdfDoc.getPages();
-                         const newCoordinates = [];
+                    const pages = pdfDoc.getPages();
+                    const newCoordinates = [];
 
-                         // Loop over all pages
-                         for (const page of pages) {
-                              const { width, height } = page.getSize();
+                    // Loop over all pages
+                    for (const page of pages) {
+                         const { width, height } = page.getSize();
 
-                              // Loop to add watermarks diagonally across each page
-                              for (let y = 0; y < height; y += 150) {
-                                   for (let x = -100; x < width; x += 200) {
-                                        page.drawText(watermarkText, {
-                                             x: x,
-                                             y: y,
-                                             size: fontSize,
+                         // Loop to add watermarks diagonally across each page
+                         for (let y = 0; y < height; y += 150) {
+                              for (let x = -100; x < width; x += 200) {
+                                   page.drawText(watermarkText, {
+                                        x: x,
+                                        y: y,
+                                        size: fontSize,
+                                        color: watermarkColor,
+                                        opacity: opacity,
+                                        font: boldFont,
+                                        rotate: degrees(rotationDegrees),
+                                   });
+
+                                   // if isUnderline is true
+                                   if (isUnderline) {
+                                        const textWidth = boldFont.widthOfTextAtSize(watermarkText, fontSize);
+                                        const underlineThickness = 1;
+                                        const startX = x;
+                                        const startY = y - 5;
+                                        const endX = x + textWidth;
+                                        const endY = y - 5;
+
+                                        // Rotate the start and end points around the text position
+                                        const rotatePoint = (px, py) => {
+                                             const dx = px - x;
+                                             const dy = py - y;
+                                             return {
+                                                  x: x + dx * Math.cos(rotationRadians) - dy * Math.sin(rotationRadians),
+                                                  y: y + dx * Math.sin(rotationRadians) + dy * Math.cos(rotationRadians),
+                                             };
+                                        };
+
+                                        const { x: startXRotated, y: startYRotated } = rotatePoint(startX, startY);
+                                        const { x: endXRotated, y: endYRotated } = rotatePoint(endX, endY);
+
+                                        page.drawLine({
+                                             start: { x: startXRotated, y: startYRotated },
+                                             end: { x: endXRotated, y: endYRotated },
+                                             thickness: underlineThickness,
                                              color: watermarkColor,
                                              opacity: opacity,
-                                             font: boldFont,
-                                             rotate: degrees(rotationDegrees),
                                         });
-
-                                        // if isUnderline is true
-                                        if (isUnderline) {
-                                             const textWidth = boldFont.widthOfTextAtSize(watermarkText, fontSize);
-                                             const underlineThickness = 1;
-                                             const startX = x;
-                                             const startY = y - 5;
-                                             const endX = x + textWidth;
-                                             const endY = y - 5;
-
-                                             // Rotate the start and end points around the text position
-                                             const rotatePoint = (px, py) => {
-                                                  const dx = px - x;
-                                                  const dy = py - y;
-                                                  return {
-                                                       x: x + dx * Math.cos(rotationRadians) - dy * Math.sin(rotationRadians),
-                                                       y: y + dx * Math.sin(rotationRadians) + dy * Math.cos(rotationRadians),
-                                                  };
-                                             };
-
-                                             const { x: startXRotated, y: startYRotated } = rotatePoint(startX, startY);
-                                             const { x: endXRotated, y: endYRotated } = rotatePoint(endX, endY);
-
-                                             page.drawLine({
-                                                  start: { x: startXRotated, y: startYRotated },
-                                                  end: { x: endXRotated, y: endYRotated },
-                                                  thickness: underlineThickness,
-                                                  color: watermarkColor,
-                                                  opacity: opacity,
-                                             });
-                                        }
-
-                                        newCoordinates.push({ x, y });
                                    }
+
+                                   newCoordinates.push({ x, y });
                               }
                          }
-
-                         const pdfBytesUpdated = await pdfDoc.save();
-
-                         // blob of edited pdf
-                         const blob = new Blob([pdfBytesUpdated], { type: 'application/pdf' });
-                         const downloadUrl = URL.createObjectURL(blob);
-                         setBlob(downloadUrl);
-                         setCoordinates(newCoordinates);
-                         setProcessStatus(false);
-                    } catch (error) {
-                         console.error("Error adding watermark:", error);
                     }
-               };
 
+                    const pdfBytesUpdated = await pdfDoc.save();
 
-               addWaterMark();  // Call the function
+                    // blob of edited pdf
+                    const blob = new Blob([pdfBytesUpdated], { type: 'application/pdf' });
+                    const downloadUrl = URL.createObjectURL(blob);
+                    setBlob(downloadUrl);
+                    setCoordinates(newCoordinates);
+                    setProcessStatus(false);
+               } catch (error) {
+                    toast.error('Error While Adding Water Mark');
+               }
+               finally {
+                    setProcessStatus(false);
+               }
           }
-     }, [selectedFiles, font, color, rotation, textOpacity, isUnderline, isItalic, watermark, coordinates]);  // Dependency array      
+     };
+
+     // reset water mark config
+     const resetSetting = () => {
+          setBlob(null);
+     }
 
      const positions = [];
      const originalWidth = 595;
@@ -186,7 +189,7 @@ const AddWaterMark = () => {
      }
 
      return (
-          <div className='w-full md:pl-5'>
+          <div className='w-full md:pl-5 mb-5'>
                <ToastContainer />
 
                <AboutFeature featureHeading={'Add Watermark to PDF'} featureDescription={'Easily add custom text or image watermarks to your PDF documents.'} />
@@ -233,7 +236,10 @@ const AddWaterMark = () => {
 
                          <div className={`absolute right-0 top-8 z-50 md:block md:static bg-white w-[100%] lg:w-[40%] flex-col place-content-center justify-between px-3 lg:px-5 md:border-l border-gray-200 ${editDisplay ? 'block' : 'hidden'}`}>
                               <div className='flex justify-between w-full'>
-                                   <div className='text-gray-900 text-3xl font-semibold mb-3'>Water Mark Setting</div>
+                                   <div className='flex gap-x-5 items-center mb-3'>
+                                        <div className='text-gray-900 text-3xl font-semibold'>Water Mark Setting</div>
+                                        {blob && <div onClick={resetSetting} className='cursor-pointer text-lg h-fit w-fit bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white px-3 rounded-full active:opacity-75'>Reset</div>}
+                                   </div>
                                    <svg onClick={() => setEditDisplay(false)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="rotate-180 size-6 mt-3 cursor-pointer md:hidden">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                    </svg>
@@ -241,7 +247,7 @@ const AddWaterMark = () => {
                               <div>
                                    <div className='mb-3'>
                                         <div className='text-gray-900 text-xl font-semibold mb-3'>Watermark Text:</div>
-                                        <input disabled={colorDisplay} onChange={(e) => setWatermark(e.target.value)} value={watermark} type="text" className={`border-2 border-gray-800 outline-none rounded-md w-full h-fit py-2 pl-4 placeholder:text-gray-400 ${isItalic ? 'italic' : ''} ${isBold ? 'font-extrabold' : ''} ${isUnderline ? 'underline' : ''}`} placeholder='Water Mark Text' />
+                                        <input disabled={colorDisplay || blob} onChange={(e) => setWatermark(e.target.value)} value={watermark} type="text" className={`border-2 border-gray-800 outline-none rounded-md w-full h-fit py-2 pl-4 placeholder:text-gray-400 ${isItalic ? 'italic' : ''} ${isBold ? 'font-extrabold' : ''} ${isUnderline ? 'underline' : ''}`} placeholder='Water Mark Text' />
                                    </div>
 
                                    <div className='mb-2'>
@@ -264,7 +270,7 @@ const AddWaterMark = () => {
                                    <div className='mb-2'>
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Font Size:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
-                                             <Slider max={100} value={font} color="primary" aria-label="slider" onChange={(_, newValue) => setFont(newValue)} />
+                                             <Slider disabled={blob} max={100} value={font} color="primary" aria-label="slider" onChange={(_, newValue) => setFont(newValue)} />
                                              <input type="text" value={font} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>
@@ -272,7 +278,7 @@ const AddWaterMark = () => {
                                    <div className='mb-2'>
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Text Rotation:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
-                                             <Slider min={0} max={360} value={rotation} color="primary" aria-label="slider" onChange={(_, newValue) => setRotation(newValue)} />
+                                             <Slider disabled={blob} min={0} max={360} value={rotation} color="primary" aria-label="slider" onChange={(_, newValue) => setRotation(newValue)} />
                                              <input type="text" value={rotation} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>
@@ -280,10 +286,14 @@ const AddWaterMark = () => {
                                    <div className='-mb-4'>
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Text Opacity:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
-                                             <Slider value={textOpacity} color="primary" aria-label="slider" onChange={(_, newValue) => setTextOpacity(newValue)} />
+                                             <Slider disabled={blob} value={textOpacity} color="primary" aria-label="slider" onChange={(_, newValue) => setTextOpacity(newValue)} />
                                              <input type="text" value={textOpacity} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>
+
+                                   {blob == null &&
+                                        <div onClick={addWaterMark} className='select-none top-0 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] mx-auto w-fit h-fit px-4 py-2 rounded-xl text-lg uppercase font-semibold text-white tracking-wide cursor-pointer active:opacity-80 mt-5'>Apply Watermark</div>
+                                   }
 
                                    {blob !== null &&
                                         <DownLoadEditedPDF blob={blob} />
