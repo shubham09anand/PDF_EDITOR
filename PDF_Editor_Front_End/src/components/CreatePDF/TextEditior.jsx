@@ -11,7 +11,6 @@ import Fonts from './Fonts'
 import { TextEditorOption } from './CreatePDFFunction';
 import ImageAi from './SupportFiles/ImageAi';
 
-
 const TextEditor = () => {
     const location = useLocation();
     const docId = location.pathname.split("/")[3];

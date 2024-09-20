@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib';
 import ColorPicker from '@rc-component/color-picker';
 import '@rc-component/color-picker/assets/index.css';
@@ -22,7 +22,6 @@ const AddWaterMark = () => {
      const [font, setFont] = useState(20);
      const [rotation, setRotation] = useState(0);
      const [textOpacity, setTextOpacity] = useState(30);
-     const [coordinates, setCoordinates] = useState([]);
      const [blob, setBlob] = useState(null);
      const [editDisplay, setEditDisplay] = useState(false);
      const [processStatus, setProcessStatus] = useState(false);
@@ -153,7 +152,6 @@ const AddWaterMark = () => {
                     const blob = new Blob([pdfBytesUpdated], { type: 'application/pdf' });
                     const downloadUrl = URL.createObjectURL(blob);
                     setBlob(downloadUrl);
-                    setCoordinates(newCoordinates);
                     setProcessStatus(false);
                } catch (error) {
                     toast.error('Error While Adding Water Mark');
