@@ -20,7 +20,6 @@ const TextEditor = () => {
     const [display, setDisplay] = useState(0);
     const [pdfGenration, setPdfGenration] = useState(0);
     const [rawHTML, setRawHTML] = useState(null);
-    const [buttonInfo, setButtonInfo] = useState(false);
     const [editorHeight, setEditorHeight] = useState(null);
 
     useEffect(() => {
@@ -34,7 +33,7 @@ const TextEditor = () => {
     }, []);
 
     // eslint-disable-next-line 
-    const config = useMemo(() => TextEditorOption(editorHeight, buttonInfo), [buttonInfo, editorHeight]);
+    const config = useMemo(() => TextEditorOption(editorHeight), [editorHeight]);
 
     useEffect(() => {
         if (!socket) return;
@@ -87,10 +86,9 @@ const TextEditor = () => {
         }
     
         const availableHeight = viewportHeight - (headerHeight + toolbarHeight);
-        console.log(availableHeight)
         setEditorHeight(availableHeight);   
         
-    }, [buttonInfo, editor, docId]);
+    }, [editor, docId]);
     
 
     setTimeout(() => {
@@ -113,12 +111,12 @@ const TextEditor = () => {
                 </div>}
             <>
                 <JoditEditor className={`h-40  overflow-hidden ${display === 0 || display === 1 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
-                <div className={`${display === 1 || display === 1 ? 'block' : 'hidden'}`}><Messaging /></div>
+                <div className={`${display === 1 || display === 1 ? 'block' : 'hidden'}`}><Messaging editorHeight={editorHeight}/></div>
                 <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi /></div>
                 <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport editorHeight={editorHeight} /></div>
-                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage /></div>
-            <TextEditorDashboard pdfGenrationStatus={setPdfGenration} display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
+                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage editorHeight={editorHeight}/></div>
             </>
+            <TextEditorDashboard pdfGenrationStatus={setPdfGenration} display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
         </div>
     );
 };

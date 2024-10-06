@@ -17,7 +17,7 @@ const setupSocket = (server) => {
 
     // User joins a room
     socket.on("join-room", (docId) => {
-      console.log(docId)
+      // console.log(docId)
       socket.join(docId);
       socket.emit('load-document', documents[docId] || '');
     });
@@ -39,14 +39,23 @@ const setupSocket = (server) => {
       console.log(data)
       console.log(`Message received: ${data.message}`);
 
+      // joing the room before sending
       socket.join(data.docId);
-      // Emit the message to everyone else in the room (except the sender)
       io.to(data.docId).emit('forward-message', data);
+    });
+    
+    // Send and forward photo
+    socket.on('send-photo', (data) => {
+      console.log("data")
+      
+      // joing the room before sending
+      socket.join(data.docId);
+      io.to(data.docId).emit('forward-photo', data);
     });
 
     // Handle user disconnection
     socket.on('disconnect', () => {
-      console.log(`User disconnected: ${socket.id}`);
+      // console.log(`User disconnected: ${socket.id}`);
     });
   });
 };

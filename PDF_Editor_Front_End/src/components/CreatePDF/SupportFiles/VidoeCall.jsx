@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import Messaging from './Messaging';
 
-import avatar1 from '../../../Assets/images/avatars/avatar-1.jpg';
-import avatar2 from '../../../Assets/images/avatars/avatar-2.jpg';
-import avatar3 from '../../../Assets/images/avatars/avatar-3.jpg';
-import avatar4 from '../../../Assets/images/avatars/avatar-4.jpg';
-import avatar5 from '../../../Assets/images/avatars/avatar-5.jpg';
+const avatar1 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6gP2cXHCBfE3Q4snVK7RZuquprmqEBFHkg&s";
+const avatar2 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6gP2cXHCBfE3Q4snVK7RZuquprmqEBFHkg&s";
+const avatar3 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6gP2cXHCBfE3Q4snVK7RZuquprmqEBFHkg&s";
+const avatar4 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6gP2cXHCBfE3Q4snVK7RZuquprmqEBFHkg&s";
+const avatar5 = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH6gP2cXHCBfE3Q4snVK7RZuquprmqEBFHkg&s";
 
 const VidoeCall = () => {
 
