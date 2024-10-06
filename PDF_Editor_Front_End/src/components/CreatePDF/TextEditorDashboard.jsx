@@ -55,7 +55,7 @@ const TextEditorDashboard = ({ pdfGenrationStatus, documentContent, display, set
 
 
      return (
-          <nav id='textEditorDashboard' className="w-full h-[57px] border-t-black border-t-2 border-x-0 border-b-0 flex justify-center bg-white absolute bottom-0 z-20">
+          <nav id='textEditorDashboard' className="w-full h-[57px] lg:h-[70px] border-t-black border-t-2 border-x-0 border-b-0 flex justify-center bg-white absolute bottom-0 z-20">
                <div onClick={() => setDisplay(0)} className={`flex place-content-center items-center h-full w-full transition duration-300 cursor-pointer relative ${display === 0 ? 'border-b-4 border-green-700' : ""}`}>
                     <div className="flex items-start space-x-2">
                          <div className="rounded-full">
