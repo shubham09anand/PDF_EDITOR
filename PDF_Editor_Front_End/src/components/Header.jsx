@@ -4,7 +4,7 @@ import projectLogo from '../Assets/images/pdfIcons/pdfLogo.jpg';
 const Header = () => {
 
     return (
-        <header className="fixed z-40 flex h-14 w-full items-center justify-between gap-3 bg-white px-3 shadow-sm">
+        <header id="header" className="fixed z-40 flex h-14 w-full items-center justify-between gap-3 bg-white px-3 shadow-sm">
             <div className="flex flex-1 items-center">
                 {/* <a className="ml-0.5 inline-flex text-indigo-400 hover:text-indigo-500" href="#0">
                     <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="none">

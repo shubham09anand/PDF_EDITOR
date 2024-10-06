@@ -8,11 +8,10 @@ const PreviousDocs = () => {
 
      const navigate = useNavigate();
      const [socket, setSocket] = useState(null);
-     const [name, setName] = useState("");
      const [joinLink, setJoinLink] = useState("");
 
      useEffect(() => {
-          const s = io("http://localhost:8080");
+          const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
           setSocket(s);
 
           return () => {
@@ -22,12 +21,7 @@ const PreviousDocs = () => {
 
      const joinDoc = () => {
           const docId = joinLink.split("/");
-
-          if (name === "" || name === null) {
-               toast.info("Name Required")
-               return
-          }
-          else if (joinLink === "" || joinLink === null) {
+          if (joinLink === "" || joinLink === null) {
                toast.info("Link Required")
                return
           }
@@ -36,7 +30,6 @@ const PreviousDocs = () => {
                return
           }
           else {
-               socket.emit("user-joined", { name, docId: docId[5] });
                navigate(`/create_doc/document/${docId[5]}`);
           }
      }
@@ -57,14 +50,6 @@ const PreviousDocs = () => {
                <div className='border-t-2 pt-10 border-gray-300'>
                     <div className='text-lg font-semibold tracking-wide mb-2'>Join A Meeting</div>
                     <div className='space-y-5 3xl:space-y-0 3xl:gap-y-0 3xl:flex 3xl:gap-x-5 w-full'>
-                         <div className=''>
-                              <div className='rounded-md px-2 flex place-content-center items-center w-full border-2 h-fit bg-white'>
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24" strok-width="1.5" stroke="gray" className="size-6">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                                   </svg>
-                                   <input onChange={(e) => setName(e.target.value)} value={name} type="text" id="input-group-1" className="w-full border-gray-300 text-gray-600 text-sm rounded-lg outline-none block p-2.5" placeholder="Your Name" />
-                              </div>
-                         </div>
                          <div className=''>
                               <div className='rounded-md px-2 flex place-content-center items-center w-full border-2 h-fit bg-white'>
                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="#1da1f2" className="size-6">

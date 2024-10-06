@@ -1,45 +1,54 @@
-const socketIO = require('socket.io');
+const { Server } = require('socket.io');
 
-module.exports = function(server) {
-     const io = socketIO(server, {
-          cors: {
-               origin: "http://localhost:3000",
-               methods: ['GET', 'POST']
-          }
-     });
+const documents = {};
 
-     const documents = {};
+// Socket setup function
+const setupSocket = (server) => {
+  const io = new Server(server, {
+    maxHttpBufferSize: 12 * 1024 * 1024,
+    cors: {
+      origin: process.env.REACT_APP_API_SOCKET_NETWORK,
+      methods: ['GET', 'POST']
+    }
+  });
 
-     io.on("connection", socket => {
-          console.log("Client connected:", socket.id);
+  io.on('connection', (socket) => {
+    // console.log(`User connected: ${socket.id}`);
 
-          socket.on('get-document', documentId => {
-               const data = documents[documentId] || { ops: [] };
+    // User joins a room
+    socket.on("join-room", (docId) => {
+      console.log(docId)
+      socket.join(docId);
+      socket.emit('load-document', documents[docId] || '');
+    });
 
-               socket.join(documentId);
-               socket.emit('load-document', data);
+    // Load document for user
+    socket.on('get-document', (docId) => {
+      socket.emit('load-document', documents[docId] || '');
+    });
 
-               socket.documentId = documentId;
-          });
+    // Handle changes made to the document and broadcast to room
+    socket.on('send-changes', (newContent) => {
+      const docId = Array.from(socket.rooms)[1];
+      documents[docId] = newContent;
+      socket.to(docId).emit('receive-changes', newContent);
+    });
 
-          socket.on('send-changes', delta => {
-               const documentId = socket.documentId;
-               if (documentId) {
-                    documents[documentId] = applyDelta(documents[documentId], delta);
+    // Send and forward messages
+    socket.on('send-message', (data) => {
+      console.log(data)
+      console.log(`Message received: ${data.message}`);
 
-                    socket.broadcast.to(documentId).emit("receive-changes", delta);
-               }
-          });
+      socket.join(data.docId);
+      // Emit the message to everyone else in the room (except the sender)
+      io.to(data.docId).emit('forward-message', data);
+    });
 
-          socket.on('disconnect', () => {
-               console.log("Client disconnected:", socket.id);
-          });
-     });
-
-     function applyDelta(doc, delta) {
-          const QuillDelta = require('quill-delta');
-          const currentDoc = new QuillDelta(doc);
-          const updatedDoc = currentDoc.compose(delta);
-          return updatedDoc;
-     }
+    // Handle user disconnection
+    socket.on('disconnect', () => {
+      console.log(`User disconnected: ${socket.id}`);
+    });
+  });
 };
+
+module.exports = { setupSocket };

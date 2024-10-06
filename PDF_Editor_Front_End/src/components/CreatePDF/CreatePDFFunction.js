@@ -63,7 +63,6 @@ export const TextEditorOption = (editorHeight,buttonInfo) => {
                'undo', 'redo', '|',
                'hr', 'eraser', 'copyformat', '|',
                'symbols', 'fullsize', 'find', 'selectall', '|',
-               'Know Options',
           ],
           uploader: {
                insertImageAsBase64URI: true,

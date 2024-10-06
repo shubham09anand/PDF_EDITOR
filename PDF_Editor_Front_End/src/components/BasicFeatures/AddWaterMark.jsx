@@ -187,7 +187,7 @@ const AddWaterMark = () => {
      }
 
      return (
-          <div className='w-full md:pl-5 mb-5'>
+          <div className='w-full md:pl-5 mb-32'>
                <ToastContainer />
 
                <AboutFeature featureHeading={'Add Watermark to PDF'} featureDescription={'Easily add custom text or image watermarks to your PDF documents.'} />
@@ -219,7 +219,7 @@ const AddWaterMark = () => {
                {selectedFiles.length !== 0 &&
                     <div className='flex relative w-full md:place-content-center select-none md:mt-4'>
                          <div className='w-full lg:w-3/5 relative'>
-                              <div className='scale-[80%] sm:scale-100 -translate-y-5 md:translate-y-0 -translate-x-4 mb:-translate-x-2 lg:translate-x-0 overflow-hidden w-[416.5px] h-[589.4px] border-[2px] border-black rounded-md mx-auto bg-white relative z-[50]'>
+                              <div className='scale-[80%] sm:scale-100 -translate-y-5 sm:translate-y-10 -translate-x-4 mb:-translate-x-2 lg:translate-x-0 overflow-hidden w-[416.5px] h-[589.4px] border-[2px] border-black rounded-md mx-auto bg-white relative z-[50]'>
                                    {positions.map((pos, index) => (
                                         <div key={index} style={{ ...watermarkStyle, position: 'absolute', top: pos.y, left: pos.x, transform: `translate(-50%, -50%) rotate(${rotation}deg)`, }}>
                                              {watermark}
@@ -232,9 +232,9 @@ const AddWaterMark = () => {
                               </svg>
                          </div>
 
-                         <div className={`absolute right-0 top-8 z-50 md:block md:static bg-white w-[100%] lg:w-[40%] flex-col place-content-center justify-between px-3 lg:px-5 md:border-l border-gray-200 ${editDisplay ? 'block' : 'hidden'}`}>
+                         <div className={`absolute right-0 translate-y-9 z-50 md:block md:static bg-white w-96 md:w-3/4 lg:w-1/3 shadow-[.1px_.1px_2px_#7656f5] rounded-lg flex-col place-content-center justify-between p-5 pt-0 border-gray-900 ${editDisplay ? 'block' : 'hidden'}`}>
                               <div className='flex justify-between w-full'>
-                                   <div className='flex gap-x-5 items-center mb-3'>
+                                   <div className='gap-x-5 items-center mb-3'>
                                         <div className='text-gray-900 text-3xl font-semibold'>Water Mark Setting</div>
                                         {blob && <div onClick={resetSetting} className='cursor-pointer text-lg h-fit w-fit bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] text-white px-3 rounded-full active:opacity-75'>Reset</div>}
                                    </div>
@@ -290,7 +290,7 @@ const AddWaterMark = () => {
                                    </div>
 
                                    {blob == null &&
-                                        <div onClick={addWaterMark} className='select-none top-0 bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] mx-auto w-fit h-fit px-4 py-2 rounded-xl text-lg uppercase font-semibold text-white tracking-wide cursor-pointer active:opacity-80 mt-5'>Apply Watermark</div>
+                                        <div onClick={addWaterMark} className='select-none bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] mx-auto w-fit h-fit px-4 py-2 rounded-xl text-lg uppercase font-semibold text-white tracking-wide cursor-pointer active:opacity-80 mt-6'>Apply Watermark</div>
                                    }
 
                                    {blob !== null &&

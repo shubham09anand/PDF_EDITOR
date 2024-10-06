@@ -9,7 +9,7 @@ import TextEditorDashboard from './TextEditorDashboard';
 import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 import Fonts from './Fonts'
 import { TextEditorOption } from './CreatePDFFunction';
-import ImageAi from './SupportFiles/ImageAi';
+import Messaging from './SupportFiles/Messaging';
 
 const TextEditor = () => {
     const location = useLocation();
@@ -23,8 +23,6 @@ const TextEditor = () => {
     const [buttonInfo, setButtonInfo] = useState(false);
     const [editorHeight, setEditorHeight] = useState(null);
 
-    console.log(rawHTML)
-    
     useEffect(() => {
         const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
         // const s = io("http://localhost:8080");
@@ -36,7 +34,7 @@ const TextEditor = () => {
     }, []);
 
     // eslint-disable-next-line 
-    const config = useMemo(() => TextEditorOption(editorHeight, buttonInfo), [buttonInfo,editorHeight]);
+    const config = useMemo(() => TextEditorOption(editorHeight, buttonInfo), [buttonInfo, editorHeight]);
 
     useEffect(() => {
         if (!socket) return;
@@ -46,7 +44,7 @@ const TextEditor = () => {
         // Load initial document content
         socket.once("load-document", (data) => {
             setContent(data);
-            setRawHTML(data); // Initialize raw HTML content
+            setRawHTML(data);
         });
 
         socket.emit("get-document", docId);
@@ -72,65 +70,41 @@ const TextEditor = () => {
     };
 
     useEffect(() => {
-        const quillContainerResize = document.querySelector('.jodit-editor__resize');
-        const joditPagePadding = document.querySelector('.jodit-wysiwyg');
-        const joditWorkplaces = document.querySelectorAll('.jodit-workplace'); // Changed to querySelectorAll
-        const joditContainer = document.querySelector('.jodit-container');
         const textEditorOption = document.getElementById('textEditorOption');
-        const joditStatusBar = document.querySelector('.jodit-status-bar-link');
+        const toolBar = document.getElementsByClassName('jodit-toolbar__box')[0];
+        const header = document.getElementById('header');
+        
         const viewportHeight = window.innerHeight;
     
+        let headerHeight = 0;
+        let toolbarHeight = 0;
+    
+        if (header) {
+            headerHeight = header.getBoundingClientRect().height;
+        }
+    
+        if (toolBar) {
+            toolbarHeight = toolBar.getBoundingClientRect().height;
+        }
+    
+        const availableHeight = viewportHeight - (headerHeight + toolbarHeight);
+    
         if (textEditorOption) {
-            const elementHeight = textEditorOption.getBoundingClientRect().height;
-            const heightDifference = viewportHeight - elementHeight;
-            setEditorHeight(heightDifference);
+            setEditorHeight(availableHeight); // Set editor height to the available height
         }
-    
-        if (quillContainerResize) {
-            quillContainerResize.style.display = 'none';
-        }
-    
-        if (joditPagePadding) {
-            joditPagePadding.style.border = '0px';
-        }
-    
-        if (joditWorkplaces.length > 0) {
-            joditWorkplaces.forEach(workplace => {
-                workplace.style.padding = '20px'; // Loop through each workplace and apply padding
-            });
-        }
-    
-        if (joditContainer) {
-            joditContainer.classList.remove('jodit-container');
-        }
-    
-        if (joditStatusBar) {
-            joditStatusBar.style.display = 'none';
-        }
-    
-    }, [buttonInfo, editor]);
+        
+    }, [buttonInfo, editor, docId]);
     
 
-    useEffect(() => {
-        const handleButtonClick = () => {
-            setButtonInfo(true);
-        };
-
-        const quillKnowButton = document.getElementsByClassName('jodit-ui-group__Know-Options')[0];
-
-        if (quillKnowButton) {
-            quillKnowButton.addEventListener('click', handleButtonClick);
+    setTimeout(() => {
+        const textEditorBar = document.getElementsByClassName('jodit-status-bar jodit-status-bar_resize-handle_true')[0];
+        if (textEditorBar !== null) {
+            textEditorBar.style.display = 'none';
         }
-
-        return () => {
-            if (quillKnowButton) {
-                quillKnowButton.removeEventListener('click', handleButtonClick);
-            }
-        };
-    }, [editor, buttonInfo]);
+    }, 5000);
 
     return (
-        <div className='mt-3 h-screen flex flex-col justify-between'>
+        <div className='mt-3 flex flex-col justify-between'>
             {/* {editorHeight} */}
             <Fonts />
             {pdfGenration === null &&
@@ -140,14 +114,14 @@ const TextEditor = () => {
                         <div className='text-lg font-semibold -mt-40'>Generating Your PDF...</div>
                     </div>
                 </div>}
-            <div className=''>
-                <JoditEditor className={`${display === 0 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
-                <div className={`w-full h-full ${display === 1 ? 'block' : 'hidden'}`}><ImageAi editorHeight={editorHeight} /></div>
-                <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi editorHeight={editorHeight} /></div>
+            <>
+                <JoditEditor className={`h-40  overflow-hidden ${display === 0 || display === 1 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
+                <div className={`${display === 1 || display === 1 ? 'block' : 'hidden'}`}><Messaging /></div>
+                <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi /></div>
                 <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport editorHeight={editorHeight} /></div>
-                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage editorHeight={editorHeight} /></div>
-            </div>
+                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage /></div>
             <TextEditorDashboard pdfGenrationStatus={setPdfGenration} display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
+            </>
         </div>
     );
 };
