@@ -70,7 +70,6 @@ const TextEditor = () => {
     };
 
     useEffect(() => {
-        const textEditorOption = document.getElementById('textEditorOption');
         const toolBar = document.getElementsByClassName('jodit-toolbar__box')[0];
         const header = document.getElementById('header');
         
@@ -88,10 +87,8 @@ const TextEditor = () => {
         }
     
         const availableHeight = viewportHeight - (headerHeight + toolbarHeight);
-    
-        if (textEditorOption) {
-            setEditorHeight(availableHeight); // Set editor height to the available height
-        }
+        console.log(availableHeight)
+        setEditorHeight(availableHeight);   
         
     }, [buttonInfo, editor, docId]);
     
