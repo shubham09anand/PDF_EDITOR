@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect, useRef, useState } from 'react';
+import React, { useMemo, useEffect, useRef, useState, useLayoutEffect } from 'react';
 import JoditEditor from 'jodit-react';
 import { useLocation } from 'react-router-dom';
 import { io } from 'socket.io-client';
@@ -7,7 +7,7 @@ import ContentSupport from "./SupportFiles/ContentSupport";
 import ProjectStroage from "./SupportFiles/ProjectStroage";
 import TextEditorDashboard from './TextEditorDashboard';
 import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
-import Fonts from './Fonts'
+import Fonts from './Fonts';
 import { TextEditorOption } from './CreatePDFFunction';
 import Messaging from './SupportFiles/Messaging';
 
@@ -23,24 +23,27 @@ const TextEditor = () => {
     const [editorHeight, setEditorHeight] = useState(null);
 
     useEffect(() => {
-        const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
-        // const s = io("http://localhost:8080");
+        const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK, {
+            transports: ['websocket', 'polling']
+        });
         setSocket(s);
+
+        s.on('connect_error', (err) => {
+            console.error('Connection error:', err);
+        });
 
         return () => {
             s.disconnect();
         };
     }, []);
 
-    // eslint-disable-next-line 
     const config = useMemo(() => TextEditorOption(editorHeight), [editorHeight]);
 
     useEffect(() => {
         if (!socket) return;
-        // Join the room for the specific document
+
         socket.emit("join-room", docId);
 
-        // Load initial document content
         socket.once("load-document", (data) => {
             setContent(data);
             setRawHTML(data);
@@ -50,7 +53,7 @@ const TextEditor = () => {
 
         socket.on("receive-changes", (newContent) => {
             setContent(newContent);
-            setRawHTML(newContent); // Update raw HTML content
+            setRawHTML(newContent);
         });
 
         return () => {
@@ -60,36 +63,43 @@ const TextEditor = () => {
 
     const handleContentChange = (newContent) => {
         setContent(newContent);
-        if (editor.current) {
-            setRawHTML(editor.current.value); // Get raw HTML content from the editor
-        }
+        setRawHTML(newContent);
         if (socket) {
             socket.emit("send-changes", newContent);
         }
     };
 
-    useEffect(() => {
-        const toolBar = document.getElementsByClassName('jodit-toolbar__box')[0];
-        const header = document.getElementById('header');
-        
-        const viewportHeight = window.innerHeight;
-    
-        let headerHeight = 0;
-        let toolbarHeight = 0;
-    
-        if (header) {
-            headerHeight = header.getBoundingClientRect().height;
-        }
-    
-        if (toolBar) {
-            toolbarHeight = toolBar.getBoundingClientRect().height;
-        }
-    
-        const availableHeight = viewportHeight - (headerHeight + toolbarHeight);
-        setEditorHeight(availableHeight);   
-        
+    useLayoutEffect(() => {
+        const calculateEditorHeight = () => {
+            const toolBar = document.getElementsByClassName('jodit-toolbar__box')[0];
+            const header = document.getElementById('header');
+            const elements = document.querySelectorAll('.jodit-container:not(.jodit_inline)');
+            if (editor !== null) {
+                elements.forEach(el => el.classList.remove('jodit-container'));
+            }
+
+            const viewportHeight = window.innerHeight;
+
+            let headerHeight = 0;
+            let toolbarHeight = 0;
+
+            if (header) {
+                headerHeight = header.getBoundingClientRect().height;
+            }
+
+            if (toolBar) {
+                toolbarHeight = toolBar.getBoundingClientRect().height;
+            }
+
+            const availableHeight = viewportHeight - (headerHeight + toolbarHeight);
+            setEditorHeight(availableHeight);
+        };
+
+        calculateEditorHeight();
+        window.addEventListener('resize', calculateEditorHeight);
+
+        return () => window.removeEventListener('resize', calculateEditorHeight);
     }, [editor, docId]);
-    
 
     setTimeout(() => {
         const textEditorBar = document.getElementsByClassName('jodit-status-bar jodit-status-bar_resize-handle_true')[0];

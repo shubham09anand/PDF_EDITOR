@@ -1,6 +1,8 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const dotenv = require('dotenv');
+dotenv.config();
 
-const genAI = new GoogleGenerativeAI("AIzaSyCV0_I26dExFLwWMbju9ZokQyZGOAKa_Ak");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
 
 const aiTextSupport = async (req, res) => {
      try {

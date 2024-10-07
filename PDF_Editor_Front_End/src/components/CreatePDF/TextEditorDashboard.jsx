@@ -27,16 +27,28 @@ const TextEditorDashboard = ({ pdfGenrationStatus, documentContent, display, set
      }, [link])
 
      const handleCopyLink = async () => {
-          console.log("Hello")
           try {
-               await window.navigator.clipboard.writeText(`${window.location.origin}${location.pathname}`);
-               setCopied(1)
-               setTimeout(() => {
-                    setCopied(0)
-               }, 2000);
+             await navigator.clipboard.writeText(`${window.location.origin}${location.pathname}`);
+             setCopied(1);
           } catch (err) {
+             console.error('Clipboard write failed, falling back');
+       
+             // Fallback approach using a hidden input field
+             const fallbackInput = document.createElement('input');
+             fallbackInput.value = `${window.location.origin}${location.pathname}`;
+             document.body.appendChild(fallbackInput);
+             fallbackInput.select();
+             document.execCommand('copy');
+             document.body.removeChild(fallbackInput);
+       
+             setCopied(1);
+          } finally {
+             setTimeout(() => {
+                setCopied(0);
+             }, 2000);
           }
-     }
+       };
+       
 
      const genratePDF = async () => {
           try {
