@@ -125,3 +125,15 @@
 .jodit-status-bar .jodit-status-bar_resize-handle_true ::before {
     display: none;
 }
+
+* {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  *::-webkit-scrollbar {
+    display: none;
+  }
+  
+
+

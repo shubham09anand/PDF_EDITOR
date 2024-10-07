@@ -111,7 +111,7 @@ const TextEditor = () => {
                 </div>}
             <>
                 <JoditEditor className={`h-40  overflow-hidden ${display === 0 || display === 1 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
-                <div className={`${display === 1 || display === 1 ? 'block' : 'hidden'}`}><Messaging editorHeight={editorHeight}/></div>
+                <div className={`${display === 1 ? 'block' : 'hidden'}`}><Messaging editorHeight={editorHeight}/></div>
                 <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi /></div>
                 <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport editorHeight={editorHeight} /></div>
                 <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage editorHeight={editorHeight}/></div>

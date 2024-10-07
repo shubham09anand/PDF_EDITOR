@@ -5,13 +5,15 @@ import { ToastContainer, toast } from 'react-toastify';
 import mammoth from 'mammoth';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
-import API from '../../Api/Api';
+// import API from '../../Api/Api';
 
 const WordToPdf = () => {
 
   const [uploadedWord, setUploadedWord] = useState(null)
+  // eslint-disable-next-line
   const [blob, setBlob] = useState([]);
   const [processStatus, setProcessStatus] = useState(false);
+  // eslint-disable-next-line
   const [htmlContent, setHtmlContent] = useState(null);
 
   // uploading file function
@@ -35,7 +37,7 @@ const WordToPdf = () => {
     try {
       const arrayBuffer = await uploadedWord.arrayBuffer();
       const result = await mammoth.convertToHtml({ arrayBuffer });
-      setHtmlContent(result.value);
+      setHtmlContent(result.valuez);
       setProcessStatus(false);
     } catch (error) {
       console.error("Error extracting HTML from Word:", error);

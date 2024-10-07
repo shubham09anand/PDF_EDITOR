@@ -179,8 +179,8 @@ const ProjectStorage = ({ editorHeight }) => {
                               </div>
                               {fileUploaded.length > 0 && (
                                    <div className='flex place-content-center'>
-                                        <div onClick={handleRemoveImages} className="cursor-pointer p-2 active:opacity-55 bg-red-600 px-5 w-fit  font-semibold text-white select-none">Reupload</div>
-                                        <div onClick={sendPhoto} className="cursor-pointer p-2 active:opacity-55 bg-black px-5 w-fit  font-semibold text-white select-none">Send</div>
+                                        <button onClick={handleRemoveImages} className="cursor-pointer p-2 active:opacity-55 bg-red-600 px-5 w-fit  font-semibold text-white select-none">Reupload</button>
+                                        <button onClick={sendPhoto} className="cursor-pointer p-2 active:opacity-55 bg-black px-5 w-fit  font-semibold text-white select-none">Send</button>
                                    </div>
                               )}
                          </div>
@@ -190,9 +190,9 @@ const ProjectStorage = ({ editorHeight }) => {
                          <div className='w-full'>
                               <div className={`mx-auto h-[600px] example ${preview === null ? 'overflow-y-scroll' : 'overflow-hidden'}`}>
                                    {preview !== null &&
-                                        <div style={{ height: `${editorHeight}px` }} className='w-screen h-screen flex place-content-center items-center backdrop-blur-3xl fixed left-0 top-0'>
-                                             <img src={preview} alt="imgErr" className='w-full lg:w-1/2 h-42 bg-current mx-auto lg:translate-x-1/2 scale-x-95 left-0 absolute z-50' />
-                                             <svg onClick={() => setPreview(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3.5" stroke="white" className="size-7 p-1 absolute z-50 right-5 top-5 lg:right-5 cursor-pointer bg-[#6366f1] rounded-full">
+                                        <div style={{ height: `${editorHeight}px` }} className='w-screen h-screen flex place-content-center translate-y-10 backdrop-blur-3xl fixed left-0 top-0'>
+                                             <img src={preview} alt="imgErr" className='w-full lg:w-1/2 h-96 bg-current mx-auto lg:translate-x-1/2 scale-x-95 left-0 object-scale-down absolute z-50 bg-white' />
+                                             <svg onClick={() => setPreview(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3.5" stroke="white" className="size-7 p-1 absolute z-50 right-5 top-2 lg:right-5 cursor-pointer bg-[#6366f1] rounded-full">
                                                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                              </svg>
                                         </div>
