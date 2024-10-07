@@ -10,38 +10,44 @@ import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 import API from '../../../Api/Api';
 import { downloadImage } from './SupportFilesFunction';
 
-const ContentSupport = ({editorHeight}) => {
+const ContentSupport = ({ editorHeight }) => {
 
      const newsOutletLinks = [
           {
                name: "BBC",
                link: "https://www.bbc.com/",
                photo: bbcNews,
+               class: "size-8",
           },
           {
                name: "Deutsche Welle",
                link: "https://www.dw.com/",
                photo: DW,
+               class: "w-12 h-8",
           },
           {
                name: "The Sun",
                link: "https://www.thesun.co.uk/",
                photo: sunNews,
+               class: "size-8 rounded-full",
           },
           {
                name: "Washington Post",
                link: "https://www.washingtonpost.com/",
                photo: washingtonPost,
+               class: "size-8",
           },
           {
                name: "CNN",
                link: "https://edition.cnn.com/",
                photo: CNN,
+               class: "size-8",
           },
      ]
      const [links, setLinks] = useState([]);
      const [itemDisplay, setItemDisplay] = useState(0);
      const [queery, setQueery] = useState("");
+     const [dropdown, setDropDown] = useState(false)
      const [button, setButton] = useState(true);
      const [summary, setSummary] = useState(null);
      const [summaryState, steSummaryState] = useState(false);
@@ -92,7 +98,7 @@ const ContentSupport = ({editorHeight}) => {
                })
      }
 
-     const handleCopyText = async () =>{
+     const handleCopyText = async () => {
           if (summary === null) {
                return
           }
@@ -101,7 +107,7 @@ const ContentSupport = ({editorHeight}) => {
                toast.success("Copies Succesfully")
           } catch (err) {
                toast.error("Copies Failed")
-           }
+          }
      }
 
      return (
@@ -127,26 +133,31 @@ const ContentSupport = ({editorHeight}) => {
                                    }
                               </div>
                               <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
-                              <div className="dropdown w-60 mx-auto">
-                                   <button className="border border-black w-60 btn bg-[#ffffff] dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        {selectedOrigin}
-                                   </button>
-                                   <ul className="dropdown-menu w-60">
-                                        {
-                                             newsOutletLinks?.map((items, index) => (
-                                                  <li key={index} onClick={() => setSelectedOrigin(items.link)}>
-                                                       <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
-                                                            <img src={items.photo} alt="" className='w-8 h-8' />
-                                                            <span className="mx-1 px-2 font-extrabold">
-                                                                 {items.name}
-                                                            </span>
-                                                       </div>
-                                                  </li>
-                                             ))
-                                        }
-                                   </ul>
+                              <div className='w-full flex-col place-content-center items-center'>
+                                   <div className="w-96 mx-auto">
+                                        <div onClick={() => dropdown ? setDropDown(false) : setDropDown(true)} className={`flex py-2 place-content-center items-center space-x-5 border border-black w-full bg-[#ffffff] rounded ${dropdown ? 'shadow' : 'shadow-none'}`}>
+                                             <div className="select-none">{selectedOrigin}</div>
+                                             <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className={`bi bi-caret-down-fill size-4 duration-500 ${dropdown ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 16 16">
+                                                  <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
+                                             </svg>
+                                        </div>
+                                        <ul className={`w-full mt-2 rounded-lg shadow overflow-hidden ${dropdown ? 'h-fit' : 'h-0'}`}>
+                                             {
+                                                  newsOutletLinks?.map((items, index) => (
+                                                       <li key={index} onClick={() => setSelectedOrigin(items.link)} className='border-b'>
+                                                            <div className="flex items-center text-sm p-1.5 px-4 cursor-pointer hover:bg-gray-200 active:opacity-75 text-gray-600 capitalize transition-colors duration-300 transform">
+                                                                 <img src={items.photo} alt="imgErr" className={items.class} />
+                                                                 <span className="mx-1 px-2 font-extrabold">
+                                                                      {items.name}
+                                                                 </span>
+                                                            </div>
+                                                       </li>
+                                                  ))
+                                             }
+                                        </ul>
+                                   </div>
+                                   <button disabled={!button} onClick={getLinks} className={`mx-auto border border-indigo-500 px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</button>
                               </div>
-                              <button onClick={getLinks} className={`mx-auto btn border border-indigo-500 px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</button>
                          </div>
                     </div>
 
@@ -262,7 +273,7 @@ const ContentSupport = ({editorHeight}) => {
                                    );
                               })}
                          </div>
-                    </div> 
+                    </div>
 
                     {
                          selectedImage !== null && (

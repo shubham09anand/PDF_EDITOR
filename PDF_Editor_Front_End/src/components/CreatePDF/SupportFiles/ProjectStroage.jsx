@@ -188,7 +188,7 @@ const ProjectStorage = ({ editorHeight }) => {
 
                     {displayUpload && (
                          <div className='w-full'>
-                              <div className={`mx-auto h-[600px] example ${preview === null ? 'overflow-y-scroll' : 'overflow-hidden'}`}>
+                              <div className={`mx-auto h-[400px] overflow-y-scroll example ${preview === null ? 'overflow-y-scroll' : 'overflow-hidden'}`}>
                                    {preview !== null &&
                                         <div style={{ height: `${editorHeight}px` }} className='w-screen h-screen flex place-content-center translate-y-10 backdrop-blur-3xl fixed left-0 top-0'>
                                              <img src={preview} alt="imgErr" className='w-full lg:w-1/2 h-96 bg-current mx-auto lg:translate-x-1/2 scale-x-95 left-0 object-scale-down absolute z-50 bg-white' />

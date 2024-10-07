@@ -8,9 +8,11 @@ const generatePDF = async (req, res) => {
     const rawHTML = req.body.htmlContent;
 
     const quillHtmlContent = `
+      <script>
       <link rel="preconnect" href="https://fonts.googleapis.com" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
       <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
+      </script>
       <style>
           table {
             border-collapse: collapse;

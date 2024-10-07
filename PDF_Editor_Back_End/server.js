@@ -10,27 +10,26 @@ dotenv.config();
 
 const app = express();
 const server = http.createServer(app);
-
 const PORT = 8080;
 
 app.use(bodyParser.json({ limit: '100mb' }));
-app.use(cors(
-  { origin: ['*'] }
-));
+app.use(cors({
+  origin: process.env.REACT_APP_API_SOCKET_NETWORK,
+  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  credentials: true,
+  allowedHeaders: 'Content-Type, Authorization',
+}));
 app.use(express.json());
 
-
-//routes
+// Routes
 app.use("/auth", require('./Routes/DocumentRoute.js'));
 app.use("/auth", require('./Routes/SupportRoutes.js'));
 app.use("/auth", require('./Routes/WebScraping.js'));
 
-
 // Setup socket.io
-setupSocket(server);
+setupSocket(server); // Initialize socket.io with the correct CORS settings
 
-
-// to get ip
+// Helper function to get local IP
 const getLocalIP = () => {
   const interfaces = os.networkInterfaces();
   for (const iface in interfaces) {

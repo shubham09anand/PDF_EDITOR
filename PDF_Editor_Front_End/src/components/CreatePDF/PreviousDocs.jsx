@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import { io } from "socket.io-client";
+import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,17 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const PreviousDocs = () => {
 
      const navigate = useNavigate();
-     const [socket, setSocket] = useState(null);
      const [joinLink, setJoinLink] = useState("");
-
-     useEffect(() => {
-          const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
-          setSocket(s);
-
-          return () => {
-               s.disconnect();
-          };
-     }, []);
 
      const joinDoc = () => {
           const docId = joinLink.split("/");
