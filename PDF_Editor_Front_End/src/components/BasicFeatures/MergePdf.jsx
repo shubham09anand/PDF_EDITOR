@@ -62,6 +62,26 @@ const AddPageNumber = () => {
 
   };
 
+  const handleMoveUp = (index) => {
+    if (index === 0) return;
+    const newFiles = [...files];
+    [newFiles[index - 1], newFiles[index]] = [newFiles[index], newFiles[index - 1]];
+    setFiles(newFiles);
+  };
+
+  const handleMoveDown = (index) => {
+    if (index === files.length - 1) return;
+    const newFiles = [...files];
+    [newFiles[index + 1], newFiles[index]] = [newFiles[index], newFiles[index + 1]];
+    setFiles(newFiles);
+  };
+
+  const reupload = () => {
+    setFiles([]);
+    setBlog(null);
+    setProcessStatus(false);
+  }
+
   return (
     <div className='w-full select-none'>
       <ToastContainer />
@@ -76,8 +96,8 @@ const AddPageNumber = () => {
         <>
           <div className='gap-y-10 space-y-3 w-full sm:w-3/5 md:w-2/5 mx-auto flex-wrap sm:p-5 mt-0 sm:bg-[#f5f5fa] rounded-xl sm:border'>
             {files.map((fileObject, index) => (
-              <div key={index} className="cursor-move mx-auto bg-white border-2 shadow-inner border-gray-200 rounded-lg overflow-hidden w-80 h-12 flex place-content-center items-center">
-                <div className="flex space-x-4 h-full w-full">
+              <div key={index} className="mx-auto bg-white border-2 shadow-inner border-gray-200 rounded-lg overflow-hidden w-96 h-12 flex place-content-center items-center">
+                <div className="flex space-x-2 h-full w-full">
                   <div className='bg-white border-r-2 border-black px-3 h-full my-auto flex place-content-center items-center'>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-7" viewBox="0 0 16 16">
                       <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
@@ -85,27 +105,56 @@ const AddPageNumber = () => {
                     </svg>
                   </div>
                   <div className='flex place-content-center items-center pr-4'>
-                    <div className="text-sm font-semibold text-center">{fileObject.name}</div>
+                    <div className="text-sm font-semibold text-center w-56 truncate">{fileObject.name}</div>
                   </div>
+                  {index === 0 && (
+                    <svg onClick={() => handleMoveDown(index)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`size-6 mt-2.5 cursor-pointer hover:opacity-40 active:opacity-50 ${index === 0 ? 'rotate-0 duration-1000' : ''} ${index === files.length - 1 ? 'rotate-180 duration-1000' : ''}`}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  )}
+                  {index === files.length - 1 && (
+                    <svg onClick={() => handleMoveUp(index)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`size-6 mt-2.5 cursor-pointer hover:opacity-40 active:opacity-50 ${index === 0 ? 'rotate-0 duration-1000' : ''} ${index === files.length - 1 ? 'rotate-180 duration-1000' : ''}`}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                    </svg>
+                  )}
+                  {index !== 0 && index !== files.length - 1 && (
+                    <>
+                      <svg onClick={() => handleMoveDown(index)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`size-6 mt-2.5 cursor-pointer hover:opacity-40 active:opacity-50 rotate-0`}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+
+                      <svg onClick={() => handleMoveUp(index)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className={`size-6 mt-2.5 cursor-pointer hover:opacity-40 active:opacity-50 rotate-180`}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                      </svg>
+                    </>
+                  )}
                 </div>
               </div>
             ))}
+
+            {files.length !== 0 &&
+              <div onClick={reupload} className="mx-auto flex h-full w-80 items-center place-content-center bg-gray-100 mt-5 md:mb-10 shadow-sm p-2 rounded-lg">                
+                <div  className="bg-white md:bg-transparent cursor-pointer hover:opacity-75 active:opacity-50 px-3 h-full my-auto flex place-content-center items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                    <path strokeLinecap="round" strok-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                </div>
+              </div>
+            }
           </div>
           <div className='bg-gradient-to-tr relative from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-xl cursor-pointer w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 active:opacity-70 mx-auto' onClick={mergePDF} disabled={loading}>{loading ? 'Merging...' : 'Merge PDFs'}</div>
         </>
       )}
 
       {processStatus && blob == null &&
-      <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
-        <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
-      </div>
+        <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+          <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
+        </div>
       }
 
-      <div>
-        {blob && (
-          <DownLoadEditedPDF blob={blob} />
-        )}
-      </div>
+      {blob && (
+        <DownLoadEditedPDF blob={blob} />
+      )}
 
     </div>
   );
