@@ -15,7 +15,6 @@ const AddPageNumber = () => {
     const [selectedFiles, setSelectedFiles] = useState([]);
     const [newPdf, setNewPdf] = useState(null);
     const [blob, setBlob] = useState(null);
-    const [totalPage, setTotalPage] = useState(null);
     const [processStatus, setProcessStatus] = useState(false);
 
     const handleFileChange = async (e) => {
@@ -36,7 +35,6 @@ const AddPageNumber = () => {
                     const pdfDoc = await PDFDocument.load(fileBuffer);
                     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
                     const pages = pdfDoc.getPages();
-                    setTotalPage(pages.length);
 
                     for (let i = 0; i < pages.length; i++) {
                         const page = pages[i];

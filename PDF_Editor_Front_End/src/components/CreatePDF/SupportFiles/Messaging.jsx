@@ -37,6 +37,9 @@ const Messaging = ({editorHeight}) => {
      const sendMessage = () => {
           if (socket === null || docId === null) return;
           const currentTime = new Date().toLocaleTimeString();
+          if (message === "") {
+               return
+          }
           socket.emit('send-message', { name: name, docId: docId, message: message, currentTime: currentTime })
      }
 
@@ -52,7 +55,7 @@ const Messaging = ({editorHeight}) => {
      }, [socket, docId]);
 
      return (
-          <div style={{ height: `${editorHeight + 20}px`}} className={`w-[90%] sm:w-1/2 md:w-1/3 lg:w-1/4 mt-16 shadow-[2px_2px_2px_2px_gray] bg-white absolute right-0 -top-2 overflow-y-hidden z-20`}>
+          <div style={{ height: `${editorHeight + 20}px`}} className={`w-full mt-16 shadow-[2px_2px_2px_2px_gray] bg-white absolute right-0 -top-2 overflow-y-hidden z-20`}>
                <div className="text-sm font-medium space-y-3 overflow-y-scroll pr-4 pl-2 relative">
                     <div className="w-full text-2xl font-medium"> Message</div>
 
@@ -93,8 +96,8 @@ const Messaging = ({editorHeight}) => {
                                    )}
                               </div>
 
-                              <div className="absolute bottom-0 flex border-t pt-2 left-0 w-full h-fit place-content-center items-center space-x-2 px-1 bg-white">
-                                   <textarea value={message} onChange={(e) => setMessage(e.target.value)} spellcheck="false" placeholder="Write your message" className="w-11/12 h-12 shadow-inner resize-none example rounded-2xl pl-4 py-2 font-semibold outline-none bg-slate-100 placeholder-slate-900 selection:bg-purple-800 selection:text-white"></textarea>
+                              <div className="absolute bottom-0 flex border-t pt-2 left-0 w-full h-fit place-content-center items-center space-x-2 px-1 pr-5 bg-white">
+                                   <textarea value={message} onChange={(e) => setMessage(e.target.value)} spellCheck="false" placeholder="Write your message" className="w-11/12 h-12 shadow-inner resize-none example rounded-2xl pl-4 py-2 font-semibold outline-none bg-slate-100 placeholder-slate-900 selection:bg-purple-800 selection:text-white"></textarea>
                                    <button className='outline-none bg-purple-500 rounded-full p-2'>
                                         <svg onClick={sendMessage} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" className="size-6 cursor-pointer rounded-full">
                                              <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />

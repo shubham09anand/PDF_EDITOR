@@ -11,7 +11,7 @@ import API from '../../../Api/Api';
 import { downloadImage } from './SupportFilesFunction';
 
 const ContentSupport = ({ editorHeight }) => {
-
+     console.log(editorHeight)
      const newsOutletLinks = [
           {
                name: "BBC",
@@ -45,6 +45,7 @@ const ContentSupport = ({ editorHeight }) => {
           },
      ]
      const [links, setLinks] = useState([]);
+     const [searchStatus, setSearchStatus] = useState(null);
      const [itemDisplay, setItemDisplay] = useState(0);
      const [queery, setQueery] = useState("");
      const [dropdown, setDropDown] = useState(false)
@@ -64,12 +65,13 @@ const ContentSupport = ({ editorHeight }) => {
           // eslint-disable-next-line
           API.post("/googleSearch", { queery: queery, selectedOrigin: selectedOrigin }).
                then((res) => {
+                    setSearchStatus(res.data?.apiResult);
                     if (res.data?.apiResult?.items) {
                          setLinks(res.data?.apiResult?.items);
                          setItemDisplay(1);
                     }
                }).catch(() => {
-                    toast.error(`Process Failed With Stauats Code`)
+                    toast.error(`Process Failed`)
                }).finally(() => {
                     setButton(true)
                })
@@ -99,22 +101,42 @@ const ContentSupport = ({ editorHeight }) => {
      }
 
      const handleCopyText = async () => {
-          if (summary === null) {
-               return
+          // Check if the text exists
+          const textToCopy = summary?.generatedSummary?.generatedText;
+      
+          if (!textToCopy) {
+              console.log("No text available to copy");
+              return;
           }
+      
           try {
-               await window.navigator.clipboard.writeText(summary?.genaratedSummary?.generatedText);
-               toast.success("Copies Succesfully")
+              // Try to use the Clipboard API
+              await navigator.clipboard.writeText(textToCopy);
+              toast.success("Copied successfully");
           } catch (err) {
-               toast.error("Copies Failed")
+              console.error("Clipboard API failed, falling back to textarea copy:", err);
+              
+              const textArea = document.createElement("textarea");
+              textArea.value = textToCopy;
+              document.body.appendChild(textArea);
+              
+              textArea.select();
+              textArea.setSelectionRange(0, 99999);
+      
+              document.execCommand("copy");
+      
+              document.body.removeChild(textArea);
+              
+              toast.success("Copied successfully (fallback)");
           }
-     }
+      };
+      
 
      return (
           <div className={`p-2 w-full flex bg-teal-lightest font-sans mx-auto backdrop-blur-2xl relative h-[${(editorHeight)}px]`}>
                <ToastContainer />
                {/* {links.length} */}
-               <div className={`w-[99%] md:w-4/5 lg:w-3/4 mx-auto`}>
+               <div className={`w-[99%] md:w-11/12 lg:w-3/4 mx-auto`}>
 
                     <div className='w-full flex place-content-center items-center space-x-3 mt-3'>
                          <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Content Supoort</div>
@@ -124,12 +146,11 @@ const ContentSupport = ({ editorHeight }) => {
                          <div className={`space-y-4 flex flex-col w-full md:space-x-5 ${itemDisplay === 0 ? "block" : "hidden"}`}>
                               <div className='flex place-content-center items-center space-x-5'>
                                    {
-                                        links?.length !== 0 ? (
+                                        links?.length !== 0 && (
                                              <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
                                                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                                              </svg>
-                                        ) :
-                                             <div className='text-gray-500'>No Links Found Realted To Your Querry</div>
+                                        )
                                    }
                               </div>
                               <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
@@ -156,14 +177,14 @@ const ContentSupport = ({ editorHeight }) => {
                                              }
                                         </ul>
                                    </div>
-                                   <button disabled={!button} onClick={getLinks} className={`mx-auto border border-indigo-500 px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</button>
+                                   <div disabled={!button} onClick={getLinks} className={`mx-auto rounded-md px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</div>
                               </div>
                          </div>
                     </div>
 
                     {/* link display */}
-                    <div key={Math.random()} className='relative'>
-                         <div className={`mb-10 w-full space-y-3 relative ${itemDisplay === 1 ? "block" : "hidden"}`}>
+                    <div key={Math.random()} className={`relative shadow-lg p-2 rounded-lg lg:h-[480px] overflow-y-scroll ${itemDisplay === 1 ? "block" : "hidden"}`}>
+                         <div className={`mb-10 w-full space-y-3 relative`}>
                               {summaryState &&
                                    <div className='absolute z-20 backdrop-blur-[2px] w-full h-full top-0'>
                                         <div className=' mx-auto z-20 flex flex-col place-content-center items-center'>
@@ -184,7 +205,7 @@ const ContentSupport = ({ editorHeight }) => {
                                         )
                                    }
                               </div>
-                              {links?.map((link, index) => (
+                              {links?.length > 0 && links?.map((link, index) => (
                                    <div key={index} className="flex items-center">
                                         <div className="relative w-full">
                                              <input id="website-url" type="text" className="bg-gray-50 border-r-0 border rounded-l-xl font-extrabold border-gray-300 text-gray-500 outline-none text-sm block w-full p-3" value={link.link} readOnly />
@@ -206,6 +227,26 @@ const ContentSupport = ({ editorHeight }) => {
                               ))}
                          </div>
                     </div>
+                    {
+                         searchStatus !== null && searchStatus?.searchInformation?.totalResults === '0' && (
+                              <div className='relative w-36 h-44 mx-auto'>
+                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth=".8" stroke="currentColor" className="w-36 h-44 absolute">
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                                   </svg>
+                                   <div className='absolute bottom-0 right-0 z-10 bg-white rounded-full'>
+                                        <div className='relative w-fit h-fit'>
+                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-16">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                                             </svg>
+                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-8 absolute top-3 left-3">
+                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                             </svg>
+                                        </div>
+                                   </div>
+                                   No result Found This query
+                              </div>
+                         )
+                    }
 
                     <div className={`h-6 relative ${itemDisplay === 2 ? "block" : "hidden"}`}>
                          <div className='flex place-content-center items-center my-2 space-x-5'>
@@ -225,7 +266,7 @@ const ContentSupport = ({ editorHeight }) => {
 
                          <div className="md:p-4">
                               <p className="relative mb-3 overflow-y-scroll example h-[400px] text-gray-600 sm:border-s-4 pl-0 sm:pl-4 md:pl-4">
-                                   <span onClick={handleCopyText} className='rounded-md shadow-[2px_2px_2px_gray] w-fit h-fit p-1'>Copy</span>
+                                   <span onClick={handleCopyText} className='rounded-md shadow-[2px_2px_2px_gray] w-fit h-fit p-1 cursor-pointer select-none absolute right-0 z-20'>Copy</span>
                                    {summary?.genaratedSummary?.generatedText.split('\n').map((line, index) => (
                                         <React.Fragment key={index}>
                                              {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
@@ -248,23 +289,27 @@ const ContentSupport = ({ editorHeight }) => {
                     </div>
 
                     <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>
-                         <div className='flex place-content-center items-center space-x-5'>
+                         <div className='flex mx-auto place-content-center items-center space-x-5'>
                               <svg onClick={() => setItemDisplay(2)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                               </svg>
-                              <div className="heading text-center font-bold text-3xl my-3 text-gray-800">Genrate Images</div>
+                              <div className="heading text-center font-bold text-3xl mt-3 mb-6 text-gray-800">Genrate Images</div>
                          </div>
-                         <div className="-m-1 mb-20 h-[450px] place-content-center gap-3 w-fit mx-auto flex flex-wrap md:-m-2 overflow-y-scroll example">
+                         <div className="-m-1 mb-20 h-[500px] mx-auto gap-10 flex flex-wrap md:-m-2 overflow-y-scroll example">
                               {links?.map((link, index) => {
-                                   const imageUrl = link?.pagemap?.cse_image[0]?.src;
+                                   const imageUrl = link?.pagemap?.cse_image?.[0]?.src;
+
+                                   if (!imageUrl) {
+                                        return null;
+                                   }
 
                                    return (
-                                        <div onContextMenu={(e) => e.preventDefault()} key={index} className="relative">
-                                             <div className="flex space-x- absolute top-3 right-3 bg-white rounded-md">
-                                                  <svg onClick={() => downloadImage(imageUrl, `${queery}_${index}.png`)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                        <div onContextMenu={(e) => e.preventDefault()} key={index} className="relative mx-auto">
+                                             <div className="flex space-x-5 absolute top-3 right-3 rounded-md">
+                                                  <svg onClick={() => downloadImage(imageUrl, `${queery}_${index}.png`)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 bg-white w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
                                                   </svg>
-                                                  <svg onClick={() => setSelectedImage(imageUrl)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
+                                                  <svg onClick={() => setSelectedImage(imageUrl)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="black" className="active:opacity-75 bg-white w-6 h-6 p-1 backdrop-blur-md rounded-full cursor-pointer">
                                                        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M3.75 20.25v-4.5m0 4.5h4.5m-4.5 0L9 15M20.25 3.75h-4.5m4.5 0v4.5m0-4.5L15 9m5.25 11.25h-4.5m4.5 0v-4.5m0 4.5L15 15" />
                                                   </svg>
                                              </div>
@@ -272,13 +317,14 @@ const ContentSupport = ({ editorHeight }) => {
                                         </div>
                                    );
                               })}
+
                          </div>
                     </div>
 
                     {
                          selectedImage !== null && (
-                              <div className='w-screen h-screen absolute top-0 left-0'>
-                                   <img src={selectedImage} alt="" className='w-full h-full absolute top-0 left-0' />
+                              <div className={`w-screen h-[720px] backdrop-blur-2xl absolute top-0 left-0`}>
+                                   <img src={selectedImage} alt="" className='w-full lg:w-1/2 h-96 translate-y-1/4 lg:translate-x-1/2 object-scale-down' />
                                    <svg onClick={() => setSelectedImage(null)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 backdrop-blur-3xl cursor-pointer rounded-full absolute top-5 right-10">
                                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
                                    </svg>
