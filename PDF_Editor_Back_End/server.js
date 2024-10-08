@@ -14,7 +14,7 @@ const PORT = 8080;
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(cors({
-  origin: process.env.REACT_APP_API_SOCKET_NETWORK,
+  origin: [process.env.REACT_APP_API_SOCKET_NETWORK, process.env.REACT_APP_API_SOCKET, 'REACT_APP_API_SOCKET' ],
   methods: 'GET, POST, PUT, DELETE, OPTIONS',
   credentials: true,
   allowedHeaders: 'Content-Type, Authorization',

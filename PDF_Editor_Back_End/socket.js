@@ -7,7 +7,7 @@ const setupSocket = (server) => {
   const io = new Server(server, {
     maxHttpBufferSize: 12 * 1024 * 1024,
     cors: {
-      origin: process.env.REACT_APP_API_SOCKET_NETWORK,
+      origin: [process.env.REACT_APP_API_SOCKET_NETWORK, process.env.REACT_APP_API_SOCKET, 'http://localhost:3000'],
       methods: ['GET', 'POST'],
       credentials: true,
     }
@@ -30,23 +30,22 @@ const setupSocket = (server) => {
 
     // Handle changes made to the document and broadcast to the room
     socket.on('send-changes', (newContent) => {
-      const docId = Array.from(socket.rooms)[1]; // Get the document room ID
+      const docId = Array.from(socket.rooms)[1];
       documents[docId] = newContent;
-      socket.to(docId).emit('receive-changes', newContent); // Broadcast changes to others
+      socket.to(docId).emit('receive-changes', newContent);
     });
-
     // Send and forward messages
     socket.on('send-message', (data) => {
       console.log(`Message received: ${data.message}`);
-      socket.join(data.docId); // Join the document's room
-      io.to(data.docId).emit('forward-message', data); // Forward message to room
+      socket.join(data.docId);
+      io.to(data.docId).emit('forward-message', data);
     });
-    
+
     // Send and forward photos
     socket.on('send-photo', (data) => {
       console.log("Photo received");
-      socket.join(data.docId); // Join the document's room
-      io.to(data.docId).emit('forward-photo', data); // Forward photo to room
+      socket.join(data.docId);
+      io.to(data.docId).emit('forward-photo', data);
     });
 
     // Handle user disconnection

@@ -86,7 +86,7 @@ const TextEditorDashboard = ({ pdfGenrationStatus, documentContent, display, set
 
                          {copied === 1 &&
                               <div className='flex-col sm:flex place-content-center items-center gap-x-5'>
-                                   <div className='text-sm mb-1 sm:mb-0 font-bold text-center'>Copied</div>
+                                   <div className='text-sm mb-1 sm:mb-1 font-bold text-center'>Copied</div>
                                    <div className='w-fit h-fit p-1 bg-green-600 rounded-full mx-auto'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-4">
                                              <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
