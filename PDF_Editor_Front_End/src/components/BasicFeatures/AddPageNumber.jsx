@@ -121,10 +121,7 @@ const AddPageNumber = () => {
             }
 
             {blob !== null &&
-                <div className='text-lg font-thin w-fit mx-auto mt-8'><span className='font-semibold tracking-tight'>Page Numbers</span> added succesfully to PDF pages. Now you can dowload the new updated PDF.</div>
-            }
-            {blob !== null &&
-                <DownLoadEditedPDF blob={blob} />
+                <DownLoadEditedPDF downloadMessage={"Pages number are added in your PDF. Now you can download it."} blob={blob} />
             }
         </div>
     );

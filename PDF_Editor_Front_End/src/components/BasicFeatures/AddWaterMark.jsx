@@ -293,7 +293,7 @@ const AddWaterMark = () => {
                                    }
 
                                    {blob !== null &&
-                                        <DownLoadEditedPDF blob={blob} />
+                                        <DownLoadEditedPDF downloadMessage={"Watermark had been added to PDF pages. Now you can download it."} blob={blob} />
                                    }
                               </div>
 

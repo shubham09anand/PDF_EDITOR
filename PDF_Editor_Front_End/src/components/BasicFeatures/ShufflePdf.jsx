@@ -219,7 +219,7 @@ const ShufflePdf = () => {
       }
 
       {blob && (
-        <DownLoadEditedPDF blob={blob} />
+        <DownLoadEditedPDF downloadMessage={"Pages of your PDF has been shuffled. Now you can download it."} blob={blob} />
       )}
     </div>
   );

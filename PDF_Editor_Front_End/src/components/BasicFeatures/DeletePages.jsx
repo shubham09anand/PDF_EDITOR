@@ -223,7 +223,7 @@ const DeletePages = () => {
 
                <div>
                     {blob && (
-                         <DownLoadEditedPDF blob={blob} />
+                         <DownLoadEditedPDF downloadMessage={"Selected Pages are removed from PDF. Now you can download it."} blob={blob} />
                     )}
                </div>
           </div>
