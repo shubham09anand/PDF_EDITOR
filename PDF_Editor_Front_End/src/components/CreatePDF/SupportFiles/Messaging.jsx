@@ -14,7 +14,7 @@ const Messaging = ({editorHeight}) => {
      const [mettingMess, setMettingMess] = useState([])
 
      useEffect(() => {
-          const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
+          const s = io(process.env.REACT_APP_API_URL_SOCKET);
           setSocket(s);
 
           return () => {
