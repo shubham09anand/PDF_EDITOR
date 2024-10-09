@@ -48,7 +48,6 @@ const TextEditorDashboard = ({ pdfGenrationStatus, documentContent, display, set
              }, 2000);
           }
        };
-       
 
      const genratePDF = async () => {
           try {
@@ -85,7 +84,7 @@ const TextEditorDashboard = ({ pdfGenrationStatus, documentContent, display, set
                          {copied === 0 && <TextEditiorOptions displayValue={display} svg={optionSVG.link} />}
 
                          {copied === 1 &&
-                              <div className='flex-col sm:flex place-content-center items-center gap-x-5'>
+                              <div className='w-32 flex-col sm:flex place-content-center items-center gap-x-5'>
                                    <div className='text-sm mb-1 sm:mb-1 font-bold text-center'>Copied</div>
                                    <div className='w-fit h-fit p-1 bg-green-600 rounded-full mx-auto'>
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-4">

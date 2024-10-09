@@ -203,7 +203,7 @@ const ProjectStorage = ({ editorHeight }) => {
                                              {mettingPhoto?.map((item, index) => {
                                                   if (Array.isArray(item)) {
                                                        return item.map((subItem, subIndex) => (
-                                                            <div onClick={() => controlPreview(subItem)} style={{ backgroundImage: `url(${subItem})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', }} key={`${index}-${subIndex}`} className="w-full h-60 sm:w-3/4 sm:h-80 md:w-1/2 lg:w-1/4   object-scale-down flex border-2 relative flex-wrap">
+                                                            <div onClick={() => controlPreview(subItem)} style={{ backgroundImage: `url(${subItem})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', }} key={`${index}-${subIndex}`} className="w-full h-60 sm:w-3/4 sm:h-80 md:w-1/2 lg:w-1/4 flex border-2 border-gray-400 rounded-md relative flex-wrap">
                                                                  <a onClick={() => downloadImage(subItem, `_${subIndex}.png`)} href={subItem} download={`image_${subIndex + 1}`}>
                                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="white" className="w-6 h-6 absolute right-4 rounded-md bg-[#6366f1] p-1 top-3 z-20 cursor-pointer">
                                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />
@@ -213,7 +213,7 @@ const ProjectStorage = ({ editorHeight }) => {
                                                        ));
                                                   } else {
                                                        return (
-                                                            <div onClick={() => controlPreview(item)} style={{ backgroundImage: `url(${item})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', }} key={index} className="w-full h-60 sm:w-3/4 sm:h-80 md:w-1/2 lg:w-1/4   object-scale-down flex border-2 relative flex-wrap">
+                                                            <div onClick={() => controlPreview(item)} style={{ backgroundImage: `url(${item})`, backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat', }} key={index} className="w-full h-60 sm:w-3/4 sm:h-80 md:w-1/2 lg:w-1/4 flex border-2 border-gray-400 rounded-md relative flex-wrap">
                                                                  <a onClick={() => downloadImage(item, `_${index}.png`)} href={item} download={`image_${index + 1}`}>
                                                                       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-6 h-6 absolute right-4 rounded-md backdrop-blur-lg p-1 top-3 z-20 cursor-pointer">
                                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3" />

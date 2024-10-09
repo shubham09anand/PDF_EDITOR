@@ -11,7 +11,7 @@ import API from '../../../Api/Api';
 import { downloadImage } from './SupportFilesFunction';
 
 const ContentSupport = ({ editorHeight }) => {
-     console.log(editorHeight)
+
      const newsOutletLinks = [
           {
                name: "BBC",
@@ -35,7 +35,7 @@ const ContentSupport = ({ editorHeight }) => {
                name: "Washington Post",
                link: "https://www.washingtonpost.com/",
                photo: washingtonPost,
-               class: "size-8",
+               class: "size-8 rounded-full",
           },
           {
                name: "CNN",
@@ -103,34 +103,33 @@ const ContentSupport = ({ editorHeight }) => {
      const handleCopyText = async () => {
           // Check if the text exists
           const textToCopy = summary?.generatedSummary?.generatedText;
-      
+
           if (!textToCopy) {
-              console.log("No text available to copy");
-              return;
+               console.log("No text available to copy");
+               return;
           }
-      
+
           try {
-              // Try to use the Clipboard API
-              await navigator.clipboard.writeText(textToCopy);
-              toast.success("Copied successfully");
+               // Try to use the Clipboard API
+               await navigator.clipboard.writeText(textToCopy);
+               toast.success("Copied successfully");
           } catch (err) {
-              console.error("Clipboard API failed, falling back to textarea copy:", err);
-              
-              const textArea = document.createElement("textarea");
-              textArea.value = textToCopy;
-              document.body.appendChild(textArea);
-              
-              textArea.select();
-              textArea.setSelectionRange(0, 99999);
-      
-              document.execCommand("copy");
-      
-              document.body.removeChild(textArea);
-              
-              toast.success("Copied successfully (fallback)");
+               console.error("Clipboard API failed, falling back to textarea copy:", err);
+
+               const textArea = document.createElement("textarea");
+               textArea.value = textToCopy;
+               document.body.appendChild(textArea);
+
+               textArea.select();
+               textArea.setSelectionRange(0, 99999);
+
+               document.execCommand("copy");
+
+               document.body.removeChild(textArea);
+
+               toast.success("Copied successfully (fallback)");
           }
-      };
-      
+     };
 
      return (
           <div className={`p-2 w-full flex bg-teal-lightest font-sans mx-auto backdrop-blur-2xl relative h-[${(editorHeight)}px]`}>
@@ -154,15 +153,27 @@ const ContentSupport = ({ editorHeight }) => {
                                    }
                               </div>
                               <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
+
                               <div className='w-full flex-col place-content-center items-center'>
-                                   <div className="w-96 mx-auto">
+                                   <div className="relative w-96 mx-auto">
                                         <div onClick={() => dropdown ? setDropDown(false) : setDropDown(true)} className={`flex py-2 place-content-center items-center space-x-5 border border-black w-full bg-[#ffffff] rounded ${dropdown ? 'shadow' : 'shadow-none'}`}>
-                                             <div className="select-none">{selectedOrigin}</div>
+                                             <div className="select-none">
+                                                  {newsOutletLinks
+                                                       .filter((outlet) => outlet.link === selectedOrigin)
+                                                       .map((filteredOutlet, index) => (
+                                                            <div key={index} className='flex space-x-5'>
+                                                                 <img  src={filteredOutlet.photo} alt={filteredOutlet.name} className={`border p-0.5 rounded-full border-black ${filteredOutlet.class}`} />
+                                                                 <div className='font-semibold'>{filteredOutlet.name}</div>
+                                                            </div>
+                                                          
+                                                       ))}
+                                             </div>
+
                                              <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className={`bi bi-caret-down-fill size-4 duration-500 ${dropdown ? 'rotate-0' : 'rotate-180'}`} viewBox="0 0 16 16">
                                                   <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z" />
                                              </svg>
                                         </div>
-                                        <ul className={`w-full mt-2 rounded-lg shadow overflow-hidden ${dropdown ? 'h-fit' : 'h-0'}`}>
+                                        <ul className={`absolute bg-white w-full mt-2 rounded-lg shadow overflow-hidden ${dropdown ? 'h-fit' : 'h-0'}`}>
                                              {
                                                   newsOutletLinks?.map((items, index) => (
                                                        <li key={index} onClick={() => setSelectedOrigin(items.link)} className='border-b'>
@@ -177,7 +188,7 @@ const ContentSupport = ({ editorHeight }) => {
                                              }
                                         </ul>
                                    </div>
-                                   <div disabled={!button} onClick={getLinks} className={`mx-auto rounded-md px-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</div>
+                                   <div disabled={!button} onClick={getLinks} className={`mx-auto rounded-md px-4 mt-4 font-semibold cursor-pointer h-fit w-fit p-2 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-pointer" : "cursor-wait"}`} >Search</div>
                               </div>
                          </div>
                     </div>
