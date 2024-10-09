@@ -5,7 +5,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import mammoth from 'mammoth';
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
-// import API from '../../Api/Api';
 
 const WordToPdf = () => {
 
