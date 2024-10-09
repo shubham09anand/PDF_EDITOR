@@ -1,23 +1,34 @@
-const ILovePDFApi = require('@ilovepdf/ilovepdf-nodejs');
+const ILovePDFApi = require('@ilovepdf/ilovepdf-js-core/tasks/CompressTask'); // Ensure the correct package import
+const fs = require('fs');
+const dotenv = require('dotenv');
 
-const instance = new ILovePDFApi('project_public_342e74fa62b66664845c85e77ea438b7_5koZn06b7febc7b47c45a81b1222cfec9b68f', 'secret_key_08c261b5a3ce0702f25ed550dce6675f_odWyuff754bbdecdb27e935b983e3e76863c3');
+// Load environment variables
+dotenv.config();
 
-const task = instance.newTask('merge');
+// Initialize ILovePDF API instance
+const instance = new ILovePDFApi(
+  'project_public_342e74fa62b66664845c85e77ea438b7_5koZn06b7febc7b47c45a81b1222cfec9b68f',
+  'secret_key_08c261b5a3ce0702f25ed550dce6675f_odWyuff754bbdecdb27e935b983e3e76863c3'
+);
 
-// Promise-based way to use ILovePDFApi.
+// Create a new compression task
+const task = instance.newTask('compress');
+
+// Start the task, add a file, process it with 'extreme' compression, and download the result
 task.start()
-.then(() => {
-    return task.addFile('./AI.pdf');
-})
-.then(() => {
-    return task.addFile('./2AI.pdf');
-})
-.then(() => {
-    return task.process();
-})
-.then(() => {
+  .then(() => {
+    return task.addFile('./AI.pdf'); // Path to the PDF you want to compress
+  })
+  .then(() => {
+    return task.process({ compression_level: 'extreme' }); // Adjust compression level as needed
+  })
+  .then(() => {
     return task.download();
-})
-.then((data) => {
-    console.log('DONE');
-});
+  })
+  .then((data) => {
+    fs.writeFileSync('./compressed.pdf', data); // Write the compressed file to the file system
+    console.log('File compressed and saved successfully.');
+  })
+  .catch((err) => {
+    console.error("Error during the compression task:", err);
+  });
