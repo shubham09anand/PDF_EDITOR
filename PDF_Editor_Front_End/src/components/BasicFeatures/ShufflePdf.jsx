@@ -183,7 +183,7 @@ const ShufflePdf = () => {
       {images.length > 0 && (
         <div className='flex mx-auto flex-wrap p-2 w-fit lg:gap-2 place-content-center'>
           {pageOrder.map((index) => (
-            <div key={index} draggable onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index); }} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} className='p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl'>
+            <div key={index} draggable onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index)}} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} className='p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl'>
               <div className='w-fit mx-auto'>
                 <img className='shadow-[1px_1px_4px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-move' src={images[index]} alt={`Page ${index + 1}`} />
                 <div className='text-center text-sm text-gray-500'>Page {index + 1}</div>

@@ -13,6 +13,7 @@ import WordToPdf from './BasicFeatures/WordToPdf';
 import AddPageNumber from './BasicFeatures/AddPageNumber';
 import PreviousDocs from './CreatePDF/PreviousDocs';
 import AddWaterMark from './BasicFeatures/AddWaterMark';
+import ImagePDF from './BasicFeatures/ImagePDF';
 import Header from './Header';
 
 const Layout = () => {
@@ -36,6 +37,7 @@ const Layout = () => {
           '/': 'Home - PDFCollbrator',
           '/split_pdf': 'Split PDF - PDFCollbrator',
           '/pdf_to_img': 'PDF to Image - PDFCollbrator',
+          '/img_to_pdf': 'Image to PDF - PDFCollbrator',
           '/delete_pages': 'Delete Pages - PDFCollbrator',
           '/merge_pdf': 'Merge PDF - PDFCollbrator',
           '/shuffle_pdf': 'Shuffle PDF - PDFCollbrator',
@@ -60,6 +62,7 @@ const Layout = () => {
                          <Route path="/" element={<Home />} />
                          <Route path="/split_pdf" element={<SplitPDF />} />
                          <Route path="/pdf_to_img" element={<PdfToImg />} />
+                         <Route path="/img_to_pdf" element={<ImagePDF />} />
                          <Route path="/delete_pages" element={<DeletePages />} />
                          <Route path="/merge_pdf" element={<MergePdf />} />
                          <Route path="/shuffle_pdf" element={<ShufflePdf />} />
