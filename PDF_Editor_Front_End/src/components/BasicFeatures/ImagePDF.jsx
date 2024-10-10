@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
 import { ToastContainer, toast } from 'react-toastify';
 import UploadFile from './Components/UploadFile';
+import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 import AboutFeature from './Components/AboutFeature';
+import LoadingPlaneAnimation from '../Animation/LoadingPlaneAnimation';
 import 'react-toastify/dist/ReactToastify.css';
 
 const ImagePDF = () => {
 
     const [imagePreviews, setImagePreviews] = useState([]);
     const [draggedImageIndex, setDraggedImageIndex] = useState(null);
+    const [blob, setBlob] = useState(null);
+    const [processStatus, setProcessStatus] = useState(false)
 
     // Uploading file function
     const handleFileChange = (e) => {
-        const allowedTypes = ["image/png"];
+        const allowedTypes = ["image/jpeg", "image/png", "image/jpg"];
         const files = e.target.files;
         let uploadedImagePreviews = [];
 
@@ -56,53 +60,83 @@ const ImagePDF = () => {
         e.preventDefault();
     };
 
+    // s etImagePreviews(imagePreviews.filter((_,i) => i !== index))
+    const handleRemoveImage = (index) => {
+        setImagePreviews(
+            [...imagePreviews.slice(0, index),
+            ...imagePreviews.slice(index + 1)]
+        )
+    }
+
     const generatePDF = async () => {
 
-        const pdfDoc = await PDFDocument.create();
+        setProcessStatus(true);
 
-        const A4_WIDTH = 595;
-        const A4_HEIGHT = 842;
+        try {
+            const pdfDoc = await PDFDocument.create();
 
-        for (let index = 0; index < imagePreviews.length; index++) {
-            const image = imagePreviews[index];
-            const imageBytes = await fetch(image.blob).then(res => res.arrayBuffer());
+            const A4_WIDTH = 595;
+            const A4_HEIGHT = 842;
+            const padding = 20;
 
-            let embeddedImage;
-            if (image.blob.includes('image/jpeg') || image.blob.includes('image/jpg')) {
-                embeddedImage = await pdfDoc.embedJpg(imageBytes);
-            } else {
-                embeddedImage = await pdfDoc.embedPng(imageBytes);
+            for (let index = 0; index < imagePreviews.length; index++) {
+                const image = imagePreviews[index];
+
+                const response = await fetch(image.blob);
+                const imageBytes = await response.arrayBuffer();
+
+                let embeddedImage;
+                if (image.blob.includes('image/jpeg') || image.blob.includes('image/jpg')) {
+                    try {
+                        embeddedImage = await pdfDoc.embedJpg(imageBytes); // Embed JPEG
+                    } catch (error) {
+                        console.error('Error embedding JPEG:', error);
+                    }
+                } else {
+                    try {
+                        embeddedImage = await pdfDoc.embedPng(imageBytes); // Embed PNG
+                    } catch (error) {
+                        console.error('Error embedding PNG:', error);
+                    }
+                }
+
+                if (embeddedImage) {
+                    const { width, height } = embeddedImage.scale(1);
+                    const scale = Math.min((A4_WIDTH - 2 * padding) / width, (A4_HEIGHT - 2 * padding) / height); // Subtract padding from both sides
+                    const newWidth = width * scale;
+                    const newHeight = height * scale;
+
+                    const page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
+
+                    // Draw the image with the padding
+                    page.drawImage(embeddedImage, {
+                        x: (A4_WIDTH - newWidth) / 2,
+                        y: (A4_HEIGHT - newHeight) / 2,
+                        width: newWidth,
+                        height: newHeight
+                    });
+                } else {
+                    console.error('Failed to embed image at index', index + 1);
+                }
             }
 
-            const { width, height } = embeddedImage.scale(1);
-            const scale = Math.min(A4_WIDTH / width, A4_HEIGHT / height);
-            const newWidth = width * scale;
-            const newHeight = height * scale;
+            const pdfBytes = await pdfDoc.save();
+            const blob = new Blob([pdfBytes], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
 
-            const page = pdfDoc.addPage([A4_WIDTH, A4_HEIGHT]);
-            page.drawImage(embeddedImage, {
-                x: (A4_WIDTH - newWidth) / 2,
-                y: (A4_HEIGHT - newHeight) / 2,
-                width: newWidth,
-                height: newHeight
-            });
+            setBlob(url); // Set the generated blob to state
+        } catch (error) {
+            toast.info("Someting Wnet Wrong")
+        } finally {
+            setProcessStatus(false)
         }
-
-        const pdfBytes = await pdfDoc.save();
-
-        const blob = new Blob([pdfBytes], { type: 'application/pdf' });
-
-        const url = URL.createObjectURL(blob);
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'images-to-pdf.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
     };
 
+    const restart = () => {
+        setImagePreviews([]);
+        setBlob(null);
+        setDraggedImageIndex(null);
+    }
 
     return (
         <div className='w-full'>
@@ -113,35 +147,51 @@ const ImagePDF = () => {
                 <UploadFile type={"ImgToPDF"} handleFileChange={handleFileChange} multiple={true} />
             )}
 
-            <div className='flex gap-1 flex-wrap w-full place-content-center items-center p-5'>
+            {imagePreviews.length > 0 && (
+                <div onClick={restart} className='mx-auto w-fit h-fit py-1 px-20 shadow-inner rounded-lg active:bg-gray-200 bg-gray-100 cursor-pointer'>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-6">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                    </svg>
+                </div>
+            )}
+
+            {imagePreviews.length > 0 && (
+                <div className='text-lg text-gray-500 mt-4 text-center'>Drag and Drop by holding the photos to shuffle their page number.</div>
+            )}
+
+            <div className='flex gap-1 flex-wrap w-full place-content-center items-center p-5 pb-0'>
                 {imagePreviews.length > 0 && imagePreviews.map((src, index) => (
-                    <div className='m-5' key={index} draggable onDragStart={() => handleDragStart(index)} onDragOver={handleDragOver} onDrop={() => handleDrop(index)} style={{ cursor: 'move' }}>
+                    <div className='m-5 relative' key={index} draggable onDragStart={() => handleDragStart(index)} onDragOver={handleDragOver} onDrop={() => handleDrop(index)} style={{ cursor: 'grab' }}>
+                        <div onClick={() => handleRemoveImage(index)} className='absolute -top-3 -right-3 z-10 cursor-pointer'>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-6 bg-black rounded-full">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                            </svg>
+                        </div>
                         <img src={src?.blob} alt={`uploaded-img-${index}`} className='shadow-[1px_1px_10px_gray] w-32 h-40 sm:w-52 object-scale-down sm:h-60' />
-                        <div className="mt-1 w-32 sm:w-52 truncate font-semibold text-center">{src?.name}</div>
-                        <div className='text-xl font-thin text-center'>{index}</div>
+                        <div className='text-xl font-thin text-center'>{index + 1}</div>
                     </div>
                 ))}
             </div>
 
-            {blob !== null &&
-                (<div onClick={generatePDF} className='cursor-pointer mb-4 mx-auto w-fit items-center text-center place-content-center '>
-                    <div className='text-gray-800 my-4 mx-auto w-fit text-xl'>Watermark had been added to PDF pages. Now you can download it.</div>
-                    <a style={{ textDecoration: "none" }} href={blob} download={`modifiedPDF.pdf`} className='px-5 py-3 space-x-4 flex place-content-center items-center bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] w-fit mt-5 text-white font-semibold text-2xl rounded-lg active:opacity-70 mx-auto'>
-                        <div className='relative w-fit h-fit'>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" className="bi bi-file-pdf size-8" viewBox="0 0 16 16">
-                                <path d="M4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm0 1h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1" />
-                                <path d="M4.603 12.087a.8.8 0 0 1-.438-.42c-.195-.388-.13-.776.08-1.102.198-.307.526-.568.897-.787a7.7 7.7 0 0 1 1.482-.645 20 20 0 0 0 1.062-2.227 7.3 7.3 0 0 1-.43-1.295c-.086-.4-.119-.796-.046-1.136.075-.354.274-.672.65-.823.192-.077.4-.12.602-.077a.7.7 0 0 1 .477.365c.088.164.12.356.127.538.007.187-.012.395-.047.614-.084.51-.27 1.134-.52 1.794a11 11 0 0 0 .98 1.686 5.8 5.8 0 0 1 1.334.05c.364.065.734.195.96.465.12.144.193.32.2.518.007.192-.047.382-.138.563a1.04 1.04 0 0 1-.354.416.86.86 0 0 1-.51.138c-.331-.014-.654-.196-.933-.417a5.7 5.7 0 0 1-.911-.95 11.6 11.6 0 0 0-1.997.406 11.3 11.3 0 0 1-1.021 1.51c-.29.35-.608.655-.926.787a.8.8 0 0 1-.58.029m1.379-1.901q-.25.115-.459.238c-.328.194-.541.383-.647.547-.094.145-.096.25-.04.361q.016.032.026.044l.035-.012c.137-.056.355-.235.635-.572a8 8 0 0 0 .45-.606m1.64-1.33a13 13 0 0 1 1.01-.193 12 12 0 0 1-.51-.858 21 21 0 0 1-.5 1.05zm2.446.45q.226.244.435.41c.24.19.407.253.498.256a.1.1 0 0 0 .07-.015.3.3 0 0 0 .094-.125.44.44 0 0 0 .059-.2.1.1 0 0 0-.026-.063c-.052-.062-.2-.152-.518-.209a4 4 0 0 0-.612-.053zM8.078 5.8a7 7 0 0 0 .2-.828q.046-.282.038-.465a.6.6 0 0 0-.032-.198.5.5 0 0 0-.145.04c-.087.035-.158.106-.196.283-.04.192-.03.469.046.822q.036.167.09.346z" />
-                            </svg>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-4 backdrop-blur-lg rounded-full -right-1 -bottom-1 absolute">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m9 12.75 3 3m0 0 3-3m-3 3v-7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                            </svg>
-                        </div>
-                        <div className='no-underline'>Download File</div>
-                    </a>
-                </div>)
+            {imagePreviews.length > 0 &&
+                (
+                    <div className='bg-gradient-to-tr relative from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-xl cursor-pointer w-fit mt-5 text-white font-semibold text-2xl px-6 py-2 active:opacity-70 mx-auto' onClick={generatePDF}>Genrate Pdf</div>
+                )
             }
-        </div>
 
+            {imagePreviews.length > 0 && processStatus &&
+                (
+                    <div className='fixed top-0 z-20 w-screen h-screen flex place-content-center items-center backdrop-blur-[2px]'>
+                        <LoadingPlaneAnimation processType={'Making Your Shuffled PDF'} />
+                    </div>
+                )
+            }
+
+            {blob && (
+                <DownLoadEditedPDF downloadMessage={"Your images has been merged into a single PDF. Now you can download it."} blob={blob} />
+            )}
+
+        </div>
     );
 };
 
