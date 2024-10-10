@@ -2,7 +2,7 @@ import React from 'react'
 
 const UploadFile = ({ handleFileChange, multiple, type }) => {
      // Fallback to PDF files if 'type' is not provided
-     const acceptType = type === 'ImgToPDF' ? 'image/*' : '.pdf, .doc, .docx';
+     const acceptType = type === 'ImgToPDF' ? 'image/png,image/jpeg' : '.pdf, .doc, .docx';
      const labelText = type === 'ImgToPDF' ? 'Select Images' : 'Select PDF File';
 
      return (
