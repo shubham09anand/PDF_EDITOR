@@ -85,8 +85,8 @@ const PreviousDocs = () => {
                <BackGroundSVG noBack={true}/>
                <div className='mx-auto mt-5'>
                     <div className='lg:flex w-full justify-between lg:absolute bottom-20'>
-                         <div className='md:w-3/4 lg:w-1/2 px-10 lg:flex-col justify-between mx-auto'>
-                              <h1 className="select-none mb-4 font-semibold text-5xl text-center leading-none tracking-[-1px] md:text-4xl xl:text-6xl">
+                         <div className='md:w-3/4 lg:w-1/2 px-10 lg:pt-32 lg:flex-col justify-between mx-auto'>
+                              <h1 className="select-none mb-4 text-5xl text-center lg:text-left leading-none tracking-[-1px] md:text-4xl xl:text-6xl">
                                    Collabrate, Create, Share PDF with everyone
                               </h1>
 
