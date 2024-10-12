@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import { PDFDocument } from 'pdf-lib';
-import LoadingPages from '../Animation/LoadingPages';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import LoadingPages from '../Animation/LoadingPages';
 import DownLoadEditedPDF from './Components/DownLoadEditedPDF';
 import UploadFile from './Components/UploadFile';
 import AboutFeature from './Components/AboutFeature';
