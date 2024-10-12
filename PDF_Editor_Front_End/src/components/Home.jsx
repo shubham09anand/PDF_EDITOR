@@ -29,22 +29,13 @@ const Home = () => {
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Edit PDF</h2>
                               </div>
                          </div>
-                         <Link style={{ textDecoration: "none" }} to="/word_to_pdf" className="place-content-center items-center flex flex-col  sm:w-[45%] lg:w-2/5 xl:w-[30%] hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                         <Link style={{ textDecoration: "none" }} to="/word_to_pdf" className="hidden place-content-center items-center flex-col  sm:w-[45%] lg:w-2/5 xl:w-[30%] hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
                               <div className="block relative h-24 rounded overflow-hidden">
                                    <img alt="imgErr" className="object-cover object-center w-20 h-20 block" draggable={false} src={pdfToword} />
                               </div>
                               <div className="mt-4">
                                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">Convert Format</h3>
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Convert Format</h2>
-                              </div>
-                         </Link>
-                         <Link style={{ textDecoration: "none" }} to="/img_to_pdf" className="place-content-center items-center flex flex-col  sm:w-[45%] lg:w-2/5 xl:w-[30%] hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
-                              <div className="block relative h-24 rounded overflow-hidden">
-                                   <img alt="imgErr" className="object-cover object-center w-16 h-16 block" draggable={false} src={imagePDF} />
-                              </div>
-                              <div className="mt-4">
-                                   <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">Image To PDF</h3>
-                                   <h2 className="text-gray-900 title-font text-lg font-medium">Image To PDF</h2>
                               </div>
                          </Link>
                          <Link style={{ textDecoration: "none" }} to="/merge_pdf" className="place-content-center items-center flex flex-col sm:w-[45%] lg:w-2/5 xl:w-[30%] hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
@@ -63,6 +54,15 @@ const Home = () => {
                               <div className="mt-4">
                                    <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1 no-underline">Split PDF</h3>
                                    <h2 className="text-gray-900 title-font text-lg font-medium">Split PDF</h2>
+                              </div>
+                         </Link>
+                         <Link style={{ textDecoration: "none" }} to="/img_to_pdf" className="place-content-center items-center flex flex-col  sm:w-[45%] lg:w-2/5 xl:w-[30%] hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">
+                              <div className="block relative h-24 rounded overflow-hidden">
+                                   <img alt="imgErr" className="object-cover object-center w-16 h-16 block" draggable={false} src={imagePDF} />
+                              </div>
+                              <div className="mt-4">
+                                   <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">Image To PDF</h3>
+                                   <h2 className="text-gray-900 title-font text-lg font-medium">Image To PDF</h2>
                               </div>
                          </Link>
                          <Link style={{ textDecoration: "none" }} to={`/create_pdf`} className="place-content-center items-center flex flex-col sm:w-[45%] lg:w-2/5 xl:w-[30%] hover:scale-105 p-4 w-full border cursor-pointer hover:bg-slate-200 rounded-xl duration-300 shadow-lg text-center">

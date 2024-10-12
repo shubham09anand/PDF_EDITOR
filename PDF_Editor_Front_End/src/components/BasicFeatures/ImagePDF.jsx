@@ -12,7 +12,7 @@ const ImagePDF = () => {
     const [imagePreviews, setImagePreviews] = useState([]);
     const [draggedImageIndex, setDraggedImageIndex] = useState(null);
     const [blob, setBlob] = useState(null);
-    const [processStatus, setProcessStatus] = useState(false)
+    const [processStatus, setProcessStatus] = useState(false);
 
     // Uploading file function
     const handleFileChange = (e) => {
@@ -187,7 +187,7 @@ const ImagePDF = () => {
                 )
             }
 
-            {blob && (
+            {imagePreviews.length > 0 && blob && (
                 <DownLoadEditedPDF downloadMessage={"Your images has been merged into a single PDF. Now you can download it."} blob={blob} />
             )}
 
