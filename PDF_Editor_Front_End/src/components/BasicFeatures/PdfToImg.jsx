@@ -108,9 +108,9 @@ const PdfToImg = () => {
 
      const reupload = () =>{
           setSelectedFiles([]);
-          // setImages([]);
-          // setPageDelete([]);
-          // setSelectedPage([]);
+          setImages([]);
+          setPageDelete([]);
+          setSelectedPage([]);
      }
 
      return (

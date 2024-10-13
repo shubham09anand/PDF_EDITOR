@@ -17,7 +17,8 @@ const ProjectStorage = ({ editorHeight }) => {
      const [mettingPhoto, setMettingPhoto] = useState([]);
 
      useEffect(() => {
-          const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
+          const s = io('http://13.202.210.238:8081');
+               // process.env.REACT_APP_API_URL_SOCKET_NETWORK);
           setSocket(s);
 
           return () => {

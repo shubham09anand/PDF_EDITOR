@@ -7,7 +7,7 @@ const setupSocket = (server) => {
   const io = new Server(server, {
     maxHttpBufferSize: 12 * 1024 * 1024,
     cors: {
-      origin: [process.env.REACT_APP_API_SOCKET_NETWORK, process.env.REACT_APP_API_SOCKET, 'http://localhost:3000'],
+      origin: [process.env.REACT_APP_API_SOCKET_NETWORK, process.env.REACT_APP_API_SOCKET, 'http://13.202.210.238:3000','http://13.202.210.238:3001'],
       methods: ['GET', 'POST'],
       credentials: true,
     }

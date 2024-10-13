@@ -57,7 +57,7 @@ const TextAi = () => {
                <div className='heading text-center sm:w-3/5 md:w-3/5 lg:w-1/2 mx-auto text-base font-thin text-gray-800 mt-4 font-mono'>Need help? Our AI Support feature is here for you! Simply type in your question or topic, and AI will generate helpful responses.</div>
                <div className="p-2 editor mx-auto rounded-md mt-4 w-full md:w-4/5 lg:w-3/5 flex flex-col text-gray-800 border border-gray-300 md:p-4 lg:shadow-lg">
                     <div className="flex w-full h-fit">
-                         <input onChange={(e) => setUserInput(e.target.value)} value={userInput} className="title w-full bg-gray-100 border border-gray-300 p-2 mb-4 outline-none border-r-0" spellCheck="false" placeholder="Describe everything about requirement here" type="text" />
+                         <input onChange={(e) => setUserInput(e.target.value)} value={userInput} className="title w-full bg-gray-100 border border-gray-300 p-2 mb-4 outline-none border-r-0" spellCheck="false" name="aiQurey" placeholder="Describe everything about requirement here" type="text" />
                          <button onClick={aiHelp} disabled={button} className={`border border-indigo-500 px-4 font-semibold h-full p-2 rounded-l-none border-l-0 mb-4 text-gray-200 bg-indigo-500 ${button ? "cursor-wait" : "cursor-pointer"}`} >Ask</button>
                     </div>
                     <div className='relative'>
