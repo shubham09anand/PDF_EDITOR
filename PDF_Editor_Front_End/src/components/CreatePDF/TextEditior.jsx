@@ -23,7 +23,7 @@ const TextEditor = () => {
     const [editorHeight, setEditorHeight] = useState(null);
 
     useEffect(() => {
-        const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK, {
+        const s = io(process.env.REACT_APP_API_URL_SOCKET_AWS, {
             transports: ['websocket', 'polling']
         });
         setSocket(s);
