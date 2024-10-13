@@ -244,7 +244,7 @@ const AddWaterMark = () => {
                               <div>
                                    <div className='mb-3'>
                                         <div className='text-gray-900 text-xl font-semibold mb-3'>Watermark Text:</div>
-                                        <input disabled={colorDisplay || blob} onChange={(e) => setWatermark(e.target.value)} value={watermark} type="text" className={`border-2 border-gray-800 outline-none rounded-md w-full h-fit py-2 pl-4 placeholder:text-gray-400 ${isItalic ? 'italic' : ''} ${isBold ? 'font-extrabold' : ''} ${isUnderline ? 'underline' : ''}`} placeholder='Water Mark Text' />
+                                        <input name="italic" disabled={colorDisplay || blob} onChange={(e) => setWatermark(e.target.value)} value={watermark} type="text" className={`border-2 border-gray-800 outline-none rounded-md w-full h-fit py-2 pl-4 placeholder:text-gray-400 ${isItalic ? 'italic' : ''} ${isBold ? 'font-extrabold' : ''} ${isUnderline ? 'underline' : ''}`} placeholder='Water Mark Text' />
                                    </div>
 
                                    <div className='mb-2'>
@@ -268,7 +268,7 @@ const AddWaterMark = () => {
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Font Size:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
                                              <Slider disabled={blob} max={100} value={font} color="primary" aria-label="slider" onChange={(_, newValue) => setFont(newValue)} />
-                                             <input type="text" value={font} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
+                                             <input name="font" type="text" value={font} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>
 
@@ -276,7 +276,7 @@ const AddWaterMark = () => {
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Text Rotation:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
                                              <Slider disabled={blob} min={0} max={360} value={rotation} color="primary" aria-label="slider" onChange={(_, newValue) => setRotation(newValue)} />
-                                             <input type="text" value={rotation} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
+                                             <input name="rotation" type="text" value={rotation} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>
 
@@ -284,7 +284,7 @@ const AddWaterMark = () => {
                                         <div className='text-gray-900 text-xl font-semibold mb-1'>Text Opacity:</div>
                                         <div className='flex space-x-5 place-content-center items-center'>
                                              <Slider disabled={blob} value={textOpacity} color="primary" aria-label="slider" onChange={(_, newValue) => setTextOpacity(newValue)} />
-                                             <input type="text" value={textOpacity} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
+                                             <input name='textOpacity' type="text" value={textOpacity} disabled className='border-2 border-gray-300 text-center rounded-md px-2 py-2 w-12 h-fit outline-none' />
                                         </div>
                                    </div>
 

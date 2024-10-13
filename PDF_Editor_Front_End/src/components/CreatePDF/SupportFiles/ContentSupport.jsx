@@ -152,7 +152,7 @@ const ContentSupport = ({ editorHeight }) => {
                                         )
                                    }
                               </div>
-                              <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" />
+                              <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" name="query"/>
 
                               <div className='w-full flex-col place-content-center items-center'>
                                    <div className="relative w-96 mx-auto">

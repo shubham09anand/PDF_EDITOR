@@ -15,7 +15,7 @@ const Messaging = ({editorHeight}) => {
      const windowsWidth = window.innerWidth;
 
      useEffect(() => {
-          const s = io(process.env.REACT_APP_API_URL_SOCKET_AWS);
+          const s = io(process.env.REACT_APP_API_URL_SOCKET_NETWORK);
           setSocket(s);
 
           return () => {
