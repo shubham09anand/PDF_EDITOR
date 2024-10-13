@@ -69,24 +69,24 @@ export const TextEditorOption = (editorHeight,buttonInfo) => {
           },
           toolbarButtonSize: 'middle',
           textIcons: buttonInfo,
-          controls: {
-               font: {
-                    list: {
-                         'Amatic SC, sans-serif': 'Amatic SC',
-                         'Assistant, sans-serif': 'Assistant',
-                         'Grey Qo, sans-serif': 'Grey Qo',
-                         'Mea Culpa, cursive': 'Mea Culpa',
-                         'Playwrite CU, sans-serif': 'Playwrite CU',
-                         'Roboto, sans-serif': 'Roboto',
-                         'Work Sans, sans-serif': 'Work Sans',
-                         'Arial, sans-serif': 'Arial',
-                         'Georgia, serif': 'Georgia',
-                         'Impact, Charcoal, sans-serif': 'Impact',
-                         'Tahoma, Geneva, sans-serif': 'Tahoma',
-                         'Verdana, Geneva, sans-serif': 'Verdana',
-                    },
-               },
-          },
+          // controls: {
+          //      font: {
+          //           list: {
+          //                'Amatic SC, sans-serif': 'Amatic SC',
+          //                'Assistant, sans-serif': 'Assistant',
+          //                'Grey Qo, sans-serif': 'Grey Qo',
+          //                'Mea Culpa, cursive': 'Mea Culpa',
+          //                'Playwrite CU, sans-serif': 'Playwrite CU',
+          //                'Roboto, sans-serif': 'Roboto',
+          //                'Work Sans, sans-serif': 'Work Sans',
+          //                'Arial, sans-serif': 'Arial',
+          //                'Georgia, serif': 'Georgia',
+          //                'Impact, Charcoal, sans-serif': 'Impact',
+          //                'Tahoma, Geneva, sans-serif': 'Tahoma',
+          //                'Verdana, Geneva, sans-serif': 'Verdana',
+          //           },
+          //      },
+          // },
      };
 };
 
