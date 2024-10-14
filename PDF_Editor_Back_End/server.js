@@ -14,7 +14,15 @@ const PORT = 8080;
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(cors({
-  origin: [process.env.REACT_APP_API_SOCKET_NETWORK, process.env.REACT_APP_API_SOCKET, 'http://13.202.210.238:3000', 'http://apipdfcollaborator.shubham09anand.in', 'https://apipdfcollaborator.shubham09anand.in', 'http://13.202.210.238:3001'],
+  origin: [
+    process.env.REACT_APP_API_SOCKET_NETWORK, 
+    process.env.REACT_APP_API_SOCKET, 
+    'http://13.202.210.238:3001', 
+    'http://apipdfcollaborator.shubham09anand.in', 
+    'https://apipdfcollaborator.shubham09anand.in',
+    'http:/pdfcollaborator.shubham09anand.in', 
+    'https:/pdfcollaborator.shubham09anand.in'
+  ],
   methods: 'GET, POST, PUT, DELETE, OPTIONS',
   credentials: true,
   allowedHeaders: 'Content-Type, Authorization',
