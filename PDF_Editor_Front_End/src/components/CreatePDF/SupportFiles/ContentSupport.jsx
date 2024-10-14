@@ -6,6 +6,7 @@ import washingtonPost from "../../../Assets/images/icons/washingtonPost.png";
 import DW from "../../../Assets/images/icons/DW.png";
 import CNN from "../../../Assets/images/icons/CNN.jpeg";
 import sunNews from "../../../Assets/images/icons/sunNews.png";
+import noresultfound from "../../../Assets/images/pdfIcons/noresultfound.avif";
 import LoadingPlaneAnimation from '../../Animation/LoadingPlaneAnimation';
 import API from '../../../Api/Api';
 import { downloadImage } from './SupportFilesFunction';
@@ -93,43 +94,13 @@ const ContentSupport = ({ editorHeight }) => {
                     steSummaryState(false);
                }).catch(() => {
                     // console.log(error)
-                    toast.error(`Process Failed With Stauats Code`)
+                    toast.error(`Somting Went Wrong`)
                }).finally(() => {
                     steSummaryState(false);
                     setButton(true)
                })
      }
 
-     const handleCopyText = async () => {
-          // Check if the text exists
-          const textToCopy = summary?.generatedSummary?.generatedText;
-
-          if (!textToCopy) {
-               console.log("No text available to copy");
-               return;
-          }
-
-          try {
-               // Try to use the Clipboard API
-               await navigator.clipboard.writeText(textToCopy);
-               toast.success("Copied successfully");
-          } catch (err) {
-               console.error("Clipboard API failed, falling back to textarea copy:", err);
-
-               const textArea = document.createElement("textarea");
-               textArea.value = textToCopy;
-               document.body.appendChild(textArea);
-
-               textArea.select();
-               textArea.setSelectionRange(0, 99999);
-
-               document.execCommand("copy");
-
-               document.body.removeChild(textArea);
-
-               toast.success("Copied successfully (fallback)");
-          }
-     };
 
      return (
           <div className={`p-2 w-full flex bg-teal-lightest font-sans mx-auto backdrop-blur-2xl relative h-[${(editorHeight)}px]`}>
@@ -152,7 +123,7 @@ const ContentSupport = ({ editorHeight }) => {
                                         )
                                    }
                               </div>
-                              <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" name="query"/>
+                              <input onChange={(e) => setQueery(e.target.value)} value={queery} className="mx-auto rounded-md title w-full bg-gray-100 border border-gray-300 p-2 outline-none" spellCheck="false" placeholder="Enter Key-Words" type="text" name="query" />
 
                               <div className='w-full flex-col place-content-center items-center'>
                                    <div className="relative w-96 mx-auto">
@@ -162,10 +133,10 @@ const ContentSupport = ({ editorHeight }) => {
                                                        .filter((outlet) => outlet.link === selectedOrigin)
                                                        .map((filteredOutlet, index) => (
                                                             <div key={index} className='flex space-x-5'>
-                                                                 <img  src={filteredOutlet.photo} alt={filteredOutlet.name} className={`border p-0.5 rounded-full border-black ${filteredOutlet.class}`} />
+                                                                 <img src={filteredOutlet.photo} alt={filteredOutlet.name} className={`border p-0.5 rounded-full border-black ${filteredOutlet.class}`} />
                                                                  <div className='font-semibold'>{filteredOutlet.name}</div>
                                                             </div>
-                                                          
+
                                                        ))}
                                              </div>
 
@@ -240,21 +211,8 @@ const ContentSupport = ({ editorHeight }) => {
                     </div>
                     {
                          searchStatus !== null && searchStatus?.searchInformation?.totalResults === '0' && (
-                              <div className='relative w-36 h-44 mx-auto'>
-                                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth=".8" stroke="currentColor" className="w-36 h-44 absolute">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
-                                   </svg>
-                                   <div className='absolute bottom-0 right-0 z-10 bg-white rounded-full'>
-                                        <div className='relative w-fit h-fit'>
-                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-16">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                                             </svg>
-                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" className="size-8 absolute top-3 left-3">
-                                                  <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                             </svg>
-                                        </div>
-                                   </div>
-                                   No result Found This query
+                              <div className='relative w-28 h-28 mx-auto mt-5 flex-col place-content-center items-center'>
+                                   <img src={noresultfound} alt="imgErr" className='size-fit shadow-lg border-2 rounded-3xl border-gray-400 object-contain' />
                               </div>
                          )
                     }
@@ -264,39 +222,47 @@ const ContentSupport = ({ editorHeight }) => {
                               <svg onClick={() => setItemDisplay(1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                               </svg>
-                              <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Genrated Summary</div>
+                              <div className="heading text-center font-bold text-xl md:text-3xl text-gray-800">Generated Summary</div>
                               <svg onClick={() => setItemDisplay(3)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-8 h-8 p-2 bg-gray-200 rotate-[180deg] cursor-pointer rounded-full">
                                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3" />
                               </svg>
                          </div>
 
-                         <p className="text-3xl mx-auto w-fit mb-2 mt-4 font-extrabold">{summary?.scrapData?.articleTitle}</p>
-                         {
-                              !summary?.scrapData?.articleTitle && <p className="text-3xl border-l-8 border-red-700 pl-5 font-extrabold">{summary?.scrapData?.articleHeading}</p>
-                         }
+                         {/* Check if summary exists before rendering */}
+                         {summary && summary.scrapData && (
+                              <>
+                                   <p className="text-3xl mx-auto w-fit mb-2 mt-4 font-extrabold">{summary.scrapData.articleTitle}</p>
+                                   {
+                                        !summary.scrapData.articleTitle && (
+                                             <p className="text-3xl border-l-8 border-red-700 pl-5 font-extrabold">{summary.scrapData.articleHeading}</p>
+                                        )
+                                   }
 
-                         <div className="md:p-4">
-                              <p className="relative mb-3 overflow-y-scroll example h-[400px] text-gray-600 sm:border-s-4 pl-0 sm:pl-4 md:pl-4">
-                                   <span onClick={handleCopyText} className='rounded-md shadow-[2px_2px_2px_gray] w-fit h-fit p-1 cursor-pointer select-none absolute right-0 z-20'>Copy</span>
-                                   {summary?.genaratedSummary?.generatedText.split('\n').map((line, index) => (
-                                        <React.Fragment key={index}>
-                                             {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
-                                                  <React.Fragment key={partIndex}>
-                                                       {part.startsWith('**') && part.endsWith('**') ? (
-                                                            <strong>{part.slice(2, -2)}</strong>
-                                                       ) : part.startsWith('*') && !part.endsWith('*') ? (
-                                                            <li className='ml-10'>{part.slice(1)}</li>
-                                                       ) : (
-                                                            part
-                                                       )}
+                                   <div className="md:p-4">
+                                        <p className="relative mb-3 overflow-y-scroll example h-[400px] text-gray-600 sm:border-s-4 pl-0 sm:pl-4 md:pl-4">
+                                             {summary.genaratedSummary && summary.genaratedSummary.generatedText.split('\n').map((line, index) => (
+                                                  <React.Fragment key={index}>
+                                                       {line.split(/(\*\*.*?\*\*)/).map((part, partIndex) => (
+                                                            <React.Fragment key={partIndex}>
+                                                                 {part.startsWith('**') && part.endsWith('**') ? (
+                                                                      <strong>{part.slice(2, -2)}</strong>
+                                                                 ) : part.startsWith('*') && !part.endsWith('*') ? (
+                                                                      <li className='ml-10'>{part.slice(1)}</li>
+                                                                 ) : (
+                                                                      part
+                                                                 )}
+                                                            </React.Fragment>
+                                                       ))}
+                                                       <br />
                                                   </React.Fragment>
                                              ))}
-                                             <br />
-                                        </React.Fragment>
-                                   ))}
-                                   <a target='_blank' rel='noreferrer' className=' mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>To Read Full Article Click Here</a>
-                              </p>
-                         </div>
+                                             <a target='_blank' rel='noreferrer' className='mt-5 text-blue-500 font-semibold text-sm' href={selectedArticle[0]}>
+                                                  To Read Full Article Click Here
+                                             </a>
+                                        </p>
+                                   </div>
+                              </>
+                         )}
                     </div>
 
                     <div className={`${itemDisplay === 3 ? "block" : "hidden"}`}>

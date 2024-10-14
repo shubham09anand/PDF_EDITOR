@@ -2,28 +2,26 @@ const puppeteer = require('puppeteer');
 
 const generatePDF = async (req, res) => {
   try {
-    const browser = await puppeteer.launch();
+    // Launch Puppeteer with necessary options for EC2
+    const browser = await puppeteer.launch({
+      headless: true, // Run in headless mode
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
+    });
+    
     const page = await browser.newPage();
-
     const rawHTML = req.body.htmlContent;
 
     const quillHtmlContent = `
-      <script>
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
-      <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="true" />
-      <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
-      </script>
       <style>
           table {
             border-collapse: collapse;
             width: 100%;
           }
-
           td, th {
             border: 1px solid black;
             padding: 8px;
           }
-        </style>
+      </style>
       ${rawHTML}
     `;
 

@@ -141,7 +141,7 @@ const ShufflePdf = () => {
     }
   };
 
-  const reupload = () =>{
+  const reupload = () => {
     setSelectedFiles([]);
     setPageOrder([]);
     setImages([]);
@@ -183,10 +183,15 @@ const ShufflePdf = () => {
       {images.length > 0 && (
         <div className='flex mx-auto flex-wrap p-2 w-fit lg:gap-2 place-content-center'>
           {pageOrder.map((index) => (
-            <div key={index} draggable onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index)}} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} className='p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl'>
+            <div key={index} draggable onContextMenu={(e) => e.preventDefault()} onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index) }} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} className='p-2 m-3 w-fit h-fit rounded-md border-red-500 hover:shadow-xl'>
               <div className='w-fit mx-auto'>
                 <img className='shadow-[1px_1px_4px_gray] w-32 h-40 sm:w-52 sm:h-60 cursor-move' src={images[index]} alt={`Page ${index + 1}`} />
-                <div className='text-center text-sm text-gray-500'>Page {index + 1}</div>
+                <div className='flex cursor-move place-content-center items-center space-x-5 mt-2'>
+                  <svg xmlns="http://www.w3.org/2000/svg" strokeWidth={2} width="16" height="16" fill="currentColor" classNames="bi bi-arrows-move" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10M.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8" />
+                  </svg>
+                  <div className='text-center text-sm text-gray-500'>Page {index + 1}</div>
+                </div>
               </div>
             </div>
           ))}
@@ -207,7 +212,7 @@ const ShufflePdf = () => {
               <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
             </svg>
           </div>
-          <div className='font-thin text-3xl -mt-1'>Reorder The Pages</div>
+          <div className='text-xl md:text-2xl mt-2'>Reorder The Pages</div>
         </div>
 
       )}

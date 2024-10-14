@@ -17,8 +17,9 @@ const ProjectStorage = ({ editorHeight }) => {
      const [mettingPhoto, setMettingPhoto] = useState([]);
 
      useEffect(() => {
-          const s = io('http://13.202.210.238:8081');
-               // process.env.REACT_APP_API_URL_SOCKET_NETWORK);
+          const s = io(
+               // 'http://13.202.210.238:8081');
+               process.env.REACT_APP_API_URL_SOCKET_NETWORK);
           setSocket(s);
 
           return () => {
@@ -130,7 +131,7 @@ const ProjectStorage = ({ editorHeight }) => {
                <div className="p-1 py-2 w-full backdrop-blur-2xl">
                     <div className="my-0 rounded-md bg-white w-full lg:w-1/2 mx-auto">
                          {preview === null && (
-                              <div className="flex justify-between relative bg-blue-600 py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
+                              <div className="flex justify-between relative  bg-gradient-to-tr from-[#3d83ff] via-[#846be6] to-[#7656f5] rounded-md py-2 px-8 place-content-center items-center text-xl font-semibold uppercase tracking-wider text-white">
                                    <div>Upload Files</div>
                                    <svg onClick={() => setDisplayUpload(prev => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="currentColor" className={`w-6 h-6 duration-500 ${!displayUpload ? 'rotate-0' : 'rotate-180'}`}>
                                         <path strokeLinecap="round" strokeLinejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />

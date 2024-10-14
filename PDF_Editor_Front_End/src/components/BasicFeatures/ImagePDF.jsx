@@ -42,23 +42,33 @@ const ImagePDF = () => {
     };
 
     const handleDragStart = (index) => {
-        setDraggedImageIndex(index);
-    };
-
-    const handleDrop = (index) => {
-        const updatedImages = [...imagePreviews];
-        const draggedImage = updatedImages[draggedImageIndex];
-
-        updatedImages.splice(draggedImageIndex, 1);
-        updatedImages.splice(index, 0, draggedImage);
-
-        setImagePreviews(updatedImages);
-        setDraggedImageIndex(null);
-    };
-
-    const handleDragOver = (e) => {
+        setImagePreviews((prevOrder) => {
+          const newOrder = [...prevOrder];
+          newOrder.draggedIndex = index;
+          return newOrder;
+        });
+      };
+    
+      const handleDragOver = (e) => {
         e.preventDefault();
-    };
+      };
+    
+      const handleDrop = (e, index) => {
+        e.preventDefault();
+        const draggedIndex = e.dataTransfer.getData('text/plain');
+        const newPageOrder = [...imagePreviews];
+        const draggedPage = newPageOrder.splice(draggedIndex, 1)[0];
+        newPageOrder.splice(index, 0, draggedPage);
+        setImagePreviews(newPageOrder);
+      };
+    
+      const handleDragEnd = () => {
+        setImagePreviews((prevOrder) => {
+          const newOrder = [...prevOrder];
+          delete newOrder.draggedIndex;
+          return newOrder;
+        });
+      };
 
     // s etImagePreviews(imagePreviews.filter((_,i) => i !== index))
     const handleRemoveImage = (index) => {
@@ -161,14 +171,19 @@ const ImagePDF = () => {
 
             <div className='flex gap-1 flex-wrap w-full place-content-center items-center p-5 pb-0'>
                 {imagePreviews.length > 0 && imagePreviews.map((src, index) => (
-                    <div className='m-5 relative' key={index} draggable onDragStart={() => handleDragStart(index)} onDragOver={handleDragOver} onDrop={() => handleDrop(index)} style={{ cursor: 'grab' }}>
+                    <div className='m-5 relative' key={index} onContextMenu={(e) => e.preventDefault()} draggable  onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index) }} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} style={{ cursor: 'grab' }}>
                         <div onClick={() => handleRemoveImage(index)} className='absolute -top-3 -right-3 z-10 cursor-pointer'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-6 bg-black rounded-full">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                             </svg>
                         </div>
                         <img src={src?.blob} alt={`uploaded-img-${index}`} className='shadow-[1px_1px_10px_gray] w-32 h-40 sm:w-52 object-scale-down sm:h-60' />
-                        <div className='text-xl font-thin text-center'>{index + 1}</div>
+                        <div className='flex cursor-grab place-content-center items-center space-x-5 mt-2'>
+                            <svg xmlns="http://www.w3.org/2000/svg" stroke={2} width="16" height="16" fill="currentColor" classNames="bi bi-arrows-move" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M7.646.146a.5.5 0 0 1 .708 0l2 2a.5.5 0 0 1-.708.708L8.5 1.707V5.5a.5.5 0 0 1-1 0V1.707L6.354 2.854a.5.5 0 1 1-.708-.708zM8 10a.5.5 0 0 1 .5.5v3.793l1.146-1.147a.5.5 0 0 1 .708.708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L7.5 14.293V10.5A.5.5 0 0 1 8 10M.146 8.354a.5.5 0 0 1 0-.708l2-2a.5.5 0 1 1 .708.708L1.707 7.5H5.5a.5.5 0 0 1 0 1H1.707l1.147 1.146a.5.5 0 0 1-.708.708zM10 8a.5.5 0 0 1 .5-.5h3.793l-1.147-1.146a.5.5 0 0 1 .708-.708l2 2a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708-.708L14.293 8.5H10.5A.5.5 0 0 1 10 8" />
+                            </svg>
+                            <div className='text-center text-sm text-gray-500'>Page {index + 1}</div>
+                        </div>
                     </div>
                 ))}
             </div>
