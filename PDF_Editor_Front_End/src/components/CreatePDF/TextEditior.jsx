@@ -24,8 +24,8 @@ const TextEditor = () => {
 
     useEffect(() => {
         const s = io(
-            // 'http://13.202.210.238:8081', {
-            process.env.REACT_APP_API_URL_SOCKET_NETWORK, {
+            'https://apipdfcollaborator.shubham09anand.in', {
+            // process.env.REACT_APP_API_URL_SOCKET_NETWORK, {
             transports: ['websocket', 'polling']
         });
         setSocket(s);
