@@ -8,15 +8,16 @@ A brief description of what this project does.
 
 [![portfolio](https://img.shields.io/badge/my_portfolio-000?style=for-the-badge&logo=ko-fi&logoColor=white)](https://shubham09anand.in/)  
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/subham09anand/?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app)  
-- [Instagram](https://www.instagram.com/shubham09anand/?igsh=YTJvZDZlZmNwYWY1)  
-- [Docker](https://hub.docker.com/u/shubham09anand)
+[![instagram](https://img.shields.io/badge/instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/shubham09anand/?igsh=YTJvZDZlZmNwYWY1)  
+[![docker](https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/u/shubham09anand)
+
 
 ---
 
 ## **🔗 Links**  
-<img src="https://pdfcollaborator.shubham09anand.in/static/media/pdfLogo.66708f8254c233d11a29.jpg" style="height: 30px; width: 30px; padding-top: 30px; margin-left: 5px;" />
+<img src="https://pdfcollaborator.shubham09anand.in/static/media/pdfLogo.66708f8254c233d11a29.jpg" style="height: 50px; width: 50px; padding-top: 30px; margin-left: 5px;" />
 
-<b>PDFCollabrate</b>: http://pdfcollaborator.shubham09anand.in/
+<b>PDFCollabrate</b>: https://pdfcollaborator.shubham09anand.in/
 
 ---
 
