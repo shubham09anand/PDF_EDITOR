@@ -1,6 +1,6 @@
 # **PDFCollabrate**
 
-A brief description of what this project does.
+A brief description of how can you start this project.
 
 ---
 
