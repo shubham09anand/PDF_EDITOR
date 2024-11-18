@@ -1,0 +1,22 @@
+services:
+  pdf_editor_front_end:
+    build: ./PDF_Editor_Front_End
+    image: shubham09anand/pdf_editor_frontend:latest
+    container_name: pdf_editor_front_end
+    ports:
+      - "3000:3000"
+    networks:
+      - pdfeditor_network
+    
+  pdf_editor_back_end:
+    build: ./PDF_Editor_Back_End
+    image: shubham09anand/pdf_editor_backend:latest
+    container_name: pdf_editor_back_end
+    ports:
+      - "8080:8080"
+    networks:
+      - pdfeditor_network
+    
+networks:
+  pdfeditor_network:
+    driver: bridge

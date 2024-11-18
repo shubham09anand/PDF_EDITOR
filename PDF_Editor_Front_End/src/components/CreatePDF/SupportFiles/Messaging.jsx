@@ -16,8 +16,9 @@ const Messaging = ({editorHeight}) => {
 
      useEffect(() => {
           const s = io(
-               'https://apipdfcollaborator.shubham09anand.in');
+               // 'https://apipdfcollaborator.shubham09anand.in');
                // process.env.REACT_APP_API_URL_SOCKET_NETWORK);
+               'http://127.0.0.1:8080/');
           setSocket(s);
 
           return () => {
