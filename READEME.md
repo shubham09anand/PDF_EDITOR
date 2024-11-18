@@ -14,10 +14,13 @@ A brief description of what this project does.
 
 ---
 
-## **🔗 Links**  
-<img src="https://pdfcollaborator.shubham09anand.in/static/media/pdfLogo.66708f8254c233d11a29.jpg" style="height: 50px; width: 50px; padding-top: 30px; margin-left: 5px;" />
+## 🔗 Links
 
-<b>PDFCollabrate</b>: https://pdfcollaborator.shubham09anand.in/
+<p>
+  <img src="https://pdfcollaborator.shubham09anand.in/static/media/pdfLogo.66708f8254c233d11a29.jpg" style="height: 50px; width: 50px; margin-right: 10px;" />
+  <b>PDFCollabrate</b>: <a href="https://pdfcollaborator.shubham09anand.in/">https://pdfcollaborator.shubham09anand.in/</a>
+</p>
+
 
 ---
 
@@ -80,6 +83,10 @@ Docker Compose will download the images, create containers, and start the applic
 ---
 
 ### **Access the Application**
+
+Once ```bash
+docker-compose up -d
+   ``` executed succesfull access the application
 
 - **Frontend**: Visit [http://127.0.0.1:3000](http://127.0.0.1:3000) in your browser.  
 - **Backend**: Access [http://127.0.0.1:8080](http://127.0.0.1:8080) to interact with the backend.
