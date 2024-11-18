@@ -1,7 +1,3 @@
-Here’s the updated README file for your **PDFCollabrate** project with the required changes:
-
----
-
 # **PDFCollabrate**
 
 A brief description of what this project does.
@@ -18,9 +14,9 @@ A brief description of what this project does.
 ---
 
 ## **🔗 Links**  
-<img src="https://socialnest.shubham09anand.in/static/media/socialNest.284b6b7c03b19ec4d054.png" style="height: 30px; width: 30px; padding-top: 30px; margin-left: 5px;" />
+<img src="https://pdfcollaborator.shubham09anand.in/static/media/pdfLogo.66708f8254c233d11a29.jpg" style="height: 30px; width: 30px; padding-top: 30px; margin-left: 5px;" />
 
-<b>PDFCollabrate</b>: *(URL to be added if hosted)*
+<b>PDFCollabrate</b>: http://pdfcollaborator.shubham09anand.in/
 
 ---
 
@@ -88,5 +84,3 @@ Docker Compose will download the images, create containers, and start the applic
 - **Backend**: Access [http://127.0.0.1:8080](http://127.0.0.1:8080) to interact with the backend.
 
 ---
-
-Let me know if you need further modifications! 🚀
