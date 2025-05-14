@@ -15,7 +15,9 @@ const GenrateImage = () => {
           }
           setButton(true)
           setScrapImages([])
-          axios.post("http://127.0.0.1:3200/auth/getImages",
+          axios.post(
+               'https://apipdfcollaborator.shubham09anand.in',
+               // "http://127.0.0.1:3200/auth/getImages",
                { queery: imageQueery }).then((res) => {
                     setScrapImages(res.data.apiResult.items)
                     console.log(res.status)
