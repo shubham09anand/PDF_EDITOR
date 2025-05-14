@@ -11,6 +11,8 @@ const generatePDF = async (req, res) => {
     const page = await browser.newPage();
     const rawHTML = req.body.htmlContent;
 
+    console.log(rawHTML)
+
     const quillHtmlContent = `
       <style>
           table {

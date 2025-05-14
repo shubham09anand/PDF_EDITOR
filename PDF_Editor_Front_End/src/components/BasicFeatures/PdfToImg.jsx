@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { pdfjs } from 'react-pdf';
 import { ToastContainer, toast } from 'react-toastify';
+import { PDFDocument } from 'pdf-lib'
 import 'react-toastify/dist/ReactToastify.css';
 import LoadingPages from '../Animation/LoadingPages';
 import AboutFeature from './Components/AboutFeature';
@@ -42,17 +43,9 @@ const PdfToImg = () => {
      };
 
      const getNumPages = async (file) => {
-          const fileReader = new FileReader();
-          return new Promise((resolve, reject) => {
-               fileReader.onload = function () {
-                    const typedArray = new Uint8Array(this.result);
-                    pdfjs.getDocument({ data: typedArray }).promise.then((pdf) => {
-                         resolve(pdf.numPages);
-                    });
-               };
-               fileReader.onerror = reject;
-               fileReader.readAsArrayBuffer(file);
-          });
+          const fileBuffer = await file.arrayBuffer();
+          const pdfDoc = await PDFDocument.load(fileBuffer);
+          return pdfDoc.getPageCount();
      };
 
      const getPageAsImage = async (file, pageNumber) => {
@@ -106,7 +99,7 @@ const PdfToImg = () => {
           })
      }
 
-     const reupload = () =>{
+     const reupload = () => {
           setSelectedFiles([]);
           setImages([]);
           setPageDelete([]);
@@ -119,7 +112,7 @@ const PdfToImg = () => {
 
                <AboutFeature featureHeading={'PDF to JPG'} featureDescription={"Convert page into a JPG or extract all images contained in a PDF."} />
 
-               {selectedFiles.length > 0  && loading && images.length === 0 && <LoadingPages />}
+               {selectedFiles.length > 0 && loading && images.length === 0 && <LoadingPages />}
 
                {selectedFiles.length !== 0 &&
                     <div className="mx-auto flex h-full w-fit mt-5 md:mb-10 shadow-sm p-2 rounded-lg">

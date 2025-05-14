@@ -43,32 +43,32 @@ const ImagePDF = () => {
 
     const handleDragStart = (index) => {
         setImagePreviews((prevOrder) => {
-          const newOrder = [...prevOrder];
-          newOrder.draggedIndex = index;
-          return newOrder;
+            const newOrder = [...prevOrder];
+            newOrder.draggedIndex = index;
+            return newOrder;
         });
-      };
-    
-      const handleDragOver = (e) => {
+    };
+
+    const handleDragOver = (e) => {
         e.preventDefault();
-      };
-    
-      const handleDrop = (e, index) => {
+    };
+
+    const handleDrop = (e, index) => {
         e.preventDefault();
         const draggedIndex = e.dataTransfer.getData('text/plain');
         const newPageOrder = [...imagePreviews];
         const draggedPage = newPageOrder.splice(draggedIndex, 1)[0];
         newPageOrder.splice(index, 0, draggedPage);
         setImagePreviews(newPageOrder);
-      };
-    
-      const handleDragEnd = () => {
+    };
+
+    const handleDragEnd = () => {
         setImagePreviews((prevOrder) => {
-          const newOrder = [...prevOrder];
-          delete newOrder.draggedIndex;
-          return newOrder;
+            const newOrder = [...prevOrder];
+            delete newOrder.draggedIndex;
+            return newOrder;
         });
-      };
+    };
 
     // s etImagePreviews(imagePreviews.filter((_,i) => i !== index))
     const handleRemoveImage = (index) => {
@@ -171,7 +171,7 @@ const ImagePDF = () => {
 
             <div className='flex gap-1 flex-wrap w-full place-content-center items-center p-5 pb-0'>
                 {imagePreviews.length > 0 && imagePreviews.map((src, index) => (
-                    <div className='m-5 relative' key={index} onContextMenu={(e) => e.preventDefault()} draggable  onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index) }} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} style={{ cursor: 'grab' }}>
+                    <div className='m-5 relative' key={index} onContextMenu={(e) => e.preventDefault()} draggable onDragStart={(e) => { e.dataTransfer.setData('text/plain', index); handleDragStart(index) }} onDragOver={handleDragOver} onDrop={(e) => handleDrop(e, index)} onDragEnd={handleDragEnd} style={{ cursor: 'grab' }}>
                         <div onClick={() => handleRemoveImage(index)} className='absolute -top-3 -right-3 z-10 cursor-pointer'>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2" stroke="white" className="size-6 bg-black rounded-full">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />

@@ -14,8 +14,9 @@ const PORT = 8080;
 
 app.use(bodyParser.json({ limit: '100mb' }));
 app.use(cors({
-  origin: ['http://127.0.0.1:3000'],
-  methods: 'GET, POST, PUT, DELETE, OPTIONS',
+  origin: ["http://localhost:3000", "http://127.0.0.1:3000",'https://pdfcollaborator.shubham09anand.in/', 'http://pdfcollaborator.shubham09anand.in/'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  optionsSuccessStatus: 200,
   credentials: true,
   allowedHeaders: 'Content-Type, Authorization',
 }));

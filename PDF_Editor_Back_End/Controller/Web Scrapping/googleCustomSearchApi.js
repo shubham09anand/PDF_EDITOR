@@ -4,7 +4,8 @@ const getGoogleLink = async (req, res) => {
      try {
 
           // console.log("googe Api")
-          const API_KEY = "AIzaSyDhXIKNv8WUsk9EJwJKA9MZ6TLFQmIb2WY";
+          const API_KEY = " AIzaSyA2g6f3uiwi_J9obHhCO1hIqRSgVdZr2AY";
+          // AIzaSyA2g6f3uiwi_J9obHhCO1hIqRSgVdZr2AY 
           const SEARCH_ENGINE_ID = "402cb9ae467ab4a4e";
           const search_query = req.body.queery;
           const selectedOrigin = req.body.selectedOrigin;
@@ -35,6 +36,7 @@ const getGoogleLink = async (req, res) => {
                     })
                }).catch(error => {
                     console.error('An error occurred:', error);
+                    console.log(error)
                     res.status(400).json({
                          success: false,
                          status: 0,
@@ -44,6 +46,7 @@ const getGoogleLink = async (req, res) => {
                });
 
      } catch (error) {
+          console.log(error)
           res.status(500).json({
                success: false,
                status: -1,

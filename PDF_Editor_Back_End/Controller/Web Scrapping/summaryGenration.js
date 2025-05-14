@@ -31,7 +31,7 @@ const summaryGenration = async (summaryMetaData) => {
                // console.log(summaryMetaData.articleSnippet)
                // console.log(summaryMetaData.articleLink)
 
-          const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
           const result = await model.generateContent(dummyText);
           const response = result.response;

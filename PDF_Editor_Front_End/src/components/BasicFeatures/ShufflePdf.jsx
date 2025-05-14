@@ -47,17 +47,9 @@ const ShufflePdf = () => {
   };
 
   const getNumPages = async (file) => {
-    const fileReader = new FileReader();
-    return new Promise((resolve, reject) => {
-      fileReader.onload = function () {
-        const typedArray = new Uint8Array(this.result);
-        pdfjs.getDocument({ data: typedArray }).promise.then((pdf) => {
-          resolve(pdf.numPages);
-        });
-      };
-      fileReader.onerror = reject;
-      fileReader.readAsArrayBuffer(file);
-    });
+    const fileBuffer = await file.arrayBuffer();
+    const pdfDoc = await PDFDocument.load(fileBuffer);
+    return pdfDoc.getPageCount();
   };
 
   const getPageAsImage = async (file, pageNumber) => {
@@ -77,10 +69,8 @@ const ShufflePdf = () => {
 
   const handleConversion = async () => {
     const convertedImages = [];
-    for (const file of selectedFiles) {
-      const images = await convertToImage(file);
-      convertedImages.push(...images);
-    }
+    const images = await convertToImage(selectedFiles[0]);
+    convertedImages.push(...images);
     setImages(convertedImages);
     setPageOrder(convertedImages.map((_, index) => index));
     setLoading(false);

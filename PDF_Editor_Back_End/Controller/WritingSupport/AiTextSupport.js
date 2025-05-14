@@ -6,7 +6,7 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API);
 
 const aiTextSupport = async (req, res) => {
      try {
-          const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+          const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
           const queery = (req.body.queery)
 
           const result = await model.generateContent(queery);

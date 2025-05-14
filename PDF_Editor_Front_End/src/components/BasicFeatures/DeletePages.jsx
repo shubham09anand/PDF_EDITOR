@@ -44,17 +44,9 @@ const DeletePages = () => {
      };
 
      const getNumPages = async (file) => {
-          const fileReader = new FileReader();
-          return new Promise((resolve, reject) => {
-               fileReader.onload = function () {
-                    const typedArray = new Uint8Array(this.result);
-                    pdfjs.getDocument({ data: typedArray }).promise.then((pdf) => {
-                         resolve(pdf.numPages);
-                    });
-               };
-               fileReader.onerror = reject;
-               fileReader.readAsArrayBuffer(file);
-          });
+          const fileBuffer = await file.arrayBuffer();
+          const pdfDoc = await PDFDocument.load(fileBuffer);
+          return pdfDoc.getPageCount();
      };
 
      const getPageAsImage = async (file, pageNumber) => {
@@ -161,13 +153,13 @@ const DeletePages = () => {
           // eslint-disable-next-line
      }, [])
 
-     const reupload = () =>{
+     const reupload = () => {
           setSelectedFiles([]);
           setImages([]);
           setPageDelete([]);
           setBlog(null);
           setProcessStatus(false);
-      }
+     }
 
      return (
           <div className='p-2 w-full'>
