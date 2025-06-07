@@ -8,7 +8,7 @@ const setupSocket = (server) => {
   const io = new Server(server, {
     maxHttpBufferSize: 12 * 1024 * 1024,
     cors: {
-      origin: ["http://localhost:3000", "http://127.0.0.1:3000", 'https://pdfcollaborator.shubham09anand.in/', 'http://pdfcollaborator.shubham09anand.in/'],
+      origin: ["http://localhost:3000", "http://127.0.0.1:3000", 'http://pdfcollaborator.shubham09anand.in', 'https://pdfcollaborator.shubham09anand.in'],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       optionsSuccessStatus: 200,
       credentials: true,

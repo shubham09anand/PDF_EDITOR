@@ -25,10 +25,13 @@ const TextEditor = () => {
     useEffect(() => {
         const s = io(
             'https://apipdfcollaborator.shubham09anand.in', {
+            transports: ['websocket'], // force websocket
+            path: '/socket.io',
+        }
             // process.env.REACT_APP_API_URL_SOCKET_NETWORK, {
             // 'http://127.0.0.1:8080/', {
-            transports: ['websocket', 'polling']
-        });
+
+        );
         setSocket(s);
 
         s.on('connect_error', (err) => {
@@ -124,10 +127,10 @@ const TextEditor = () => {
                 </div>}
             <>
                 <JoditEditor className={`h-40  overflow-hidden ${display === 0 || display === 1 ? 'block' : 'hidden'}`} ref={editor} value={content} config={config} onChange={handleContentChange} />
-                <div className={`${display === 1 ? 'block' : 'hidden'}`}><Messaging editorHeight={editorHeight}/></div>
+                <div className={`${display === 1 ? 'block' : 'hidden'}`}><Messaging editorHeight={editorHeight} /></div>
                 <div className={`w-full h-full ${display === 2 ? 'block' : 'hidden'}`}><TextAi /></div>
                 <div className={`w-full h-full ${display === 3 ? 'block' : 'hidden'}`}><ContentSupport editorHeight={editorHeight} /></div>
-                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage editorHeight={editorHeight}/></div>
+                <div className={`w-full h-full ${display === 4 ? 'block' : 'hidden'}`}><ProjectStroage editorHeight={editorHeight} /></div>
             </>
             <TextEditorDashboard pdfGenrationStatus={setPdfGenration} display={display} setDisplay={setDisplay} data={content} documentContent={rawHTML} />
         </div>
